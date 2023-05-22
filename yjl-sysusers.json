@@ -1,293 +1,380 @@
 {
     "root": {
-        "uid": 0,
-        "gid": 0,
+        "myid": 0,
+        "usr": true,
+        "grp": true,
         "comment": "r00t",
         "homedir": "/root",
         "shell": "/bin/bash",
         "skel": true
     },
     "bin": {
-        "uid": 1,
-        "gid": 1,
+        "myid": 1,
+        "usr": true,
+        "grp": true,
         "comment": "bin"
     },
     "daemon": {
-        "uid": 6,
-        "gid": 6,
+        "myid": 6,
+        "usr": true,
+        "grp": true,
         "comment": "Daemon User"
     },
     "lp": {
-        "uid": 9,
-        "gid": 9,
+        "myid": 9,
+        "usr": true,
+        "grp": true,
         "comment": "CUPS Print Server",
         "homedir": "/var/spool/cups"
     },
     "adm": {
-        "gid": 16
+        "myid": 16,
+        "usr": false,
+        "grp": true
     },
     "atd": {
-        "uid": 17,
-        "gid": 17
+        "myid": 17,
+        "usr": true,
+        "grp": true
     },
     "messagebus": {
-        "uid": 18,
-        "gid": 18,
+        "myid": 18,
+        "usr": true,
+        "grp": true,
         "comment": "D-Bus Message Daemon User",
         "homedir": "/run/dbus"
     },
     "lpadmin": {
-        "gid": 19
+        "myid": 19,
+        "usr": false,
+        "grp": true
     },
     "named": {
-        "uid": 20,
-        "gid": 20,
+        "myid": 20,
+        "usr": true,
+        "grp": true,
         "comment": "BIND Daemon"
     },
     "gdm": {
-        "uid": 21,
-        "gid": 21
+        "myid": 21,
+        "usr": true,
+        "grp": true
     },
     "fcron": {
-        "uid": 22,
-        "gid": 22,
+        "myid": 22,
+        "usr": true,
+        "grp": true,
         "comment": "FCron Daemon"
     },
     "plocate": {
-        "gid": 23
+        "myid": 23,
+        "usr": false,
+        "grp": true
     },
     "apache": {
-        "uid": 25,
-        "gid": 25,
-        "comment": "Apache Daemon"
+        "myid": 25,
+        "usr": true,
+        "grp": true,
+        "comment": "Apache Daemon",
+        "homedir": "/srv/www"
     },
     "smmsp": {
-        "uid": 26,
-        "gid": 26,
+        "myid": 26,
+        "usr": true,
+        "grp": true,
         "comment": "Sendmail Daemon"
     },
     "polkitd": {
-        "uid": 27,
-        "gid": 27
+        "myid": 27,
+        "usr": true,
+        "grp": true
     },
     "rpc": {
-        "uid": 28,
-        "gid": 28
+        "myid": 28,
+        "usr": true,
+        "grp": true
+    },
+    "mail": {
+        "myid": 30,
+        "usr": false,
+        "grp": true
     },
     "exim": {
-        "uid": 31,
-        "gid": 31,
+        "myid": 31,
+        "usr": true,
+        "grp": true,
         "comment": "Exim Daemon"
     },
     "postfix": {
-        "uid": 32,
-        "gid": 32,
+        "myid": 32,
+        "usr": true,
+        "grp": true,
         "comment": "Postfix Daemon",
         "homedir": "/var/spool/postfix"
     },
     "postdrop": {
-        "gid": 33
+        "myid": 33,
+        "usr": false,
+        "grp": true
     },
     "sendmail": {
-        "uid": 34
-    },
-    "mail": {
-        "gid": 34
+        "myid": 34,
+        "usr": true,
+        "grp": true
     },
     "vmailman": {
-        "uid": 35,
-        "gid": 35
+        "myid": 35,
+        "usr": true,
+        "grp": true
     },
     "news": {
-        "uid": 36,
-        "gid": 36
+        "myid": 36,
+        "usr": true,
+        "grp": true
     },
     "kdm": {
-        "uid": 37,
-        "gid": 37
+        "myid": 37,
+        "usr": true,
+        "grp": true
     },
     "fetchmail": {
-        "uid": 38,
+        "myid": 38,
+        "usr": true,
+        "grp": false,
         "group": "nogroup"
     },
     "mariadb": {
-        "uid": 40,
-        "gid": 40
+        "myid": 40,
+        "usr": true,
+        "grp": true
     },
     "postgres": {
-        "uid": 41,
-        "gid": 41
+        "myid": 41,
+        "usr": true,
+        "grp": true
     },
     "dovecot": {
-        "uid": 42,
-        "gid": 42,
+        "myid": 42,
+        "usr": true,
+        "grp": true,
         "comment": "Dovecot Daemon"
     },
     "dovenull": {
-        "uid": 43,
-        "gid": 43,
+        "myid": 43,
+        "usr": true,
+        "grp": true,
         "comment": "Dovecot Login User"
     },
     "ftp": {
-        "uid": 45,
-        "gid": 45
+        "myid": 45,
+        "usr": true,
+        "grp": true
     },
     "proftpd": {
-        "uid": 46,
-        "gid": 46
+        "myid": 46,
+        "usr": true,
+        "grp": true
     },
     "vsftpd": {
-        "uid": 47,
-        "gid": 47
+        "myid": 47,
+        "usr": true,
+        "grp": true
     },
     "rsyncd": {
-        "uid": 48,
-        "gid": 48,
+        "myid": 48,
+        "usr": true,
+        "grp": true,
         "comment": "rsyncd Daemon",
         "homedir": "/srv/rsync"
     },
     "sshd": {
-        "uid": 50,
-        "gid": 50,
+        "myid": 50,
+        "usr": true,
+        "grp": true,
         "comment": "sshd PrivSep",
         "homedir": "/var/lib/sshd"
     },
     "stunnel": {
-        "uid": 51,
-        "gid": 51
+        "myid": 51,
+        "usr": true,
+        "grp": true
     },
     "dhcpcd": {
-        "uid": 52,
-        "gid": 52
+        "myid": 52,
+        "usr": true,
+        "grp": true
     },
     "svn": {
-        "uid": 56,
-        "gid": 56
+        "myid": 56,
+        "usr": true,
+        "grp": true
     },
     "svntest": {
-        "gid": 57
+        "myid": 57,
+        "usr": false,
+        "grp": true
     },
     "git": {
-        "uid": 58,
-        "gid": 58
+        "myid": 58,
+        "usr": true,
+        "grp": true
     },
     "games": {
-        "uid": 60,
-        "gid": 60
+        "myid": 60,
+        "usr": true,
+        "grp": true
     },
     "kvm": {
-        "gid": 61
+        "myid": 61,
+        "usr": false,
+        "grp": true
     },
     "wireshark": {
-        "gid": 62
+        "myid": 62,
+        "usr": false,
+        "grp": true
     },
     "sddm": {
-        "uid": 64,
-        "gid": 64
+        "myid": 64,
+        "usr": true,
+        "grp": true
     },
     "lightdm": {
-        "uid": 65,
-        "gid": 65
+        "myid": 65,
+        "usr": true,
+        "grp": true
     },
     "scanner": {
-        "gid": 70
+        "myid": 70,
+        "usr": false,
+        "grp": true
     },
     "colord": {
-        "uid": 71,
-        "gid": 71
+        "myid": 71,
+        "usr": true,
+        "grp": true
     },
     "uuidd": {
-        "uid": 80,
-        "gid": 80,
+        "myid": 80,
+        "usr": true,
+        "grp": true,
         "comment": "UUID Generation Daemon User"
     },
     "ldap": {
-        "uid": 83,
-        "gid": 83
+        "myid": 83,
+        "usr": true,
+        "grp": true,
+        "comment": "OpenLDAP Daemon",
+        "homedir": "/var/lib/openldap"
     },
     "avahi": {
-        "uid": 84,
-        "gid": 84
+        "myid": 84,
+        "usr": true,
+        "grp": true
     },
     "avahi-autoipd": {
-        "uid": 85,
-        "gid": 85
+        "myid": 85,
+        "usr": true,
+        "grp": true
     },
     "netdev": {
-        "gid": 86
+        "myid": 86,
+        "usr": false,
+        "grp": true
     },
     "ntp": {
-        "uid": 87,
-        "gid": 87,
+        "myid": 87,
+        "usr": true,
+        "grp": true,
         "comment": "Network Time Protocol",
         "homedir": "/var/lib/ntp"
     },
     "unbound": {
-        "uid": 88,
-        "gid": 88,
+        "myid": 88,
+        "usr": true,
+        "grp": true,
         "comment": "Unbound Caching DNS",
         "homedir": "/var/lib/unbound"
     },
     "plugdev": {
-        "gid": 90
+        "myid": 90,
+        "usr": false,
+        "grp": true
     },
     "wheel": {
-        "gid": 97
+        "myid": 97,
+        "usr": false,
+        "grp": true
     },
     "anonymous": {
-        "uid": 98
+        "myid": 98,
+        "usr": true,
+        "grp": false
     },
     "systemd-journal": {
-        "uid": 180,
-        "gid": 180
+        "myid": 180,
+        "usr": true,
+        "grp": true
     },
     "systemd-journal-gateway": {
-        "uid": 181,
-        "gid": 181
+        "myid": 181,
+        "usr": true,
+        "grp": true
     },
     "systemd-journal-remote": {
-        "uid": 182,
-        "gid": 182
+        "myid": 182,
+        "usr": true,
+        "grp": true
     },
     "systemd-journal-upload": {
-        "uid": 183,
-        "gid": 183
+        "myid": 183,
+        "usr": true,
+        "grp": true
     },
     "systemd-network": {
-        "uid": 184,
-        "gid": 184
+        "myid": 184,
+        "usr": true,
+        "grp": true
     },
     "systemd-resolve": {
-        "uid": 185,
-        "gid": 185
+        "myid": 185,
+        "usr": true,
+        "grp": true
     },
     "systemd-timesync": {
-        "uid": 186,
-        "gid": 186
+        "myid": 186,
+        "usr": true,
+        "grp": true
     },
     "systemd-coredump": {
-        "uid": 187,
-        "gid": 187
+        "myid": 187,
+        "usr": true,
+        "grp": true
     },
     "systemd-oom": {
-        "uid": 188,
-        "gid": 188
+        "myid": 188,
+        "usr": true,
+        "grp": true
     },
     "texlive": {
-        "uid": 450,
-        "gid": 450,
-        "group": "texlive",
+        "myid": 450,
+        "usr": true,
+        "grp": true,
         "comment": "TeXLive Administrator",
         "homedir": "/opt/texlive/tladmin",
         "shell": "/bin/bash",
         "skel": true
     },
     "nobody": {
-        "uid": 65534,
+        "myid": 65534,
+        "usr": true,
+        "grp": false,
         "group": "nogroup",
         "comment": "Unprivileged User"
     },
     "nogroup": {
-        "gid": 65534
+        "myid": 65534,
+        "usr": false,
+        "grp": true
     }
 }
