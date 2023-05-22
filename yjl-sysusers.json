@@ -1,9 +1,26 @@
 {
+    "root": {
+        "uid": 0,
+        "gid": 0,
+        "comment": "r00t",
+        "homedir": "/root",
+        "shell": "/bin/bash"
+    },
     "bin": {
-        "uid": 1
+        "uid": 1,
+        "gid": 1,
+        "comment": "bin"
+    },
+    "daemon": {
+        "uid": 6,
+        "gid": 6,
+        "comment": "Daemon User"
     },
     "lp": {
-        "uid": 9
+        "uid": 9,
+        "gid": 9,
+        "comment": "CUPS Print Server",
+        "homedir": "/var/spool/cups"
     },
     "adm": {
         "gid": 16
@@ -14,14 +31,17 @@
     },
     "messagebus": {
         "uid": 18,
-        "gid": 18
+        "gid": 18,
+        "comment": "D-Bus Message Daemon User",
+        "homedir": "/run/dbus"
     },
     "lpadmin": {
         "gid": 19
     },
     "named": {
         "uid": 20,
-        "gid": 20
+        "gid": 20,
+        "comment": "BIND Daemon"
     },
     "gdm": {
         "uid": 21,
@@ -29,18 +49,21 @@
     },
     "fcron": {
         "uid": 22,
-        "gid": 22
+        "gid": 22,
+        "comment": "FCron Daemon"
     },
     "plocate": {
         "gid": 23
     },
     "apache": {
         "uid": 25,
-        "gid": 25
+        "gid": 25,
+        "comment": "Apache Daemon"
     },
     "smmsp": {
         "uid": 26,
-        "gid": 26
+        "gid": 26,
+        "comment": "Sendmail Daemon"
     },
     "polkitd": {
         "uid": 27,
@@ -52,11 +75,14 @@
     },
     "exim": {
         "uid": 31,
-        "gid": 31
+        "gid": 31,
+        "comment": "Exim Daemon"
     },
     "postfix": {
         "uid": 32,
-        "gid": 32
+        "gid": 32,
+        "comment": "Postfix Daemon",
+        "homedir": "/var/spool/postfix"
     },
     "postdrop": {
         "gid": 33
@@ -80,7 +106,8 @@
         "gid": 37
     },
     "fetchmail": {
-        "uid": 38
+        "uid": 38,
+        "group": "nogroup"
     },
     "mariadb": {
         "uid": 40,
@@ -91,8 +118,14 @@
         "gid": 41
     },
     "dovecot": {
+        "uid": 42,
+        "gid": 42,
+        "comment": "Dovecot Daemon"
+    },
+    "dovenull": {
         "uid": 43,
-        "gid": 43
+        "gid": 43,
+        "comment": "Dovecot Login User"
     },
     "ftp": {
         "uid": 45,
@@ -108,11 +141,15 @@
     },
     "rsyncd": {
         "uid": 48,
-        "gid": 48
+        "gid": 48,
+        "comment": "rsyncd Daemon",
+        "homedir": "/srv/rsync"
     },
     "sshd": {
         "uid": 50,
-        "gid": 50
+        "gid": 50,
+        "comment": "sshd PrivSep",
+        "homedir": "/var/lib/sshd"
     },
     "stunnel": {
         "uid": 51,
@@ -160,7 +197,8 @@
     },
     "uuidd": {
         "uid": 80,
-        "gid": 80
+        "gid": 80,
+        "comment": "UUID Generation Daemon User"
     },
     "ldap": {
         "uid": 83,
@@ -179,11 +217,15 @@
     },
     "ntp": {
         "uid": 87,
-        "gid": 87
+        "gid": 87,
+        "comment": "Network Time Protocol",
+        "homedir": "/var/lib/ntp"
     },
     "unbound": {
         "uid": 88,
-        "gid": 88
+        "gid": 88,
+        "comment": "Unbound Caching DNS",
+        "homedir": "/var/lib/unbound"
     },
     "plugdev": {
         "gid": 90
@@ -240,7 +282,9 @@
         "skel": true
     },
     "nobody": {
-        "uid": 65534
+        "uid": 65534,
+        "group": "nogroup",
+        "comment": "Unprivileged User"
     },
     "nogroup": {
         "gid": 65534
