@@ -1,6 +1,8 @@
 yjl-sysusers
 ============
 
+At present this is vaporware.
+
 This project will (likely) include two utilities, primarily intended
 to be used in RPM scriptlets (largely the `%pre` scriptlets).
 
@@ -97,3 +99,100 @@ Adding a system user to groups other than the primary group for that
 user is *not directly supported*. To accomplish that task should it
 actually be necessary, use the `yjl-sysgroup` utility first to ensure
 the group exists and then use `usermod` command.
+
+
+yjl-sysusers.json
+-----------------
+
+This JSON file contains all the information needed to create system
+users and groups for YellowJacket GNU/Linux.
+
+It is currently a work in progress.
+
+It is based on the users and groups used by LFS/BLFS 11.3 with some
+minor modifications:
+
+* All of the various systemd users have been moved to start with a
+  UID/GID of 180, freeing up nine UID/GID combinations under 100.
+
+* The Group ID 23 (formerly associated with `systemd-journal`) is now
+  associated with the `plocate` group. Note there is no `plocate` user.
+
+* The UID/GID combination of 40/40 has been changed from `mysql` to
+  `mariadb` but *I might* revert that when I package MariaDB.
+
+Initially I was going to try to keep in sync with LFS/BLFS but I do
+not think that is of any particular benefit, so I probably will use
+their numbering system initially but likely further diverge as time
+goes by.
+
+With respect to YJL, there is some already likely some technical debt
+within the assigned numbers. For example, YJL will almost certainly
+*never* package [BIND](https://www.isc.org/bind/) so the UID/GID
+associated with `named` *probably* should be considered recyclable.
+
+If YJL ever has the need to package an authoritative name server, it
+would almost certainly be [NSD](https://www.nlnetlabs.nl/projects/nsd/about/)
+although I kind of doubt a hobbyist desktop distribution needs an
+authoritative naneserver.
+
+[Sendmail](https://www.proofpoint.com/us/products/email-protection/open-source-email-solution)
+is another daemon likely to never be packaged for YJL, [Exim](https://www.exim.org/)
+or [Postfix](https://www.postfix.org/) are much more appropriate for
+hobbyist mail server needs (both also usually do well in Enterprise).
+
+### JSON Format
+
+This describes the constraines of the JSON file.
+
+#### User and Group Names
+
+Every object represents a user and/or group name and thus must be a
+valid Unix username as defined in __man 8 useradd__
+
+    Usernames may contain only lower and upper case letters, digits,
+    underscores, or dashes. They can end with a dollar sign. Dashes
+    are not allowed at the beginning of the username. Fully numeric
+    usernames and usernames . or .. are also disallowed. It is not
+    recommended to use usernames beginning with . character as their
+    home directories will be hidden in the ls output. In regular
+    expression terms: [a-zA-Z0-9_.][a-zA-Z0-9_.-]*[$]?
+
+    Usernames may only be up to 32 characters long.
+
+The JSON file itself does not care but since the utilities will validate
+a username before querying the JSON file, invalid usernames in the JSON
+file will never be used.
+
+#### User and Group ID Numbers
+
+Every object __MUST__ have a `uid` and/or `gid` property that points
+to an appropriate non-negative integer value not used by another object.
+When an object has both, they must be defined to the same integer.
+
+For *most* system users, the `uid` and/or `gid` __MUST__ not exceed
+65534. However with the exception of user `nobody` and group `nogroup`
+the values in the JSON file really have no reason to ever exceed 499.
+
+In YJL, the range 0--179 is used for most system-related users and groups
+that are typically found on GNU/Linux systems, with the exception of
+SystemD related users. When possible, non-SystemD system-related users
+should be kept below 100 when possible but that may not always be possible.
+
+In YJL, the range 180-199 is used for SystemD related users and groups.
+
+In YJL, the range 200-299 is reserved for future special interest use.
+
+In YJL, the range 300-399 is used for cases when the requested UID/GID
+is already in use on the system. Normally that will not happen, but
+there may be cases when a system administrator need to use a specific
+UID/GID for something else.
+
+The JSON file thus should not specify IDs in the 200-399 range.
+
+In YJL, the range 400-499 is reserved for YJL specific use cases, such
+as UID/GID 450 for the TeXLive administrator.
+
+In YJL, the range 500-999 is for System Adminstrator to use for their
+own non-human user needs. The JSON file thus should not specify IDs
+above 499 with the noted exception of `nobody` and `nogroup`.
