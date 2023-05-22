@@ -1,0 +1,248 @@
+{
+    "bin": {
+        "uid": 1
+    },
+    "lp": {
+        "uid": 9
+    },
+    "adm": {
+        "gid": 16
+    },
+    "atd": {
+        "uid": 17,
+        "gid": 17
+    },
+    "messagebus": {
+        "uid": 18,
+        "gid": 18
+    },
+    "lpadmin": {
+        "gid": 19
+    },
+    "named": {
+        "uid": 20,
+        "gid": 20
+    },
+    "gdm": {
+        "uid": 21,
+        "gid": 21
+    },
+    "fcron": {
+        "uid": 22,
+        "gid": 22
+    },
+    "plocate": {
+        "gid": 23
+    },
+    "apache": {
+        "uid": 25,
+        "gid": 25
+    },
+    "smmsp": {
+        "uid": 26,
+        "gid": 26
+    },
+    "polkitd": {
+        "uid": 27,
+        "gid": 27
+    },
+    "rpc": {
+        "uid": 28,
+        "gid": 28
+    },
+    "exim": {
+        "uid": 31,
+        "gid": 31
+    },
+    "postfix": {
+        "uid": 32,
+        "gid": 32
+    },
+    "postdrop": {
+        "gid": 33
+    },
+    "sendmail": {
+        "uid": 34
+    },
+    "mail": {
+        "gid": 34
+    },
+    "vmailman": {
+        "uid": 35,
+        "gid": 35
+    },
+    "news": {
+        "uid": 36,
+        "gid": 36
+    },
+    "kdm": {
+        "uid": 37,
+        "gid": 37
+    },
+    "fetchmail": {
+        "uid": 38
+    },
+    "mariadb": {
+        "uid": 40,
+        "gid": 40
+    },
+    "postgres": {
+        "uid": 41,
+        "gid": 41
+    },
+    "dovecot": {
+        "uid": 43,
+        "gid": 43
+    },
+    "ftp": {
+        "uid": 45,
+        "gid": 45
+    },
+    "proftpd": {
+        "uid": 46,
+        "gid": 46
+    },
+    "vsftpd": {
+        "uid": 47,
+        "gid": 47
+    },
+    "rsyncd": {
+        "uid": 48,
+        "gid": 48
+    },
+    "sshd": {
+        "uid": 50,
+        "gid": 50
+    },
+    "stunnel": {
+        "uid": 51,
+        "gid": 51
+    },
+    "dhcpcd": {
+        "uid": 52,
+        "gid": 52
+    },
+    "svn": {
+        "uid": 56,
+        "gid": 56
+    },
+    "svntest": {
+        "gid": 57
+    },
+    "git": {
+        "uid": 58,
+        "gid": 58
+    },
+    "games": {
+        "uid": 60,
+        "gid": 60
+    },
+    "kvm": {
+        "gid": 61
+    },
+    "wireshark": {
+        "gid": 62
+    },
+    "sddm": {
+        "uid": 64,
+        "gid": 64
+    },
+    "lightdm": {
+        "uid": 65,
+        "gid": 65
+    },
+    "scanner": {
+        "gid": 70
+    },
+    "colord": {
+        "uid": 71,
+        "gid": 71
+    },
+    "uuidd": {
+        "uid": 80,
+        "gid": 80
+    },
+    "ldap": {
+        "uid": 83,
+        "gid": 83
+    },
+    "avahi": {
+        "uid": 84,
+        "gid": 84
+    },
+    "avahi-autoipd": {
+        "uid": 85,
+        "gid": 85
+    },
+    "netdev": {
+        "gid": 86
+    },
+    "ntp": {
+        "uid": 87,
+        "gid": 87
+    },
+    "unbound": {
+        "uid": 88,
+        "gid": 88
+    },
+    "plugdev": {
+        "gid": 90
+    },
+    "wheel": {
+        "gid": 97
+    },
+    "anonymous": {
+        "uid": 98
+    },
+    "systemd-journal": {
+        "uid": 180,
+        "gid": 180
+    },
+    "systemd-journal-gateway": {
+        "uid": 181,
+        "gid": 181
+    },
+    "systemd-journal-remote": {
+        "uid": 182,
+        "gid": 182
+    },
+    "systemd-journal-upload": {
+        "uid": 183,
+        "gid": 183
+    },
+    "systemd-network": {
+        "uid": 184,
+        "gid": 184
+    },
+    "systemd-resolve": {
+        "uid": 185,
+        "gid": 185
+    },
+    "systemd-timesync": {
+        "uid": 186,
+        "gid": 186
+    },
+    "systemd-coredump": {
+        "uid": 187,
+        "gid": 187
+    },
+    "systemd-oom": {
+        "uid": 188,
+        "gid": 188
+    },
+    "texlive": {
+        "uid": 450,
+        "gid": 450,
+        "group": "texlive",
+        "name": "TeXLive Administrator",
+        "homedir": "/opt/texlive/tladmin",
+        "shell": "/bin/bash",
+        "skel": true
+    },
+    "nobody": {
+        "uid": 65534
+    },
+    "nogroup": {
+        "gid": 65534
+    }
+}
