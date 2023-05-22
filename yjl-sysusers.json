@@ -234,7 +234,7 @@
         "uid": 450,
         "gid": 450,
         "group": "texlive",
-        "name": "TeXLive Administrator",
+        "comment": "TeXLive Administrator",
         "homedir": "/opt/texlive/tladmin",
         "shell": "/bin/bash",
         "skel": true
