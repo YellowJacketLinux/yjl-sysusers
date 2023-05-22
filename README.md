@@ -164,6 +164,9 @@ The JSON file itself does not care but since the utilities will validate
 a username before querying the JSON file, invalid usernames in the JSON
 file will never be used.
 
+For system users and groups, I am actually included to restrict it to
+lowercase alphanumeric strings no longer than 24 characters.
+
 #### User and Group ID Numbers
 
 Every object __MUST__ have a `uid` and/or `gid` property that points
@@ -179,20 +182,57 @@ that are typically found on GNU/Linux systems, with the exception of
 SystemD related users. When possible, non-SystemD system-related users
 should be kept below 100 when possible but that may not always be possible.
 
-In YJL, the range 180-199 is used for SystemD related users and groups.
+In YJL, the range 180--199 is used for SystemD related users and groups.
 
-In YJL, the range 200-299 is reserved for future special interest use.
+In YJL, the range 200--299 is reserved for future special interest use.
 
-In YJL, the range 300-399 is used for cases when the requested UID/GID
+In YJL, the range 300--399 is used for cases when the requested UID/GID
 is already in use on the system. Normally that will not happen, but
 there may be cases when a system administrator need to use a specific
 UID/GID for something else.
 
-The JSON file thus should not specify IDs in the 200-399 range.
+The JSON file thus should not specify IDs in the 200-399 range, however
+the 200--299 range *could* be used in the future for special interest
+needs.
 
-In YJL, the range 400-499 is reserved for YJL specific use cases, such
+In YJL, the range 400--499 is reserved for YJL specific use cases, such
 as UID/GID 450 for the TeXLive administrator.
 
-In YJL, the range 500-999 is for System Adminstrator to use for their
+In YJL, the range 500--999 is for System Adminstrator to use for their
 own non-human user needs. The JSON file thus should not specify IDs
 above 499 with the noted exception of `nobody` and `nogroup`.
+
+#### User Comment
+
+When the object has a `uid` it *should* also have a `comment` property
+that describes the purpose of the account although that is not strictly
+necessary.
+
+For system users, I am restricting the comments to 7-bit ASCII printable
+characters excluding the `\`, `#`, and `:` characters, and restricting
+it to 48 characters in length.
+
+#### Homedir
+
+When the object has a `uid` it *may* also have a `homedir` property.
+The property __MUST__ be a legal absolute file path starting with a
+`/` and __MUST NOT__ include white space. Best practice, each directory
+name should be lower case `[a-z]` and Linux FHS compliant for the purpose
+of the system user account.
+
+#### Shell
+
+When the object has a `homedir` it *may* also have a `shell` property,
+although in most cases it likely will not.
+
+If the shell is not in `/etc/shells` then `/bin/false` will be used.
+The entries `/bin/bash` and `/bin/sh` are *always* valid on GNU/Linux
+systems, so the JSON file is restricted to those values for the `shell`
+property.
+
+#### Skeleton Files
+
+When the object has a `shell` property it *may* alsi have a `skel`
+property. This is a boolean property. If present *and* it evaluates
+to `true`, then the home directory will be created and the contents
+of `/etc/skel` copied to it.

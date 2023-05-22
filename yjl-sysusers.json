@@ -4,7 +4,8 @@
         "gid": 0,
         "comment": "r00t",
         "homedir": "/root",
-        "shell": "/bin/bash"
+        "shell": "/bin/bash",
+        "skel": true
     },
     "bin": {
         "uid": 1,
