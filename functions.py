@@ -70,6 +70,8 @@ def homedir_check(checkme):
 # This function verifies login shell is valid
 def shell_check(checkme, syshells=False):
     myshells = ['/bin/bash', '/bin/sh']
+    if os.path.isfile("/sbin/nologin"):
+        myshells.append("/sbin/nologin")
     if syshells:
         with open('/etc/shells') as file:
             lines = [line.rstrip() for line in file]
