@@ -7,6 +7,12 @@ import string
 import unicodedata
 import re
 import json
+import grp
+import pwd
+
+# Dummy until gettext is used
+def _(fubar):
+    return fubar
 
 # For system user accounts, no uppercase and MUST begin with a letter
 #  or an underscore. Violation results in program failure.
@@ -38,10 +44,9 @@ def usercomment_check(checkme, onlyascii=True):
         return True
     return False
 
-# This function is clearly not finished, currently always returns the input
-#  implement via https://docs.python.org/3/library/gettext.html#class-based-api
+# if available, returns translation of the user comment
 def translate_comment(myinput):
-    translation = ""
+    translation = _(myinput)
     if usercomment_check(translation, False):
         return translation
     return myinput
@@ -83,4 +88,42 @@ def shell_check(checkme, syshells=False):
     if checkme in myshells:
         return True
     return False
+
+# This function will add the group
+def add_the_group(gpname, gid):
+    return gid
+
+# Returns a list of IDs to try
+def load_id_list(desired):
+    mylist = []
+    if desired != 65535:
+        mylist.append(desired)
+    for i in range(300,400):
+        mylist.append(i)
+    for i in range(500,1000):
+        mylist.append(i)
+    return mydict
+
+# Takes the group name and if provided, potential group ID.
+#  When it returns an ID, the group exists.
+def find_group_id(gpname, desired=65535):
+    try:
+        existing = grp.getgrnam(gpname)
+        return existing.gr_gid
+    except KeyError:
+        pass
+    idlist = load_id_list(desired)
+    for x in idlist:
+        try:
+            existing = grp.getgrgid(x)
+            pass
+        except KeyError:
+            try:
+                existing = pwd.getpwuid(x)
+                pass
+            except KeyError:
+                return add_the_group(gpname, x)
+    # Should never reach this point
+    # throw error
+    return desired
 
