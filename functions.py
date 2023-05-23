@@ -25,13 +25,13 @@ def userid_check(checkme):
     return False
 
 # A system user comment must be printable unicode w/o : or \ and not
-#  exceed 48 characters. Violations result in no user comment.
+#  exceed 60 characters. Violations result in no user comment.
 # In the JSON file, only ascii is allowed.
 def usercomment_check(checkme, onlyascii=True):
     if isinstance(checkme, str) and checkme.isprintable():
         if checkme.__contains__(":") or checkme.__contains__("\\"):
             return False
-        if (len(checkme) == 0) or (len(checkme) > 48):
+        if (len(checkme) == 0) or (len(checkme) > 60):
             return False
         if onlyascii:
             return checkme.isascii()

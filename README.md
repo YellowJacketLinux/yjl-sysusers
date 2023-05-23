@@ -34,6 +34,9 @@ between 300 and 399 inclusive, or the first available Group ID above
 499 in the highly unlikely event all Group IDs between 300 and 399 are
 already used, and then return the ID of the freshly created group.
 
+The utility will never create a Group using an ID for which there is
+already a user with the same ID even if the Group ID is not in use.
+
 
 yjl-sysuser
 -----------
@@ -122,7 +125,7 @@ minor modifications:
   that it does not share the same ID as the `sendmail` user. The
   `sendmail` Group has been defined with Group ID 34 to match the
   `sendmail` user. This user and and group may be removed in the
-  future, along with the `smmsp` user and group.
+  future, along with the `smmsp` user and group also used with sendmail.
 
 * The UID/GID combination of 40/40 has been changed from `mysql` to
   `mariadb` but *I might* revert that when I package MariaDB.
@@ -140,21 +143,26 @@ associated with `named` *probably* should be considered recyclable.
 If YJL ever has the need to package an authoritative name server, it
 would almost certainly be [NSD](https://www.nlnetlabs.nl/projects/nsd/about/)
 although I kind of doubt a hobbyist desktop distribution needs an
-authoritative naneserver.
+authoritative nameserver.
 
 [Sendmail](https://www.proofpoint.com/us/products/email-protection/open-source-email-solution)
 is another daemon likely to never be packaged for YJL, [Exim](https://www.exim.org/)
 or [Postfix](https://www.postfix.org/) are much more appropriate for
 hobbyist mail server needs (both also usually do well in Enterprise).
 
-### JSON Format
+
+The JSON Format
+---------------
 
 This describes the constraines of the JSON file.
 
-#### User and Group Names
+### User and Group Names
 
-Every object represents a user and/or group name and thus must be a
-valid Unix username as defined in __man 8 useradd__
+If we view the imported JSON as a Python list of objects, each object
+bears the name of a system user and/or group. I will refer to these
+as the ‘Name Object’.
+
+Valid GNU/Linux usernames are defined in __man 8 useradd__
 
     Usernames may contain only lower and upper case letters, digits,
     underscores, or dashes. They can end with a dollar sign. Dashes
@@ -166,83 +174,107 @@ valid Unix username as defined in __man 8 useradd__
 
     Usernames may only be up to 32 characters long.
 
+For *system* user/group names, these utilities are intentionally a bit
+more picky. Specifically, upper case letters are not allowed and the
+first letter must be a letter or an underscore, and a dot in the user
+or group name is not allowed. This is the python regex I am using:
+
+    pattern = re.compile("^[a-z_]([a-z0-9_-]{0,31}|[a-z0-9_-]{0,30}\$)$")
+
 The JSON file itself does not care but since the utilities will validate
 a username before querying the JSON file, invalid usernames in the JSON
-file will never be used.
+file used for a name object will not result in usable information.
 
-For system users and groups, I am actually included to restrict it to
-lowercase alphanumeric strings no longer than 24 characters.
+### User and Group ID Numbers
 
-#### User and Group ID Numbers
+Every name object __MUST__ have a `myid` property that has the value
+of a non-negative integer. With the noted exception of the `nobody`
+user and the `nogroup` name objects, the `myid` property __MUST__ be
+both unique and have a value below 1000.
 
-Every object __MUST__ have a `uid` and/or `gid` property that points
-to an appropriate non-negative integer value not used by another object.
-When an object has both, they must be defined to the same integer.
+The `nobody` and `nogroup` name objects in modern LSB compliant GNU/Linux
+distributions should both have a `myid` property of `65534` however it
+is worth noting that was not always the case, when I first started
+using GNU/Linux a value of `99` was used for them. Some Unix-like systems
+may still use `99` or a different value, there is no POSIX standard
+for it.
 
-For *most* system users, the `uid` and/or `gid` __MUST__ not exceed
-65534. However with the exception of user `nobody` and group `nogroup`
-the values in the JSON file really have no reason to ever exceed 499.
+The `myid` property *may* exceed a value of 499 but I *personally*
+consider that to be a bad practice.
 
-In YJL, the range 0--179 is used for most system-related users and groups
-that are typically found on GNU/Linux systems, with the exception of
-SystemD related users. When possible, non-SystemD system-related users
-should be kept below 100 when possible but that may not always be possible.
+A name object __MUST__ have either a boolean `usr` or `grp` property
+(or both) and at least one of them must be set to `true`.
 
-In YJL, the range 180--199 is used for SystemD related users and groups.
+When a name object has a `grp` property that is set to `true` and the
+group account does not already exist, the `yjl-sysuser` utility will
+create a group using the ID specified by the `myid` property if neither
+a group or user already are using that ID.
 
-In YJL, the range 200--299 is reserved for future special interest use.
+When a name object has a `usr` property that is set to `true` and the
+user account does not already exist, the `yjl-sysuser` utility will
+create an account using the ID specified by the `myid` property if that
+ID is available *unless* the group with same name was created with a
+different ID, in which case that ID will be used.
 
-In YJL, the range 300--399 is used for cases when the requested UID/GID
-is already in use on the system. Normally that will not happen, but
-there may be cases when a system administrator need to use a specific
-UID/GID for something else.
+When a name object has a `grp` property that is set to `false` and a
+string property `group` exists, then that group will be created (if
+it does not already exist) and be used as the primary group for the
+user.
 
-The JSON file thus should not specify IDs in the 200-399 range, however
-the 200--299 range *could* be used in the future for special interest
-needs.
+When a object has a `grp` property that is set to `false` and a string
+property `group` *does not exist*, then the group `nogroup` will be
+used as the primary group for the user.
 
-In YJL, the range 400--499 is reserved for YJL specific use cases, such
-as UID/GID 450 for the TeXLive administrator.
+### User Comment
 
-In YJL, the range 500--999 is for System Adminstrator to use for their
-own non-human user needs. The JSON file thus should not specify IDs
-above 499 with the noted exception of `nobody` and `nogroup`.
+When the object has a `usr` property set to `true` it *should* also have
+a `comment` property containing a string that describes the purpose of
+the account although that is not strictly necessary.
 
-#### User Comment
+For the JSON name object, I am restricting the comments to 7-bit ASCII
+printable characters excluding the `\` and `:` characters, and restricting
+it to 60 characters in length.
 
-When the object has a `uid` it *should* also have a `comment` property
-that describes the purpose of the account although that is not strictly
-necessary.
+The plan is to pass the string through GNU GetText so that when a
+translation to the system language and locale are available, the comment
+that ends up in the `/etc/passwd` file for the user is in the appropriate
+language for the system.
 
-For system users, I am restricting the comments to 7-bit ASCII printable
-characters excluding the `\`, `#`, and `:` characters, and restricting
-it to 48 characters in length.
+Internationalized account comments is something I personally have not
+yet seen any RPM do when creating a system user, I think it is a very
+nice touch---assuming I actually get the translation system working.
 
-#### Homedir
+### Homedir
 
-When the object has a `uid` it *may* also have a `homedir` property.
-The property __MUST__ be a legal absolute file path starting with a
-`/` and __MUST NOT__ include white space. Best practice, each directory
-name should be lower case `[a-z]` and Linux FHS compliant for the purpose
-of the system user account.
+When the object has a `usr` property set to `true`, it *may* also have a
+`homedir` property containing a string filesystem path to a home directory
+for the system user. The property __MUST__ be a legal absolute file path
+starting with a `/` and __MUST NOT__ include white space.
 
-#### Shell
+For system users, valid paths should only contain lower-case alpha-numeric
+characters plus `_` and `-` and should not end with a `/`.
 
-When the object has a `homedir` it *may* also have a `shell` property,
-although in most cases it likely will not.
+When a `homedir` property is not set, `/dev/null` is used.
 
-If the shell is not in `/etc/shells` then `/bin/false` will be used.
-The entries `/bin/bash` and `/bin/sh` are *always* valid on GNU/Linux
-systems, so the JSON file is restricted to those values for the `shell`
-property.
+### Shell
 
-#### Skeleton Files
+When the object has a `usr` property set to `true`, it *may* also have a
+`shell` property containing a string filesystem path to a login shell.
+There are three valid values: `/bin/bash`, `/bin/sh`, and `/sbin/nologin`.
 
-When the object has a `shell` property it *may* alsi have a `skel`
-property. This is a boolean property. If present *and* it evaluates
-to `true`, then the home directory will be created and the contents
-of `/etc/skel` copied to it.
+When the operating system does not have a `/sbin/nologin` command, then
+`/bin/false` will automatically be substituted.
 
+If a `shell` property is not set then `/bin/false` is used.
+
+### Skeleton Files
+
+When the object has a `homedir` property that is *not* `/dev/null` then
+it *may* also have a boolean `skel` property. If set to `true` and the
+user does not already exist, the contents of `/etc/skel` are copied
+into the home directory when the user is created.
+
+If the `skel` option does not exist, it is treated as if it is `false`.
 
 Validation Failures and Handling
 --------------------------------
