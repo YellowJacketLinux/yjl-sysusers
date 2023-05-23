@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# Copyright 2023 YellowJacket GNU/Linux. MIT license.
+#  See https://github.com/YellowJacketLinux/yjl-sysusers/blob/main/LICENSE
 
 import os
 import string
