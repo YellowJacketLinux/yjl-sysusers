@@ -118,6 +118,12 @@ minor modifications:
 * The Group ID 23 (formerly associated with `systemd-journal`) is now
   associated with the `plocate` group. Note there is no `plocate` user.
 
+* The `mail` Group has been moved to Group ID 30 (formerly unused) so
+  that it does not share the same ID as the `sendmail` user. The
+  `sendmail` Group has been defined with Group ID 34 to match the
+  `sendmail` user. This user and and group may be removed in the
+  future, along with the `smmsp` user and group.
+
 * The UID/GID combination of 40/40 has been changed from `mysql` to
   `mariadb` but *I might* revert that when I package MariaDB.
 
@@ -236,3 +242,126 @@ When the object has a `shell` property it *may* alsi have a `skel`
 property. This is a boolean property. If present *and* it evaluates
 to `true`, then the home directory will be created and the contents
 of `/etc/skel` copied to it.
+
+
+Validation Failures and Handling
+--------------------------------
+
+If the user running the `yjl-sysgroup` and `yjl-sysuser` does not
+have `root` privileges, the utilities will exit with a failure status.
+
+If the JSON file is malformed, both the `yjl-sysgroup` and `yjl-sysuser`
+utilities will exit with a failure status. That should never happen
+unless the JSON file is improperly modified after install.
+
+If a username or groupname passed as an argument does not validate,
+the `yjl-sysgroup` and `yjl-sysuser` utilities will exit with a failure
+status.
+
+If the `yjl-sysgroup` utility is used with a group name contained as an
+object in the JSON file which does not have a valid `gid` property, the
+`yjl-sysgroup` utility will fail with a failure status. If the JSON entry
+has a `gid` property that should never happen unless the JSON file is
+improperly modified after install.
+
+If the `gid` provided by the JSON file already has either a group or
+a user assigned to that ID, the `yjl-sysgroup` will treat the assigned
+ID as in use and select a group ID that is not already in use for either
+a group or a user.
+
+If the `groupadd` program called by the `yjl-sysgroup` utility should
+fail with a bad exit status, the `yjl-sysgroup` utility will fail with
+a bad exit status. That should never happen unless the operating system
+is broken.
+
+When `yjl-sysgroup` is successful, it will return a group ID and exit
+with a 0 status.
+
+If the `yjl-sysuser` utility is used with a user name contained as an
+object in the JSON file which does not have a valid `uid` property, the
+`yjl-sysuser` utility will fail with a failure status. If the JSON entry
+has a `uid` property that should never happen unless the JSON file is
+improperly modified after install.
+
+If the `yjl-sysuser` command calls the `yjl-sysgroup` command and it
+returns with a failure status, then the `yjl-sysuder` command will also
+return a failure status.
+
+If the `group` option is passed to the `yjl-sysuser` command and the
+group name does not validate, the `yjl-sysuser` command will ignore
+it.
+
+If the `yjl-sysuser` command retrieves a `group` from the JSON file
+that does not validate, the `yjl-sysuser` command will fail with a
+bad exit status. That should never happen unless the JSON file is
+improperly modified after install.
+
+If the `comment` option is passed to the `yjl-sysuser` command and the
+comment does not validate, the `yjl-sysuser` command will ignore it.
+
+If the `yjl-sysuser` command retrieves a `comment` from the JSON file
+that does not validate, the `yjl-sysuser` command will not fail but
+will ignore it. That should never happen unless the JSON file is
+improperly modified after install.
+
+If the `homedir` option is passed to the `yjl-sysuser` command and the
+directory does not validate, the `yjl-sysuser` command will ignore it.
+
+If the `yjl-sysuser` command retrieves a `homedir` from the JSON file
+that does not validate, the `yjl-sysuser` command will fail with a
+bad exit status. That should never happen unless the JSON file is
+improperly modified after install.
+
+If the `shell` option is passed to the `yjl-sysuser` command and the
+shell is not contained within `/etc/shell`, the `yjl-sysuser` command
+will ignore it.
+
+If the `yjl-sysuser` command retrieves a `shell` from the JSON file
+that is not `/bin/bash` or `/bin/sh`, then `/bin/false` will be used
+instead. That should never happen unless the JSON file is improperly
+modified after install.
+
+If the `skel` option is passed to the `yjl-sysuser` command and does
+not evaluate to `true` then it will be assigned a value of `false`.
+
+If the `yjl-sysuser` command retrieves a `skel` from the JSON file
+that does not evaluate to `true` then it will be assigned a value of
+false.
+
+If the `useradd` program called by the `yjl-sysuser` utility should
+fail with a bad exit status, the `yjl-sysuser` utility will fail with
+a bad exit status. That should never happen unless the operating system
+is broken.
+
+Example Usage in RPM
+--------------------
+
+For a package like `plocate` that only needs a group added, add the
+following conditional `Requires`:
+
+    %if 0%{?_yjl_sysgroup:1} == 1
+    Requires(pre): %{_yjl_sysgroup}
+    %endif
+
+Then for the scriptlet:
+
+    %pre
+    %if 0%{?_yjl_sysgroup:1} == 1
+    %{_yjl_sysgroup} plocate
+    %else
+    getent group plocate >/dev/null 2>&1 ||groupadd -r plocate
+    %endif
+
+When the RPM spec file is built on YJL systems, it will require the
+`/usr/sbin/yjl-sysgroup` utility and then use it in the pre scriptlet
+to create the group with the specified group ID, or an alternate in
+the unlikely case a group with the specified ID already exists.
+
+When the RPM spec file is built on another system, it will still create
+the needed group if it does not already exist, but the group ID will
+be selected based upon the `SYS_GID_MIN-SYS_GID_MAX` range as defined
+in `login.defs`.
+
+Thus, the spec file remains at least somewhat portable while still
+catering to YJL.
+
