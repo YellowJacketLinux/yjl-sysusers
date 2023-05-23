@@ -1,0 +1,3 @@
+# yjl-sysusers macros
+%_yjl_sysgroup %{_sbindir}/yjl-sysgroup
+%_yjl_sysuser  %{_sbindir}/yjl-sysuser
