@@ -28,9 +28,9 @@ allocated’, broken up into four sub-groups:
    Majority of common system users and groups excluding SystemD users.
 2. __180--199__  
    SystemD users and groups.
-3. __200--299__
+3. __200--299__  
    Special Interest Group integration.
-4. __400--499__
+4. __400--499__  
    YJL Specific users and groups that are less likely to be found on
    other GNU/Linux systems (like `texlive:texlive` at `450:450`)
 
