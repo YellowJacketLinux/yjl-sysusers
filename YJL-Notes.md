@@ -71,7 +71,7 @@ of the UID/GID in the `yjl-sysusers.json` file is in my opinion a
 reasonable thing to do.
 
 
-YJL Specific users and groups
+YJL Specific Users and Groups
 -----------------------------
 YJL itself will have users and groups that are not necessarily ‘generic’
 across GNU/Linux distributions.
