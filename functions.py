@@ -98,8 +98,8 @@ def homedir_check(checkme: str) -> bool:
 def shell_check(checkme: str, syshells=False) -> bool:
     """Validates the input can be used as a system user login shell."""
     myshells = ['/bin/bash', '/bin/sh']
-    if os.path.isfile("/sbin/nologin"):
-        myshells.append("/sbin/nologin")
+    if os.path.isfile('/sbin/nologin'):
+        myshells.append('/sbin/nologin') 
     if syshells:
         with open('/etc/shells') as file:
             lines = [line.rstrip() for line in file]
@@ -226,4 +226,60 @@ def determine_useradd_uid_from_json(username: str, sysusers: list) -> int:
     # Should never ever happen
     return emergencyreturn
 
+def add_the_user(username: str, sysusers: list) -> None:
+    gid = determine_useradd_gid_from_json(username, sysusers)
+    try:
+        existing = pwd.getpwnam(username)
+        return
+    except KeyError:
+        pass
+    uid = determine_useradd_uid_from_json(username, sysusers)
+    try:
+        nameobject = sysusers[username]
+        extrashells = nameobject.get('extrashells', False)
+        checkme = nameobject.get('comment', '')
+        if usercomment_check(checkme):
+            comment = translate_comment(checkme)
+        else:
+            comment = username + " " + _("system user account")
+        checkme = nameobject.get('homedir', '/dev/null')
+        if homedir_check(checkme):
+            homedir = checkme
+        else:
+            homedir = "/dev/null"
+        checkme = nameobject.get('shell', '/sbin/nologin')
+        if shell_check(checkme, extrashells):
+            shell = checkme
+        else:
+            shell = "/bin/false"
+        if homedir == "/dev/null":
+            skel = False
+        else:
+            testme = nameobject.get('skel', False)
+            if testme:
+                if os.path.exists(homedir):
+                    skel = False
+                else:
+                    skel = True
+            else:
+                skel = False
+    except KeyError:
+        comment = username + " " + _("system user account")
+        homedir = "/dev/null"
+        shell = "/bin/false"
+        skel = False
+    myPREcmd = "/sbin/useradd -g " + str(gid) + " -u " + str(uid) + " -c \"" + comment + "\" -d " + homedir + " -s " + shell
+    if skel:
+        mycmd = myPREcmd + " --create-home -r " + username
+    else:
+        mycmd = myPREcmd + " -r " + username
+    myuid = os.getuid()
+    if myuid == 0:
+        try:
+            subprocess.run([mycmd])
+        except:
+            sys.exit(_("Failed to create the specified user."))
+    else:
+        # this only happens in testing, __main__ checks
+        print(mycmd)
 
