@@ -171,3 +171,59 @@ def request_gid_from_json(gpname: str, sysusers: list[dict]) -> int:
     if nameobject.get('grp', False):
         return nameobject.get('myid', 65535)
     return 65535
+
+def request_gpname_from_json(username: str, sysusers: list) -> str:
+    """Given a user name, attempts to find the primary group for the user."""
+    try:
+        nameobject = sysusers[username]
+    except KeyError:
+        return username
+    if nameobject.get('grp', False):
+        return username
+    gpname = nameobject.get('group', 'nogroup')
+    if username_check(gpname):
+        return gpname
+    return "nogroup"
+
+def determine_useradd_gid_from_json(username: str, sysusers: list) -> int:
+    """Given a username, find the appropriate GID for useradd command."""
+    gpname = request_gpname_from_json(username, sysusers)
+    desired = request_gid_from_json(gpname, sysusers)
+    """ NOTE: If group does not exist, it will be created.
+            The *actual* GID will be returned which may
+            differ from the "desired" value.
+    """
+    return find_group_id(gpname, desired)
+
+def determine_useradd_uid_from_json(username: str, sysusers: list) -> int:
+    """Given a username, find the appropriate UID for useradd command."""
+    sameAsGroup = True
+    try:
+        nameobject = sysusers[username]
+        sameAsGroup = nameobject.get('grp', False)
+        if sameAsGroup:
+            desired = determine_useradd_gid_from_json(username, sysusers)
+        else:
+            desired = nameobject.get('myid', 65535)
+    except KeyError:
+        desired = determine_useradd_gid_from_json(username, sysusers)
+    emergencyreturn = desired
+    if sameAsGroup:
+        try:
+            existing = pwd.getpwuid(desired)
+            desired = 65535
+        except KeyError:
+            return desired
+    idlist = load_id_list(desired)
+    for x in idlist:
+        try:
+            existing = grp.getgrgid(x)
+        except KeyError:
+            try:
+                existing = pwd.getpwuid(x)
+            except KeyError:
+                return x
+    # Should never ever happen
+    return emergencyreturn
+
+
