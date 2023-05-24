@@ -11,12 +11,12 @@ import grp
 import pwd
 
 # Dummy until gettext is used
-def _(fubar):
+def _(fubar: str) -> str:
     return fubar
 
 # For system user accounts, no uppercase and MUST begin with a letter
 #  or an underscore. Violation results in program failure.
-def username_check(checkme):
+def username_check(checkme: str) -> bool:
     pattern = re.compile("^[a-z_]([a-z0-9_-]{0,31}|[a-z0-9_-]{0,30}\$)$")
     if isinstance(checkme, str):
         return pattern.match(checkme)
@@ -24,7 +24,7 @@ def username_check(checkme):
 
 # A system user/group id must be a non-negative integer below 1000 except
 #  for nobody/nogroup which are 65534. Violation result in program failure.
-def userid_check(checkme):
+def userid_check(checkme: str) -> bool:
     if isinstance(checkme, int) and (checkme >= 0):
         if (checkme < 1000) or (checkme == 65534):
             return True
@@ -33,7 +33,7 @@ def userid_check(checkme):
 # A system user comment must be printable unicode w/o : or \ and not
 #  exceed 60 characters. Violations result in no user comment.
 # In the JSON file, only ascii is allowed.
-def usercomment_check(checkme, onlyascii=True):
+def usercomment_check(checkme: str, onlyascii=True) -> bool:
     if isinstance(checkme, str) and checkme.isprintable():
         if checkme.__contains__(":") or checkme.__contains__("\\"):
             return False
@@ -45,7 +45,7 @@ def usercomment_check(checkme, onlyascii=True):
     return False
 
 # if available, returns translation of the user comment
-def translate_comment(myinput):
+def translate_comment(myinput: str) -> str:
     translation = _(myinput)
     if usercomment_check(translation, False):
         return translation
@@ -54,7 +54,7 @@ def translate_comment(myinput):
 # This function verifies a valid path starting with a / and only consisting of
 #  lower case alphanumeric, _, and - and not ending with a / or containing //
 # It does NOT verify the path exists.
-def path_check(checkme):
+def path_check(checkme: str) -> bool:
     pattern = re.compile("^[/][a-z0-9_/-]+$")
     doublecheck = re.compile("(.*[/]{2,}.*)|(.*[/]$)")
     if isinstance(checkme, str) and pattern.match(checkme):
@@ -65,7 +65,7 @@ def path_check(checkme):
 
 # If the specified home directory exists, it MUST be either /dev/null or a
 #  directory. If it does not exist, that is okay.
-def homedir_check(checkme):
+def homedir_check(checkme: str) -> bool:
     if checkme == "/dev/null":
         return True
     if path_check(checkme) is False:
@@ -75,7 +75,7 @@ def homedir_check(checkme):
     return True
 
 # This function verifies login shell is valid
-def shell_check(checkme, syshells=False):
+def shell_check(checkme: str, syshells=False) -> bool:
     myshells = ['/bin/bash', '/bin/sh']
     if os.path.isfile("/sbin/nologin"):
         myshells.append("/sbin/nologin")
@@ -89,12 +89,27 @@ def shell_check(checkme, syshells=False):
         return True
     return False
 
-# This function will add the group
-def add_the_group(gpname, gid):
-    return gid
+# This function will (hopefully) add the group
+def add_the_group(gpname: str, gid: int) -> int:
+    mycmd = "/sbin/groupadd " + "-f -g " + str(gid) + " -r " + gpname
+    myuid = os.getuid()
+    if myuid == 0:
+        try:
+            subprocess.run([mycmd])
+        except:
+            sys.exit(_("Failed to create the specified group."))
+    else:
+        # this only happens in testing, __main__ checks
+        print(mycmd)
+        return gid
+    try:
+        existing = grp.getgrnam(gpname)
+    except KeyError:
+        sys.exit(_("Failed to create the specified group."))
+    return existing.gr_gid
 
 # Returns a list of IDs to try
-def load_id_list(desired):
+def load_id_list(desired: int) -> list[int]:
     mylist = []
     if desired != 65535:
         mylist.append(desired)
@@ -106,7 +121,7 @@ def load_id_list(desired):
 
 # Takes the group name and if provided, potential group ID.
 #  When it returns an ID, the group exists.
-def find_group_id(gpname, desired=65535):
+def find_group_id(gpname: str, desired=65535) -> int:
     try:
         existing = grp.getgrnam(gpname)
         return existing.gr_gid
