@@ -1,14 +1,41 @@
 #!/usr/bin/env python3
+
+""" YJL System User and Group Setup 
+
+This program installs system (non-human) users and groups using parameters
+provided in '/var/lib/yjl-sysuers/yjl-sysuers.json', some of which can
+be over-ridden with valid run-time arguments to this script. As such, it
+needs to be run by the root user.
+
+Copyright (C) 2023 YellowJacket GNU/Linux.
+
+This program is released under terms of the MIT License.
+
+    SPDX-License-Identifier: MIT
+
+On GNU/Linux systems, there often is a copy of the license installed
+in /usr/share/licenses/yjl-sysusers/ but if not, try:
+
+    https://spdx.org/licenses/MIT.html
+
+This script is currently developed on github.
+
+    https://github.com/YellowJacketLinux/yjl-sysusers/
+
+"""
+
 # Copyright 2023 YellowJacket GNU/Linux. MIT license.
 #  See https://github.com/YellowJacketLinux/yjl-sysusers/blob/main/LICENSE
 
 import os
+import sys
 import string
 import unicodedata
 import re
 import json
 import grp
 import pwd
+from subprocess import run
 
 def _(fubar: str) -> str:
     """Dummy function until gettext is set up."""
