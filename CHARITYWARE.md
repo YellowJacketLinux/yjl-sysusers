@@ -3,11 +3,14 @@ CHARITYWARE
 
 This software is ‘Free Libre Open Source Software’ (FLOSS) even
 if you are a heartless individual who despises immigrants fleeing
-oppression in their homeland, but inspired by [Vim](https://www.vim.org/),
-it the request of the author of this software (Michael A. Peters, not
-YellowJacket GNU/Linux specifically) that if you can afford to do so,
-you make a donation to one or both of the following organizations that
-provide much needed help to undocumented immigrants within America.
+oppression in their homeland.
+
+That being said and inspired by [Vim](https://www.vim.org/) and their
+request to help orphans in Uganda, it the request of the author of this
+software (Michael A. Peters, not YellowJacket GNU/Linux specifically)
+that if you can afford to do so, you make a donation to one or both of
+the following organizations that provide much needed help to undocumented
+immigrants within America.
 
 For those who not within America, you can likely find organizations
 within your own country that are similar in nature.
