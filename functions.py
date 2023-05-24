@@ -140,7 +140,7 @@ def load_id_list(desired: int) -> list[int]:
         mylist.append(i)
     return mydict
 
-def find_group_id(gpname: str, desired=65535) -> int:
+def find_group_id(gpname: str, desired: int) -> int:
     """Returns the ID associated with input group name, creating group first if needed."""
     try:
         existing = grp.getgrnam(gpname)
@@ -158,7 +158,16 @@ def find_group_id(gpname: str, desired=65535) -> int:
                 pass
             except KeyError:
                 return add_the_group(gpname, x)
-    # Should never reach this point
-    # throw error
-    return desired
+    # Should never reach this point but if it does
+    #  try to create group anyway
+    return add_the_group(gpname, desired)
 
+def request_gid_from_json(gpname: str, sysusers: list[dict]) -> int:
+    """Given a group name, attempts to find the preferred Group ID."""
+    try:
+        nameobject = sysusers[gpname]
+    except KeyError:
+        return 65535
+    if nameobject.get('grp', False):
+        return nameobject.get('myid', 65535)
+    return 65535
