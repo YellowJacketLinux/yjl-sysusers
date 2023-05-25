@@ -61,7 +61,7 @@ def username_check(checkme: str) -> bool:
             return True
     return False
 
-def userid_check(checkme: str) -> bool:
+def userid_check(checkme: int) -> bool:
     """Validates input against YJL rules for system user/group ID."""
     if isinstance(checkme, int) and (checkme >= 0):
         if (checkme < 1000) or (checkme == 65534):
@@ -307,7 +307,7 @@ def validate_cfg() -> int:
             sys.exit(_("The user/group '") + username + _("' is an invald name."))
         nameobject = sysusers[username]
         myid = nameobject.get('myid', 65535)
-        if myid == 65535:
+        if userid_check(myid) is False:
             sys.exit(_("The user/group '") + username + _("' has a missing or invalid 'myid' definition."))
         if myid in usedlist:
             sys.exit(_("The user/group '") + username + _("' has a duplicate 'myid' definition."))
