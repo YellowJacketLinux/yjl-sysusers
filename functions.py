@@ -311,8 +311,53 @@ def just_do_it(username: str, sysusers: list) -> None:
     else:
         gid = determine_useradd_gid_from_json(username, sysusers)
 
+def validate_cfg() -> int:
+    """Validates the JSON configuration file and if successful, dumps contents to screen."""
+    usedlist = []
+    shells = ["/bin/bash", "/bin/sh"]
+    jsonfile = cfg()
+    try:
+        with open(jsonfile) as data_file:
+            sysusers = json.load(data_file)
+    except:
+        sys.exit(_("Could not load the JSON data file:") + " " + jsonfile)
+    keylist = list(sysusers.keys())
+    for username in keylist:
+        check = username_check(username)
+        if username_check(username) is False:
+            sys.exit(_("The user/group '") + username + _("' is an invald name."))
+        nameobject = sysusers[username]
+        myid = nameobject.get('myid', 65535)
+        if myid == 65535:
+            sys.exit(_("The user/group '") + username + _("' has a missing or invalid 'myid' definition."))
+        if myid in usedlist:
+            sys.exit(_("The user/group '") + username + _("' has a duplicate 'myid' definition."))
+        else:
+            if myid != 65534:
+                usedlist.append(myid)
+        usr = nameobject.get('usr', False)
+        grp = nameobject.get('grp', False)
+        if usr is False:
+            if grp is False:
+                sys.exit(_("The user/group '") + username + _("' must have at least one of 'usr' or 'grp' set to 'true'."))
+        comment = nameobject.get('comment', 'A Valid String')
+        if usercomment_check(comment) is False:
+            sys.exit(_("The user/group '") + username + _("' has an invalid 'comment' definition."))
+        homedir = nameobject.get('homedir', '/dev/null')
+        if homedir_check(homedir) is False:
+            sys.exit(_("The user/group '") + username + _("' has an invalid 'homedir' definition."))
+        shell = nameobject.get('shell', '/bin/bash')
+        if shell not in shells:
+            sys.exit(_("The user/group '") + username + _("' has an invalid 'shell' definition."))
+    myjson = json.dumps(sysusers)
+    print(myjson)
+    return 0
+
 def main(args) -> int:
     """Does some things. Not finished."""
+    if args.name == "000":
+        validate_cfg()
+        return 0
     myuid = os.getuid()
     if myuid != 0:
         sys.exit(_("Sorry, you must be root to run me."))
