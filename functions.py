@@ -38,7 +38,7 @@ import argparse
 def _(fubar):
     return fubar
 
-parser = argparse.ArgumentParser(description='Add system users and groups.')
+parser = argparse.ArgumentParser(description='Add system users and groups. See: man 1 yjl-sysusers')
 parser.add_argument("-c", "--comment", type=str, help=_("Specify the user comment passwd field."))
 parser.add_argument("-d", "--home", type=str, help=_("Specify the user home directory."))
 parser.add_argument("-s", "--shell", type=str, help=_("Specify the user login shell."))
