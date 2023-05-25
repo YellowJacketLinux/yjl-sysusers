@@ -1,11 +1,10 @@
 TODO
 ====
 
-Right now it mostly works except it does not work.
+Right now it mostly works.
 
-To actually add the group and user, `subprocess.run()` is used. It
-is not however *used correctly* so it does not work. I have to learn
-how to properly use subprocess. All other things seem to work.
+When useradd is asked to create a home directory, that fails. I
+know why and can fix it.
 
 It needs to be integrated with gettext for string i18n string
 translation.

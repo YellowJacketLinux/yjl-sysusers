@@ -70,7 +70,8 @@ is normally located in the directory /var/lib/yjl-sysusers.
 
 # BUGS
 
-Well, at present it does not actually work, but that is a minor detail.
+At present it fails to create home directory when parent directory
+does not yet exist.
 
 # COPYRIGHT
 Copyright (c) 2023 YellowJacket GNU/Linux. License MIT
