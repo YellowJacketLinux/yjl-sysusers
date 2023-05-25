@@ -31,7 +31,7 @@ import re
 import json
 import grp
 import pwd
-from subprocess import run
+import subprocess
 import argparse
 
 # Dummy until gettext is used
@@ -132,7 +132,7 @@ def add_the_group(gpname: str, gid: int) -> int:
     myuid = os.getuid()
     if myuid == 0:
         try:
-            subprocess.run([mycmd])
+            subprocess.call(["groupadd", "-f", "-g", str(gid), "-r", gpname])
         except:
             sys.exit(_("Failed to create the specified group."))
     else:
@@ -238,6 +238,7 @@ def add_the_user(username: str, sysusers: dict[dict]) -> None:
     except KeyError:
         pass
     uid = determine_useradd_uid_from_json(username, sysusers)
+    spclist = ["useradd", "-g", str(gid), "-u", str(uid)]
     nameobject = sysusers[username]
     extrashells = nameobject.get('extrashells', False)
     checkme = nameobject.get('comment', '')
@@ -245,16 +246,22 @@ def add_the_user(username: str, sysusers: dict[dict]) -> None:
         comment = translate_comment(checkme)
     else:
         comment = username + " " + _("system user account")
+    spclist.append("-c")
+    spclist.append(comment)
     checkme = nameobject.get('homedir', '/dev/null')
     if homedir_check(checkme):
         homedir = checkme
     else:
         homedir = "/dev/null"
+    spclist.append("-d")
+    spclist.append(homedir)
     checkme = nameobject.get('shell', '/sbin/nologin')
     if shell_check(checkme, extrashells):
         shell = checkme
     else:
         shell = "/bin/false"
+    spclist.append("-s")
+    spclist.append(shell)
     if homedir == "/dev/null":
         skel = False
     else:
@@ -269,12 +276,15 @@ def add_the_user(username: str, sysusers: dict[dict]) -> None:
     myPREcmd = "/sbin/useradd -g " + str(gid) + " -u " + str(uid) + " -c \"" + comment + "\" -d " + homedir + " -s " + shell
     if skel:
         mycmd = myPREcmd + " --create-home -r " + username
+        spclist.append("--create-home")
     else:
         mycmd = myPREcmd + " -r " + username
+    spclist.append("-r")
+    spclist.append(username)
     myuid = os.getuid()
     if myuid == 0:
         try:
-            subprocess.run([mycmd])
+            subprocess.call(spclist)
         except:
             sys.exit(_("Failed to create the specified user."))
     else:
