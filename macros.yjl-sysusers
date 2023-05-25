@@ -1,3 +1,2 @@
-# yjl-sysusers macros
-%_yjl_sysgroup %{_sbindir}/yjl-sysgroup
+# macro for use in RPM
 %_yjl_sysuser  %{_sbindir}/yjl-sysuser
