@@ -181,20 +181,14 @@ def find_group_id(gpname: str, desired: int) -> int:
 
 def request_gid_from_json(gpname: str, sysusers: list[dict]) -> int:
     """Given a group name, attempts to find the preferred Group ID."""
-    try:
-        nameobject = sysusers[gpname]
-    except KeyError:
-        return 65535
+    nameobject = sysusers[gpname]
     if nameobject.get('grp', False):
         return nameobject.get('myid', 65535)
     return 65535
 
 def request_gpname_from_json(username: str, sysusers: list) -> str:
     """Given a user name, attempts to find the primary group for the user."""
-    try:
-        nameobject = sysusers[username]
-    except KeyError:
-        return username
+    nameobject = sysusers[username]
     if nameobject.get('grp', False):
         return username
     gpname = nameobject.get('group', 'nogroup')
@@ -215,16 +209,12 @@ def determine_useradd_gid_from_json(username: str, sysusers: list) -> int:
 def determine_useradd_uid_from_json(username: str, sysusers: list) -> int:
     """Given a username, find the appropriate UID for useradd command."""
     sameAsGroup = True
-    try:
-        nameobject = sysusers[username]
-        sameAsGroup = nameobject.get('grp', False)
-        if sameAsGroup:
-            desired = determine_useradd_gid_from_json(username, sysusers)
-        else:
-            desired = nameobject.get('myid', 65535)
-    except KeyError:
+    nameobject = sysusers[username]
+    sameAsGroup = nameobject.get('grp', False)
+    if sameAsGroup:
         desired = determine_useradd_gid_from_json(username, sysusers)
-    emergencyreturn = desired
+    else:
+        desired = nameobject.get('myid', 65535)
     if sameAsGroup:
         try:
             existing = pwd.getpwuid(desired)
@@ -241,7 +231,7 @@ def determine_useradd_uid_from_json(username: str, sysusers: list) -> int:
             except KeyError:
                 return x
     # Should never ever happen
-    return emergencyreturn
+    sys.exit(_("There do not seem to be any available User IDs left for a system user."))
 
 def add_the_user(username: str, sysusers: list) -> None:
     gid = determine_useradd_gid_from_json(username, sysusers)
@@ -251,40 +241,34 @@ def add_the_user(username: str, sysusers: list) -> None:
     except KeyError:
         pass
     uid = determine_useradd_uid_from_json(username, sysusers)
-    try:
-        nameobject = sysusers[username]
-        extrashells = nameobject.get('extrashells', False)
-        checkme = nameobject.get('comment', '')
-        if usercomment_check(checkme):
-            comment = translate_comment(checkme)
-        else:
-            comment = username + " " + _("system user account")
-        checkme = nameobject.get('homedir', '/dev/null')
-        if homedir_check(checkme):
-            homedir = checkme
-        else:
-            homedir = "/dev/null"
-        checkme = nameobject.get('shell', '/sbin/nologin')
-        if shell_check(checkme, extrashells):
-            shell = checkme
-        else:
-            shell = "/bin/false"
-        if homedir == "/dev/null":
-            skel = False
-        else:
-            testme = nameobject.get('skel', False)
-            if testme:
-                if os.path.exists(homedir):
-                    skel = False
-                else:
-                    skel = True
-            else:
-                skel = False
-    except KeyError:
+    nameobject = sysusers[username]
+    extrashells = nameobject.get('extrashells', False)
+    checkme = nameobject.get('comment', '')
+    if usercomment_check(checkme):
+        comment = translate_comment(checkme)
+    else:
         comment = username + " " + _("system user account")
+    checkme = nameobject.get('homedir', '/dev/null')
+    if homedir_check(checkme):
+        homedir = checkme
+    else:
         homedir = "/dev/null"
+    checkme = nameobject.get('shell', '/sbin/nologin')
+    if shell_check(checkme, extrashells):
+        shell = checkme
+    else:
         shell = "/bin/false"
+    if homedir == "/dev/null":
         skel = False
+    else:
+        testme = nameobject.get('skel', False)
+        if testme:
+            if os.path.exists(homedir):
+                skel = False
+            else:
+                skel = True
+        else:
+            skel = False
     myPREcmd = "/sbin/useradd -g " + str(gid) + " -u " + str(uid) + " -c \"" + comment + "\" -d " + homedir + " -s " + shell
     if skel:
         mycmd = myPREcmd + " --create-home -r " + username
@@ -302,11 +286,8 @@ def add_the_user(username: str, sysusers: list) -> None:
 
 def just_do_it(username: str, sysusers: list) -> None:
     """Called by __main__ to creates the user/group account as needed."""
-    try:
-        nameobject = sysusers[username]
-        createuser = nameobject.get('usr', False)
-    except KeyError:
-        createuser = True
+    nameobject = sysusers[username]
+    createuser = nameobject.get('usr', False)
     if createuser:
         add_the_user(username, sysusers)
     else:
@@ -403,3 +384,5 @@ def main(args) -> int:
 
 if __name__ == '__main__':
     sys.exit(main(parser.parse_args()))
+
+# EOF
