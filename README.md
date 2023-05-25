@@ -1,107 +1,40 @@
 yjl-sysusers
 ============
 
-At present this is vaporware.
+__PARTS OF THIS README NEED TO BE FIXED__
 
-This project will (likely) include two utilities, primarily intended
-to be used in RPM scriptlets (largely the `%pre` scriptlets).
+At present this is works except for the minor detail that it does not
+*actually* work, see [TODO](TODO.md) for details.
+
+This project includes a single utility and a JSON file. In the git
+source, that utility is simply called `functions.py` but it gets
+installed as `/usr/sbin/yjl-sysusers.py` with a single-line change
+to specify the location on the filesystem of the JSON file.
+
+I know the `.isascii()` function requires Python 3.8+ and I *believe*
+some of the type hints require Python 3.9+.
+
+I am developing this using Python 3.11.3 but I think it should work
+in Python 3.9+ without issue.
 
 The purpose is to provide an easy way to provide consistent user ID
-and group ID numbers for system users (as opposed to human login users).
+and group ID numbers for system users (as opposed to human login users)
+while also being able to on-the-fly use dynamic IDs if the static IDs
+have already been used for something else.
 
+My use case is for RPM `%pre` scriptlets to ensure that the appropriate
+users and groups an RPM package needs exist when the package installs.
 
-yjl-sysgroup
-------------
+If the necessary parameters are described in the JSON file, the only
+argument the script needs is the name of the user (or group) account
+to create. If the necessary parameters are *not* described in the JSON
+file or if the packager wants different parameters, every parameter
+can be defined as an argument to the script *except* for the UID/GID
+to request, that is only definable in the JSON file.
 
-This will be a utility for adding a system `group` and will take a
-single argument: the name of the group being added as a system group.
-
-If the group already exists, `yjl-sysgroup` will simply return the ID
-of the existing group.
-
-If the group *does not* already exist, the utility will check with the
-`yjl-sysusers.json` file to determine if there is a preferred Group ID
-for the specified group name.
-
-When there is a preferred Group ID, the utility will check to see if
-the specified Group ID is already in use. When it is not already in
-use, the utility will create the group and return the ID of the freshly
-created group.
-
-When there *is not* a preferred Group ID or if the preferred Group ID
-is *already in use*, the utility will use the first available Group ID
-between 300 and 399 inclusive, or the first available Group ID above
-499 in the highly unlikely event all Group IDs between 300 and 399 are
-already used, and then return the ID of the freshly created group.
-
-The utility will never create a Group using an ID for which there is
-already a user with the same ID even if the Group ID is not in use.
-
-
-yjl-sysuser
------------
-
-This will be a utility for adding a system `user` and will take a single
-arguement plus options to override defaults. The single argument will
-be the username of the system user to add.
-
-If the user already exists, `yjl-sysuser` will simply return the ID of
-the existing user.
-
-If the user *does not* already exist, the utility will check with the
-`yjl-sysusers.json` file to determine if there is a preferred User ID
-for the user, and what group the user should belong to.
-
-If the `group` was specified as an option, that group *always* takes
-precedence. Otherwise, if a group name is specified in the `yjl-sysusers.json`
-file, that is used as the group name. Others, if the `yjl-sysusers.json`
-specifies both a `uid` and a `gid` that are identical, then the requested
-username is used as the default group name. Otherwide, the group `nogroup`
-will be used.
-
-The `yjl-sysgroup` utility is used with the determined group name to
-retrieve the associated Group ID (creating the group if necessary).
-
-If the `yjl-sysusers.json` has a preferred User ID that is not already
-in use, that is the User ID that will be used in combination with the
-Group ID.
-
-If the User ID is not specified in the `yjl-sysusers.json` file, then
-the first available user ID between 300 and 399 inclusive will be used,
-or the first available User ID above 499 in the highly unlikely event
-all User IDs between 300 and 399 are already used.
-
-If the `comment` was specified as an option, that comment takes precedence.
-Otherwise if a default `comment` is specified in the `yjl-sysusers.json`
-file, that comment is used. Otherwise no comment is used.
-
-If the `homedir` was specified as an option, that directory is used
-as the `home` directory for the user. Otherwise if a `home` directory
-is specified in the `yjl-sysusers.json` file, that will be used as the
-home directory. Otherwise `/dev/null` is used as the home directory.
-
-If `/dev/null` is the home directory, then `/bin/false` will be the
-login shell. On the other hand if an actual directory is used used
-as the home directory and a *valid* `shell` was specified as an option,
-that shell is used as the default command shell. If a *valid* `shell`
-was not specified but a default exists in the `yjl-sysusers.json` file,
-that will be used as the defaut shell (of course verifying it is a
-valid shell as well). When there is no valid shell specified, then
-`/bin/false` is used.
-
-When a valid shell is specified and the boolean option `skel` is set
-to `true` then the `/etc/skel` files will be copied into the home
-directory. When the boolean option `skel` is not specified but the
-`yjl-sysusers.json` file specifies it for that user and it is set
-to `true` then `/etc/skel` files will be copied into the home directory.
-
-Once the user is created, `yjl-sysuser` will return the ID of the
-created user.
-
-Adding a system user to groups other than the primary group for that
-user is *not directly supported*. To accomplish that task should it
-actually be necessary, use the `yjl-sysgroup` utility first to ensure
-the group exists and then use `usermod` command.
+Note the script still works to create users and groups not defined in
+the JSON file, it just uses appropriate dynamic IDs outside the range
+reserved for static IDs.
 
 
 yjl-sysusers.json
@@ -371,21 +304,22 @@ Example Usage in RPM
 For a package like `plocate` that only needs a group added, add the
 following conditional `Requires`:
 
-    %if 0%{?_yjl_sysgroup:1} == 1
-    Requires(pre): %{_yjl_sysgroup}
+    %if 0%{?_yjl_sysusers:1} == 1
+    Requires(pre): %{_yjl_sysusers}
     %endif
 
 Then for the scriptlet:
 
     %pre
-    %if 0%{?_yjl_sysgroup:1} == 1
-    %{_yjl_sysgroup} plocate
+    %if 0%{?_yjl_sysusers:1} == 1
+    %{_yjl_sysusers} plocate
     %else
     getent group plocate >/dev/null 2>&1 ||groupadd -r plocate
     %endif
 
-When the RPM spec file is built on YJL systems, it will require the
-`/usr/sbin/yjl-sysgroup` utility and then use it in the pre scriptlet
+When the RPM spec file is built on a system that has `yjl-sysusers`
+as part of the RPM build environment, the package will require the
+`/usr/sbin/yjl-sysusers` utility and then use it in the pre scriptlet
 to create the group with the specified group ID, or an alternate in
 the unlikely case a group with the specified ID already exists.
 
@@ -394,6 +328,17 @@ the needed group if it does not already exist, but the group ID will
 be selected based upon the `SYS_GID_MIN-SYS_GID_MAX` range as defined
 in `login.defs`.
 
-Thus, the spec file remains at least somewhat portable while still
-catering to YJL.
+Thus, the spec file remains at least somewhat portable.
+
+In the event the package installs on a system that does not have
+`plocate` defined in the JSON file, it will still create the group---
+but will also create a user as well as that is the default when the
+JSON file does not tell it what to do for a user. That actually does
+not hurt anything but you can avoid it by adding the `-p False` switch
+to the `%{_yjl_sysusers}` command.
+
+If you are creating RPM spec files for a distribution, you probably do
+not need to mess with switches as long as JSON file is correct but if
+you are creating generic RPM spec files, you probably do want to use
+the switches to manually specify the needed parameters for user creation.
 
