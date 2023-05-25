@@ -108,11 +108,14 @@ def shell_check(checkme: str, syshells=False) -> bool:
     if os.path.isfile('/sbin/nologin'):
         myshells.append('/sbin/nologin') 
     if syshells:
-        with open('/etc/shells') as file:
-            lines = [line.rstrip() for line in file]
-            for entry in lines:
-                if path_check(entry) and os.path.isfile(entry):
-                    myshells.append(entry)
+        try:
+            with open('/etc/shells') as file:
+                lines = [line.rstrip() for line in file]
+                for entry in lines:
+                    if path_check(entry) and os.path.isfile(entry):
+                        myshells.append(entry)
+        except:
+            pass
     if checkme in myshells:
         return True
     return False
@@ -158,11 +161,9 @@ def find_group_id(gpname: str, desired: int) -> int:
     for x in idlist:
         try:
             existing = grp.getgrgid(x)
-            pass
         except KeyError:
             try:
                 existing = pwd.getpwuid(x)
-                pass
             except KeyError:
                 return add_the_group(gpname, x)
     # Should never reach this point but if it does
@@ -323,21 +324,17 @@ def main(args) -> int:
         sysusers[username] = {'myid': 65535, 'usr': True, 'grp': True}
     # modify sysusers[username] based upon arguements
     if args.comment is not None:
-        checkme = args.comment
-        if usercomment_check(checkme):
+        if usercomment_check(args.comment):
             sysusers[username].update({"comment": args.comment})
     if args.home is not None:
-        checkme = args.home
-        if homedir_check(checkme):
+        if homedir_check(args.home):
             sysusers[username].update({"homedir": args.home})
     if args.shell is not None:
-        checkme = args.shell
-        if shell_check(checkme, True):
+        if shell_check(args.shell, True):
             sysusers[username].update({"shell": args.shell})
             sysusers[username].update({"extrashells": True})
     if args.group is not None:
-        checkme = args.group
-        if username_check(checkme):
+        if username_check(args.group):
             if username == args.group:
                 sysusers[username].pop("group")
                 sysusers[username].update({"grp": True})
