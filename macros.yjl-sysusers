@@ -1,2 +1,2 @@
 # macro for use in RPM
-%_yjl_sysuser  %{_sbindir}/yjl-sysuser
+%_yjl_sysusers  %{_sbindir}/yjl-sysusers
