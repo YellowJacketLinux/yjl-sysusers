@@ -23,10 +23,6 @@ This script is currently developed on github.
     https://github.com/YellowJacketLinux/yjl-sysusers/
 
 """
-
-# Copyright 2023 YellowJacket GNU/Linux. MIT license.
-#  See https://github.com/YellowJacketLinux/yjl-sysusers/blob/main/LICENSE
-
 import os
 import sys
 import string
@@ -140,7 +136,7 @@ def add_the_group(gpname: str, gid: int) -> int:
         except:
             sys.exit(_("Failed to create the specified group."))
     else:
-        # this only happens in testing, __main__ checks
+        # this only happens in testing, main() checks for root
         print(mycmd)
         return gid
     try:
@@ -180,14 +176,14 @@ def find_group_id(gpname: str, desired: int) -> int:
     #  try to create group anyway
     return add_the_group(gpname, desired)
 
-def request_gid_from_json(gpname: str, sysusers: list[dict]) -> int:
+def request_gid_from_json(gpname: str, sysusers: dict[dict]) -> int:
     """Given a group name, attempts to find the preferred Group ID."""
     nameobject = sysusers[gpname]
     if nameobject.get('grp', False):
         return nameobject.get('myid', 65535)
     return 65535
 
-def request_gpname_from_json(username: str, sysusers: list) -> str:
+def request_gpname_from_json(username: str, sysusers: dict[dict]) -> str:
     """Given a user name, attempts to find the primary group for the user."""
     nameobject = sysusers[username]
     if nameobject.get('grp', False):
@@ -197,7 +193,7 @@ def request_gpname_from_json(username: str, sysusers: list) -> str:
         return gpname
     return "nogroup"
 
-def determine_useradd_gid_from_json(username: str, sysusers: list) -> int:
+def determine_useradd_gid_from_json(username: str, sysusers: dict[dict]) -> int:
     """Given a username, find the appropriate GID for useradd command."""
     gpname = request_gpname_from_json(username, sysusers)
     desired = request_gid_from_json(gpname, sysusers)
@@ -207,7 +203,7 @@ def determine_useradd_gid_from_json(username: str, sysusers: list) -> int:
     """
     return find_group_id(gpname, desired)
 
-def determine_useradd_uid_from_json(username: str, sysusers: list) -> int:
+def determine_useradd_uid_from_json(username: str, sysusers: dict[dict]) -> int:
     """Given a username, find the appropriate UID for useradd command."""
     sameAsGroup = True
     nameobject = sysusers[username]
@@ -234,7 +230,7 @@ def determine_useradd_uid_from_json(username: str, sysusers: list) -> int:
     # Should never ever happen
     sys.exit(_("There do not seem to be any available User IDs left for a system user."))
 
-def add_the_user(username: str, sysusers: list) -> None:
+def add_the_user(username: str, sysusers: dict[dict]) -> None:
     gid = determine_useradd_gid_from_json(username, sysusers)
     try:
         existing = pwd.getpwnam(username)
@@ -282,11 +278,11 @@ def add_the_user(username: str, sysusers: list) -> None:
         except:
             sys.exit(_("Failed to create the specified user."))
     else:
-        # this only happens in testing, __main__ checks
+        # this only happens in testing, main() checks for root.
         print(mycmd)
 
-def just_do_it(username: str, sysusers: list) -> None:
-    """Called by __main__ to creates the user/group account as needed."""
+def just_do_it(username: str, sysusers: dict[dict]) -> None:
+    """Called by main() to creates the user/group account as needed."""
     nameobject = sysusers[username]
     createuser = nameobject.get('usr', False)
     if createuser:
