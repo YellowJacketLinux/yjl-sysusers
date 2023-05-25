@@ -154,7 +154,7 @@ def load_id_list(desired: int) -> list[int]:
         mylist.append(i)
     for i in range(500,1000):
         mylist.append(i)
-    return mydict
+    return mylist
 
 def find_group_id(gpname: str, desired: int) -> int:
     """Returns the ID associated with input group name, creating group first if needed."""
