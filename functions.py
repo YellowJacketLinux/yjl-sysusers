@@ -47,6 +47,7 @@ parser.add_argument("-c", "--comment", type=str, help=_("Specify the user commen
 parser.add_argument("-d", "--home", type=str, help=_("Specify the user home directory."))
 parser.add_argument("-s", "--shell", type=str, help=_("Specify the user login shell."))
 parser.add_argument("-g", "--group", type=str, help=_("Specify the default group NAME for the user."))
+parser.add_argument('name', type=str, help=_("User or Group name to add."))
 
 def cfg() -> str:
     """Sets the hard-coded location of the configuration file."""
