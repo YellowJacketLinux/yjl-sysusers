@@ -389,6 +389,15 @@
         "shell": "/bin/bash",
         "skel": true
     },
+    "tttexlive": {
+        "myid": 458,
+        "usr": true,
+        "grp": true,
+        "comment": "iiTeXLive Administrator",
+        "homedir": "/opt/iitexlive/tladmin",
+        "shell": "/bin/bash",
+        "skel": true
+    },
     "nobody": {
         "myid": 65534,
         "usr": true,

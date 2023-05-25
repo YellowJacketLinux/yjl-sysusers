@@ -36,10 +36,17 @@ import json
 import grp
 import pwd
 from subprocess import run
+import argparse
 
-def _(fubar: str) -> str:
-    """Dummy function until gettext is set up."""
+# Dummy until gettext is used
+def _(fubar):
     return fubar
+
+parser = argparse.ArgumentParser(description='Add system users and groups.')
+parser.add_argument("-c", "--comment", type=str, help=_("Specify the user comment passwd field."))
+parser.add_argument("-d", "--home", type=str, help=_("Specify the user home directory."))
+parser.add_argument("-s", "--shell", type=str, help=_("Specify the user login shell."))
+parser.add_argument("-g", "--group", type=str, help=_("Specify the default group NAME for the user."))
 
 def username_check(checkme: str) -> bool:
     """Validates input against YJL rules for system user/group names."""
@@ -283,3 +290,64 @@ def add_the_user(username: str, sysusers: list) -> None:
         # this only happens in testing, __main__ checks
         print(mycmd)
 
+def just_do_it(username: str, sysusers: list) -> None:
+    """Called by __main__ to creates the user/group account as needed."""
+    try:
+        nameobject = sysusers[username]
+        createuser = nameobject.get('usr', False)
+    except KeyError:
+        createuser = True
+    if createuser:
+        add_the_user(username, sysusers)
+    else:
+        gid = determine_useradd_gid_from_json(username, sysusers)
+
+def main(args) -> int:
+    """Does some things. Not finished."""
+    myuid = os.getuid()
+    if myuid != 0:
+        sys.exit(_("Sorry, you must be root to run me."))
+    if username_check(args.name):
+        username = args.name
+    else:
+        sys.exit(args.name + " " + _("is not valid for a system user/group name."))
+    try:
+        with open('yjl-sysusers.json') as data_file:
+            sysusers = json.load(data_file)
+    except:
+        sys.exit(_("Could not open the JSON data file."))
+    keylist = list(sysusers.keys())
+    if username in keylist:
+        pass
+    else:
+        sysusers[username] = {'myid': 65535, 'usr': True, 'grp': True}
+    # modify sysusers[username] based upon arguements
+    if args.comment is not None:
+        checkme = args.comment
+        if usercomment_check(checkme):
+            sysusers[username].update({"comment": args.comment})
+    if args.home is not None:
+        checkme = args.home
+        if homedir_check(checkme):
+            sysusers[username].update({"homedir": args.home})
+    if args.shell is not None:
+        checkme = args.shell
+        if shell_check(checkme, True):
+            sysusers[username].update({"shell": args.shell})
+            sysusers[username].update({"extrashells": True})
+    if args.group is not None:
+        checkme = args.group
+        if username_check(checkme):
+            if username == args.group:
+                sysusers[username].pop("group")
+                sysusers[username].update({"grp": True})
+            else:
+                sysusers[username].update({"group": args.group})
+                sysusers[username].update({"grp": False})
+    #
+    just_do_it(username, sysusers)
+    return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main(parser.parse_args()))
