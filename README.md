@@ -43,45 +43,11 @@ yjl-sysusers.json
 This JSON file contains all the information needed to create system
 users and groups for YellowJacket GNU/Linux.
 
-It is currently a work in progress.
+It is largely based upon the static system user information from
+LFS/BLFS 11.3 but there are some differences.
 
-It is based on the users and groups used by LFS/BLFS 11.3 with some
-minor modifications:
-
-* All of the various systemd users have been moved to start with a
-  UID/GID of 180, freeing up nine UID/GID combinations under 100.
-
-* The Group ID 23 (formerly associated with `systemd-journal`) is now
-  associated with the `plocate` group. Note there is no `plocate` user.
-
-* The `mail` Group has been moved to Group ID 30 (formerly unused) so
-  that it does not share the same ID as the `sendmail` user. The
-  `sendmail` Group has been defined with Group ID 34 to match the
-  `sendmail` user. This user and and group may be removed in the
-  future, along with the `smmsp` user and group also used with sendmail.
-
-* The UID/GID combination of 40/40 has been changed from `mysql` to
-  `mariadb` but *I might* revert that when I package MariaDB.
-
-Initially I was going to try to keep in sync with LFS/BLFS but I do
-not think that is of any particular benefit, so I probably will use
-their numbering system initially but likely further diverge as time
-goes by.
-
-With respect to YJL, there is some already likely some technical debt
-within the assigned numbers. For example, YJL will almost certainly
-*never* package [BIND](https://www.isc.org/bind/) so the UID/GID
-associated with `named` *probably* should be considered recyclable.
-
-If YJL ever has the need to package an authoritative name server, it
-would almost certainly be [NSD](https://www.nlnetlabs.nl/projects/nsd/about/)
-although I kind of doubt a hobbyist desktop distribution needs an
-authoritative nameserver.
-
-[Sendmail](https://www.proofpoint.com/us/products/email-protection/open-source-email-solution)
-is another daemon likely to never be packaged for YJL, [Exim](https://www.exim.org/)
-or [Postfix](https://www.postfix.org/) are much more appropriate for
-hobbyist mail server needs (both also usually do well in Enterprise).
+It is currently a work in progress, some of the JSON entries are not
+complete and others are planned but missing.
 
 
 The JSON Format
@@ -91,9 +57,9 @@ This describes the constraines of the JSON file.
 
 ### User and Group Names
 
-If we view the imported JSON as a Python list of objects, each object
-bears the name of a system user and/or group. I will refer to these
-as the ‘Name Object’.
+If we view the imported JSON as a Python dictionary of JSON objects,
+each object bears the name of a system user and/or group. I will refer
+to these as the ‘Name Object’.
 
 Valid GNU/Linux usernames are defined in __man 8 useradd__
 
@@ -102,8 +68,7 @@ Valid GNU/Linux usernames are defined in __man 8 useradd__
     are not allowed at the beginning of the username. Fully numeric
     usernames and usernames . or .. are also disallowed. It is not
     recommended to use usernames beginning with . character as their
-    home directories will be hidden in the ls output. In regular
-    expression terms: [a-zA-Z0-9_.][a-zA-Z0-9_.-]*[$]?
+    home directories will be hidden in the ls output.
 
     Usernames may only be up to 32 characters long.
 
@@ -113,10 +78,6 @@ first letter must be a letter or an underscore, and a dot in the user
 or group name is not allowed. This is the python regex I am using:
 
     pattern = re.compile("^[a-z_]([a-z0-9_-]{0,31}|[a-z0-9_-]{0,30}\$)$")
-
-The JSON file itself does not care but since the utilities will validate
-a username before querying the JSON file, invalid usernames in the JSON
-file used for a name object will not result in usable information.
 
 ### User and Group ID Numbers
 
@@ -139,12 +100,12 @@ A name object __MUST__ have either a boolean `usr` or `grp` property
 (or both) and at least one of them must be set to `true`.
 
 When a name object has a `grp` property that is set to `true` and the
-group account does not already exist, the `yjl-sysuser` utility will
+group account does not already exist, the `yjl-sysusers` utility will
 create a group using the ID specified by the `myid` property if neither
 a group or user already are using that ID.
 
 When a name object has a `usr` property that is set to `true` and the
-user account does not already exist, the `yjl-sysuser` utility will
+user account does not already exist, the `yjl-sysusers` utility will
 create an account using the ID specified by the `myid` property if that
 ID is available *unless* the group with same name was created with a
 different ID, in which case that ID will be used.
@@ -193,21 +154,21 @@ When a `homedir` property is not set, `/dev/null` is used.
 
 When the object has a `usr` property set to `true`, it *may* also have a
 `shell` property containing a string filesystem path to a login shell.
-There are three valid values: `/bin/bash`, `/bin/sh`, and `/sbin/nologin`.
+There are two valid values: `/bin/bash` and `/bin/sh`.
 
-When the operating system does not have a `/sbin/nologin` command, then
-`/bin/false` will automatically be substituted.
-
-If a `shell` property is not set then `/bin/false` is used.
+When there is not a `shell` property set, the `yjl-sysusers` utility
+will set the shell to `/sbin/nologin` if it is installed on the system
+and otherwise to `/bin/false`.
 
 ### Skeleton Files
 
 When the object has a `homedir` property that is *not* `/dev/null` then
 it *may* also have a boolean `skel` property. If set to `true` and the
-user does not already exist, the contents of `/etc/skel` are copied
-into the home directory when the user is created.
+home directory does not already exist, then `useradd` will be instructed
+to create the home directory. That *usually* results in the contents of
+`/etc/skel/` being copied into the home directory.
 
-If the `skel` option does not exist, it is treated as if it is `false`.
+If the `skel` property is not set, it is treated as if it is `false`.
 
 Validation Failures and Handling
 --------------------------------
