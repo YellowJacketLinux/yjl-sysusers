@@ -60,7 +60,8 @@ def username_check(checkme: str) -> bool:
     """Validates input against YJL rules for system user/group names."""
     pattern = re.compile("^[a-z_]([a-z0-9_-]{0,31}|[a-z0-9_-]{0,30}\$)$")
     if isinstance(checkme, str):
-        return pattern.match(checkme)
+        if pattern.match(checkme):
+            return True
     return False
 
 def userid_check(checkme: str) -> bool:

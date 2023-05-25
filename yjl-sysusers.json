@@ -18,16 +18,14 @@
         "myid": 6,
         "usr": true,
         "grp": true,
-        "comment": "Daemon User",
-        "shell": "/sbin/nologin"
+        "comment": "Daemon User"
     },
     "lp": {
         "myid": 9,
         "usr": true,
         "grp": true,
         "comment": "CUPS Print Server",
-        "homedir": "/var/spool/cups",
-        "shell": "/sbin/nologin"
+        "homedir": "/var/spool/cups"
     },
     "adm": {
         "myid": 16,
@@ -38,16 +36,14 @@
         "myid": 17,
         "usr": true,
         "grp": true,
-        "comment": "atd daemon",
-        "shell": "/sbin/nologin"
+        "comment": "atd daemon"
     },
     "messagebus": {
         "myid": 18,
         "usr": true,
         "grp": true,
         "comment": "D-Bus Message Daemon User",
-        "homedir": "/run/dbus",
-        "shell": "/sbin/nologin"
+        "homedir": "/run/dbus"
     },
     "lpadmin": {
         "myid": 19,
@@ -65,15 +61,13 @@
         "usr": true,
         "grp": true,
         "comment": "GNOME Display Manager",
-        "homedir": "/var/lib/gdm",
-        "shell": "/sbin/nologin"
+        "homedir": "/var/lib/gdm"
     },
     "fcron": {
         "myid": 22,
         "usr": true,
         "grp": true,
-        "comment": "FCron Daemon",
-        "shell": "/sbin/nologin"
+        "comment": "FCron Daemon"
     },
     "plocate": {
         "myid": 23,
@@ -85,8 +79,7 @@
         "usr": true,
         "grp": true,
         "comment": "Apache Daemon",
-        "homedir": "/srv/www",
-        "shell": "/sbin/nologin"
+        "homedir": "/srv/www"
     },
     "smmsp": {
         "myid": 26,
@@ -158,16 +151,14 @@
         "usr": true,
         "grp": true,
         "comment": "MariaDB Server",
-        "homedir": "/srv/mariadb",
-        "shell": "/sbin/nologin"
+        "homedir": "/srv/mariadb"
     },
     "postgres": {
         "myid": 41,
         "usr": true,
         "grp": true,
         "comment": "PostreSQL Server",
-        "homedir": "/srv/pgsql/data",
-        "shell": "/sbin/nologin"
+        "homedir": "/srv/pgsql/data"
     },
     "dovecot": {
         "myid": 42,
@@ -260,8 +251,7 @@
         "usr": true,
         "grp": true,
         "comment": "Lightdm Daemon",
-        "homedir": "/var/lib/lightdm",
-        "shell": "/sbin/nologin"
+        "homedir": "/var/lib/lightdm"
     },
     "scanner": {
         "myid": 70,
@@ -273,8 +263,7 @@
         "usr": true,
         "grp": true,
         "comment": "Color Daemon",
-        "homedir": "/var/lib/colord",
-        "shell": "/sbin/nologin"
+        "homedir": "/var/lib/colord"
     },
     "uuidd": {
         "myid": 80,
@@ -287,8 +276,7 @@
         "usr": true,
         "grp": true,
         "comment": "OpenLDAP Daemon",
-        "homedir": "/var/lib/openldap",
-        "shell": "/sbin/nologin"
+        "homedir": "/var/lib/openldap"
     },
     "avahi": {
         "myid": 84,
@@ -317,8 +305,7 @@
         "usr": true,
         "grp": true,
         "comment": "Unbound Caching DNS",
-        "homedir": "/var/lib/unbound",
-        "shell": "/sbin/nologin"
+        "homedir": "/var/lib/unbound"
     },
     "plugdev": {
         "myid": 90,
