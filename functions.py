@@ -48,6 +48,14 @@ parser.add_argument("-d", "--home", type=str, help=_("Specify the user home dire
 parser.add_argument("-s", "--shell", type=str, help=_("Specify the user login shell."))
 parser.add_argument("-g", "--group", type=str, help=_("Specify the default group NAME for the user."))
 
+def cfg() -> str:
+    """Sets the hard-coded location of the configuration file."""
+    jsonfile = 'yjl-sysusers.json'
+    cfgdir = ''
+    if len(cfgdir) == 0:
+        return jsonfile
+    return(cfgdir + '/' + jsonfile)
+
 def username_check(checkme: str) -> bool:
     """Validates input against YJL rules for system user/group names."""
     pattern = re.compile("^[a-z_]([a-z0-9_-]{0,31}|[a-z0-9_-]{0,30}\$)$")
@@ -312,11 +320,12 @@ def main(args) -> int:
         username = args.name
     else:
         sys.exit(args.name + " " + _("is not valid for a system user/group name."))
+    jsonfile = cfg()
     try:
-        with open('yjl-sysusers.json') as data_file:
+        with open(jsonfile) as data_file:
             sysusers = json.load(data_file)
     except:
-        sys.exit(_("Could not open the JSON data file."))
+       sys.exit(_("Could not load the JSON data file:") + " " + jsonfile)
     keylist = list(sysusers.keys())
     if username in keylist:
         pass
