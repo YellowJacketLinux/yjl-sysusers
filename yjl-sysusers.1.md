@@ -42,7 +42,19 @@ is normally located in the directory /var/lib/yjl-sysusers.
 **-g**, **--group** *GROUP*  
 : Define the primary group the user should belong to, if different
   from the login user name. If **GROUP** does not exist, it will be
-  created automatically.
+  created automatically. When *GROUP* is defined, a group will not
+  be created for **NAME**.
+
+**--useradd** *{True,False}*  
+: Define whether or not the user specified by **NAME** should be
+  created. If set to *False* then **--groupadd** must be set to
+  *True*.
+
+**--groupadd** *{True,False}*  
+: Define whether or not the group specified by **NAME** should be
+  created. Setting this to *False* will not prevent a group specified
+  by the **-g**, **--group** from being created. If set to *False*
+  then **--useradd** must be set to *True*.
 
 # EXAMPLES
 **yjl-sysusers** *somename*  
@@ -69,7 +81,8 @@ is normally located in the directory /var/lib/yjl-sysusers.
 : The program failed to create requested group and/or user.
 
 # BUGS
-Probably are some.
+Yes, I have seen Starship Troopers. Bugs can be very insideous and hard
+to get rid of, but I expect them to be random and light.
 
 # COPYRIGHT
 Copyright (c) 2023 YellowJacket GNU/Linux. License MIT

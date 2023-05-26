@@ -43,11 +43,11 @@ parser = argparse.ArgumentParser(description=_("Add system users and groups. See
 parser.add_argument("-c", "--comment", type=str, help=_("Specify the user comment passwd field."))
 parser.add_argument("-d", "--home", type=str, help=_("Specify the user home directory."))
 parser.add_argument("-s", "--shell", type=str, help=_("Specify the user login shell."))
-parser.add_argument("-g", "--group", type=str, help=_("Specify the default group NAME for the user."))
 parser.add_argument("--useradd", choices=('True','False'), help=_("Use False to disable user creation."))
 parser.add_argument("--groupadd", choices=('True','False'), help=_("Use False to disable group creation."))
+parser.add_argument("-g", "--group", type=str, help=_("Specify the default group NAME for the user."))
 parser.add_argument("--mkdir", choices=('True','False'), help=_("Use True to create home directory."))
-parser.add_argument('name', type=str, help=_("User or Group name to add."))
+parser.add_argument('account', type=str, help=_("User or Group name to add."))
 
 def cfg() -> str:
     """Sets the hard-coded location of the configuration file."""
@@ -360,16 +360,16 @@ def validate_cfg() -> int:
 
 def main(args) -> int:
     """Does some things. Not finished."""
-    if args.name == "000":
+    if args.account == "000":
         validate_cfg()
         return 0
     myuid = os.getuid()
     if myuid != 0:
         sys.exit(_("Sorry, you must be root to run me."))
-    if username_check(args.name):
-        username = args.name
+    if username_check(args.account):
+        username = args.account
     else:
-        sys.exit(args.name + " " + _("is not valid for a system user/group name."))
+        sys.exit(args.account + " " + _("is not valid for a system user/group account name."))
     jsonfile = cfg()
     try:
         with open(jsonfile) as data_file:
@@ -392,14 +392,6 @@ def main(args) -> int:
         if shell_check(args.shell, True):
             sysusers[username].update({"shell": args.shell})
             sysusers[username].update({"extrashells": True})
-    if args.group is not None:
-        if username_check(args.group):
-            if username == args.group:
-                sysusers[username].pop("group")
-                sysusers[username].update({"grp": True})
-            else:
-                sysusers[username].update({"group": args.group})
-                sysusers[username].update({"grp": False})
     if args.useradd is not None:
         if args.useradd == "True":
             sysusers[username].update({"usr": True})
@@ -410,16 +402,25 @@ def main(args) -> int:
             sysusers[username].update({"grp": True})
         else:
             sysusers[username].update({"grp": False})
+    if args.group is not None:
+        if username_check(args.group):
+            if username == args.group:
+                sysusers[username].pop("group")
+                sysusers[username].update({"grp": True})
+            else:
+                sysusers[username].update({"group": args.group})
+                sysusers[username].update({"grp": False})
+    mytest = sysusers[username].get("usr")
+    if mytest is False:
+        sysusers[username].update({"grp": True})
+    mytest = sysusers[username].get("grp")
+    if mytest is False:
+        sysusers[username].update({"usr": True})
     if args.mkdir is not None:
         if args.mkdir == "True":
             sysusers[username].update({"mkdir": True})
         else:
             sysusers[username].update({"mkdir": False})
-    TA = sysusers[username].get("usr")
-    TB = sysusers[username].get("grp")
-    if TA is False:
-        if TB is False:
-            sys.exit(_("You can not disable both user and group creation."))
     #
     just_do_it(username, sysusers)
     return 0

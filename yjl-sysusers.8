@@ -1,0 +1,150 @@
+.TH "YJL\-SYSUSERS" "8" "May 2023" "yjl\-sysusers 0.1.0" "System Management Commands"
+.SH "NAME"
+yjl\-sysusers \- Add system users and groups
+.SH SYNOPSIS
+.HP \w'\fByjl-sysusers\fR\ 'u
+\fByjl-sysusers\fR [\fIOPTIONS\fR] \fIACCOUNT\fR
+.\" --- continue later
+.SH DESCRIPTION
+.PP
+\fByjl\-sysusers\fR is a wrapper script to the operating system
+\fBgroupadd\fR and \fBuseradd\fR commands that allows respecting
+the operating system static UID and GID assignment when available,
+without the need to assign them manually\&.
+.PP
+Static UID and GID values, as well as some other parameters useful to
+the \fBuseradd\fR command, are defined in the file
+\fByjl\-sysusers.json\fR which is normally located in the directory
+/var/lib/yjl\-sysusers\&.
+.PP
+\fByjl\-sysusers\fR was developed with RPM package scriptlets in
+mind\&.
+.\" --- continue later
+.SH OPTIONS
+.PP
+Options can be used when \fIACCOUNT\fR has not been described
+in the \fByjl\-sysusers.json\fR file or to override default
+settings for \fIACCOUNT\fR as defined in the \fByjl\-sysusers.json\fR
+file\&.
+.PP
+\fB\-h\fR, \fB\-\-help\fR
+.RS 4
+Display help message and exit\&.
+.RE
+.PP
+\fB\-c\fR, \fB\-\-comment\fR \&\fICOMMENT\fR
+.RS 4
+Define the comment field to be used in the /etc/passwd file\&.
+This is used to provide a brief description of \fBACCOUNT\fR\&.
+\fICOMMENT\fR must be printable ASCII, excluding the \\ and :
+characters\&.
+\fICOMMENT\fR must not exceed 60 characters\&.
+.RE
+.PP
+\fB\-d\fR, \fB\-\-home\fR \fIHOME\fR
+.RS 4
+Define the home directory to be used with the system user account\&.
+It must be full path and can only use lower\-case alpha\-numeric
+characters plus underscore, forward\-slash, and hyphen\&.
+.RE
+.PP
+\fB\-s\fR, \fB\-\-shell\fR \fISHELL\fR
+.RS 4
+Define the login shell to be used with the system user account\&.
+If \fISHELL\fR is not present in /etc/shells or is not installed on
+the system, then /sbin/nologin or /bin/false will be substituted\&.
+.sp
+\fByjl\-sysuers\fR will use /sbin/nologin for any \fBACCOUNT\fR
+that does have a valid \fISHELL\fR specified unless /sbin/nologin
+is not present on the system\&. In such cases, /bin/false is
+used instead\&.
+.RE
+.PP
+\fB\-\-useradd\fR \fI{True,False}\fR
+.RS 4
+Define whether or not the user name \fBACCOUNT\fR should be created\&.
+.sp
+When \fB\-\-useradd\fR is set to \fIFalse\fR then \fB\-\-groupadd\fR
+is automatically set to \fITrue\fR\&.
+.RE
+.PP
+\fB\-\-groupadd\fR \fI{True,False}\fR
+.RS 4
+Define whether or not the group name \fBACCOUNT\fR should be created\fR.
+.sp
+When \fB\-\-groupadd\fR is set to \fIFalse\fR then \fB\-\-useradd\fR
+is automatically set to \fITrue\fR\&.
+.RE
+.PP
+\fB\-g\fR, \fB\-\-group\fR \fIGROUP\fR
+.RS 4
+Define the primary group for the user \fBACCOUNT\fR with a different
+group name than \fBACCOUNT\fR\&.
+.sp
+If the group \fIGROUP\fR does not exist, it will be created
+automatically\&.
+.sp
+When \fIGROUP\fR is defined, the group \fBACCOUNT\fR will not be
+created regardless of \fB\-\-groupadd\fR and the user \fBACCOUNT\fR
+will be created regardless of \fB\-\-useradd\fR\&.
+.RE
+.PP
+\fB\-\-mkdir\fR \fI{True,False}\fR
+.RS 4
+Define whether or not the home directory for user \fBACCOUNT\fR should
+be created\&. The default with system accounts is not to create the
+directory automatically\&.
+.RE
+.\" --- insert NOTES here
+.SH EXAMPLES
+.PP
+\f[B]yjl\-sysusers\f[] \f[I]somename\f[]
+.PD 0
+.P
+.PD
+: If \f[I]somename\f[] is defined in /var/lib/yjl\-sysusers.json then
+the user and/or group will be created according to the paramaters in
+that file.
+If \f[I]somename\f[] is \f[B]NOT\f[] defined in that file, then both a
+user and group will be created using /dev/null as the home directory and
+/sbin/login (or /bin/false) as the login shell.
+.PP
+\f[B]yjl\-sysusers\f[] \f[B]\-g\f[] \f[I]mail\f[] \f[I]sendmail\f[]
+.PD 0
+.P
+.PD
+: If \f[I]mail\f[] is defined in /var/lib/yjl\-sysusers.json then the
+group \f[I]mail\f[] will be created using the \f[I]GID\f[] defined
+there, unless already in use.
+Otherwise it will created with a \f[I]GID\f[] from the dynamic range for
+system groups.
+If the user \f[I]sendmail\f[] is defined in /var/lib/yjl\-sysuers.json
+then the user \f[I]sendmail\f[] will be created using the parameters
+defined there, but will be created using \f[I]mail\f[] as the primary
+group regardless of the parameters in that file.
+.SH EXIT STATUS
+.PP
+\f[B]0\f[]
+.PD 0
+.P
+.PD
+: Success
+.PP
+\f[B]1\f[]
+.PD 0
+.P
+.PD
+: The program failed to create requested group and/or user.
+.SH BUGS
+.PP
+Yes, I have seen Starship Troopers.
+Bugs can be very insideous and hard to get rid of, but I expect them to
+be random and light.
+.SH COPYRIGHT
+.PP
+Copyright (c) 2023 YellowJacket GNU/Linux.
+License MIT <https://spdx.org/licenses/MIT.html>.
+This is free software: you are free to change and redistribute it.
+There is no WARRANTY, to the extent permitted by law.
+.SH AUTHORS
+YellowJacket GNU/Linux.
