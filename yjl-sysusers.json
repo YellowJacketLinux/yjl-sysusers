@@ -322,6 +322,11 @@
         "usr": true,
         "grp": false
     },
+    "mock": {
+        "myid": 135,
+        "usr": false,
+        "grp": true
+    },
     "systemd-journal": {
         "myid": 180,
         "usr": true,
