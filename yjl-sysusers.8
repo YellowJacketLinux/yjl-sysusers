@@ -35,7 +35,7 @@ Display help message and exit\&.
 \fB\-c\fR, \fB\-\-comment\fR \&\fICOMMENT\fR
 .RS 4
 Define the comment field to be used in the /etc/passwd file\&.
-This is used to provide a brief description of \fBACCOUNT\fR\&.
+This is used to provide a brief description of \fIACCOUNT\fR\&.
 \fICOMMENT\fR must be printable ASCII, excluding the \\ and :
 characters\&.
 \fICOMMENT\fR must not exceed 60 characters\&.
@@ -54,7 +54,7 @@ Define the login shell to be used with the system user account\&.
 If \fISHELL\fR is not present in /etc/shells or is not installed on
 the system, then /sbin/nologin or /bin/false will be substituted\&.
 .sp
-\fByjl\-sysuers\fR will use /sbin/nologin for any \fBACCOUNT\fR
+\fByjl\-sysuers\fR will use /sbin/nologin for any \fIACCOUNT\fR
 that does have a valid \fISHELL\fR specified unless /sbin/nologin
 is not present on the system\&. In such cases, /bin/false is
 used instead\&.
@@ -62,7 +62,7 @@ used instead\&.
 .PP
 \fB\-\-useradd\fR \fI{True,False}\fR
 .RS 4
-Define whether or not the user name \fBACCOUNT\fR should be created\&.
+Define whether or not the user name \fIACCOUNT\fR should be created\&.
 .sp
 When \fB\-\-useradd\fR is set to \fIFalse\fR then \fB\-\-groupadd\fR
 is automatically set to \fITrue\fR\&.
@@ -70,7 +70,7 @@ is automatically set to \fITrue\fR\&.
 .PP
 \fB\-\-groupadd\fR \fI{True,False}\fR
 .RS 4
-Define whether or not the group name \fBACCOUNT\fR should be created\fR.
+Define whether or not the group name \fIACCOUNT\fR should be created\fR.
 .sp
 When \fB\-\-groupadd\fR is set to \fIFalse\fR then \fB\-\-useradd\fR
 is automatically set to \fITrue\fR\&.
@@ -78,24 +78,81 @@ is automatically set to \fITrue\fR\&.
 .PP
 \fB\-g\fR, \fB\-\-group\fR \fIGROUP\fR
 .RS 4
-Define the primary group for the user \fBACCOUNT\fR with a different
-group name than \fBACCOUNT\fR\&.
+Define the primary group for the user \fIACCOUNT\fR with a different
+group name than \fIACCOUNT\fR\&.
 .sp
 If the group \fIGROUP\fR does not exist, it will be created
 automatically\&.
 .sp
-When \fIGROUP\fR is defined, the group \fBACCOUNT\fR will not be
-created regardless of \fB\-\-groupadd\fR and the user \fBACCOUNT\fR
+When \fIGROUP\fR is defined, the group \fIACCOUNT\fR will not be
+created regardless of \fB\-\-groupadd\fR and the user \fIACCOUNT\fR
 will be created regardless of \fB\-\-useradd\fR\&.
 .RE
 .PP
 \fB\-\-mkdir\fR \fI{True,False}\fR
 .RS 4
-Define whether or not the home directory for user \fBACCOUNT\fR should
+Define whether or not the home directory for user \fIACCOUNT\fR should
 be created\&. The default with system accounts is not to create the
 directory automatically\&.
 .RE
 .\" --- insert NOTES here
+.SH USAGE NOTES
+.PP
+The boolean options (\fB\-\-useradd\fR, \fB\-\-groupadd\fR, and
+\fB\-\-mkdir\fR) are case sensitive \fITrue\fR or \fIFalse\fR\&.
+.sp
+When \fB\-\-groupadd \fIFalse\fR is used without using
+\fB\-g\fR, \fB\-\-group\fR \fIGROUP\fR then the system group
+\fBnogroup\fR
+will be used as the primary group for \fIACCOUNT\fR\&.
+.\" ---
+.SH PACKAGER NOTES
+.PP
+When creating an RPM (or other) package that has files owned by
+non-root users and groups, you should use \fByjl\-sysusers\fR in
+the package \fI%pre\fR scriptlet to ensure the appropriate
+users and groups exist at the time the files are installed\&.
+.sp
+RPM packagers should use the macro \fB%{_yjl_sysusers}\fR rather
+that the command \fByjl\-sysusers\fR or
+\fB/usr/sbin/yjl\-sysusers\fR\&.
+.sp
+RPM packagers should \fBRequires(pre): %{_yjl_sysusers}\fR\&.
+.sp
+Packagers should avoid using
+\fB\-c\fR, \fB\-\-comment\fR \fICOMMENT\fR as it can interfere
+with the string being properly translated via gettext i18n
+facilities into the preferred language of the system\&.
+.sp
+Packagers should usually avoid using
+\fB\-\-mkdir\fR \fITrue\fR\&.
+.sp
+When \fBuseradd\fR creates the \fIHOME\fR directory, it also copies
+the contents of /etc/skel into that directory\&. Usually that is not
+desired\&. It is often better to have the package create the
+\fBhome\fR directory when a home directory is needed\&.
+.sp
+Packagers should never assume the contents of the
+\fByjl-sysusers.json\fR file are correct for the package, but
+should specify the correct option parameters when ensuring that
+\fIACCOUNT\fR exists\&.
+.sp
+The primary motivation for this wrapper script is to allow for
+truly portable RPM spec files that can build and install on many
+GNU/Linux distributions while still respecting the static GID/UID
+assignments for system users and groups that a distribution (or
+system administrator) wants to enforce\&.
+.sp
+A secondary motive for this wrapper script is to allow for the
+internationalization of system user account descriptions (the
+\fICOMMENT\fR of /etc/passwd) at the time of package install\&.
+.sp
+Lazy packaging where the packager relies upon \fByjl-sysusers.json\fR
+to have correct user account parameters is not a motive for this
+package, although compensating for lazy packaging was a motive for
+allowing sane \fBuseradd\fR defaults to be specified in that file\&.
+.PP
+.\" --- end Packager Notes
 .SH EXAMPLES
 .PP
 \f[B]yjl\-sysusers\f[] \f[I]somename\f[]
