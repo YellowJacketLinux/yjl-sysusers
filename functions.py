@@ -39,11 +39,14 @@ import argparse
 def _(fubar):
     return fubar
 
-parser = argparse.ArgumentParser(description='Add system users and groups. See: man 1 yjl-sysusers')
+parser = argparse.ArgumentParser(description=_("Add system users and groups. See: man 1 yjl-sysusers"))
 parser.add_argument("-c", "--comment", type=str, help=_("Specify the user comment passwd field."))
 parser.add_argument("-d", "--home", type=str, help=_("Specify the user home directory."))
 parser.add_argument("-s", "--shell", type=str, help=_("Specify the user login shell."))
 parser.add_argument("-g", "--group", type=str, help=_("Specify the default group NAME for the user."))
+parser.add_argument("--useradd", choices=('True','False'), help=_("Use False to disable user creation."))
+parser.add_argument("--groupadd", choices=('True','False'), help=_("Use False to disable group creation."))
+parser.add_argument("--mkdir", choices=('True','False'), help=_("Use True to create home directory."))
 parser.add_argument('name', type=str, help=_("User or Group name to add."))
 
 def cfg() -> str:
@@ -397,6 +400,26 @@ def main(args) -> int:
             else:
                 sysusers[username].update({"group": args.group})
                 sysusers[username].update({"grp": False})
+    if args.useradd is not None:
+        if args.useradd == "True":
+            sysusers[username].update({"usr": True})
+        else:
+            sysusers[username].update({"usr": False})
+    if args.groupadd is not None:
+        if args.groupadd == "True":
+            sysusers[username].update({"grp": True})
+        else:
+            sysusers[username].update({"grp": False})
+    if args.mkdir is not None:
+        if args.mkdir == "True":
+            sysusers[username].update({"mkdir": True})
+        else:
+            sysusers[username].update({"mkdir": False})
+    TA = sysusers[username].get("usr")
+    TB = sysusers[username].get("grp")
+    if TA is False:
+        if TB is False:
+            sys.exit(_("You can not disable both user and group creation."))
     #
     just_do_it(username, sysusers)
     return 0
