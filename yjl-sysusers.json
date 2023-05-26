@@ -376,12 +376,12 @@
         "shell": "/bin/bash",
         "mkdir": true
     },
-    "tttexlive": {
-        "myid": 458,
+    "qqtexlive": {
+        "myid": 460,
         "usr": true,
         "grp": true,
         "comment": "iiTeXLive Administrator",
-        "homedir": "/opt/iitexlive/tladmin",
+        "homedir": "/opt/qqtexlive/tladmin",
         "shell": "/bin/bash",
         "mkdir": true
     },
