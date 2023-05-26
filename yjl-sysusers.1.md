@@ -69,9 +69,7 @@ is normally located in the directory /var/lib/yjl-sysusers.
 : The program failed to create requested group and/or user.
 
 # BUGS
-
-At present it fails to create home directory when parent directory
-does not yet exist.
+Probably are some.
 
 # COPYRIGHT
 Copyright (c) 2023 YellowJacket GNU/Linux. License MIT

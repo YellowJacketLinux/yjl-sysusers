@@ -3,9 +3,6 @@ TODO
 
 Right now it mostly works.
 
-When useradd is asked to create a home directory, that fails. I
-know why and can fix it.
-
 It needs to be integrated with gettext for string i18n string
 translation.
 
