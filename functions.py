@@ -263,18 +263,18 @@ def add_the_user(username: str, sysusers: dict[dict]) -> None:
     spclist.append("-s")
     spclist.append(shell)
     if homedir == "/dev/null":
-        skel = False
+        mkdir = False
     else:
-        testme = nameobject.get('skel', False)
+        testme = nameobject.get('mkdir', False)
         if testme:
             if os.path.exists(homedir):
-                skel = False
+                mkdir = False
             else:
-                skel = True
+                mkdir = True
         else:
-            skel = False
+            mkdir = False
     myPREcmd = "/sbin/useradd -g " + str(gid) + " -u " + str(uid) + " -c \"" + comment + "\" -d " + homedir + " -s " + shell
-    if skel:
+    if mkdir:
         mycmd = myPREcmd + " --create-home -r " + username
         spclist.append("--create-home")
     else:

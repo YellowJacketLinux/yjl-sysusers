@@ -160,15 +160,15 @@ When there is not a `shell` property set, the `yjl-sysusers` utility
 will set the shell to `/sbin/nologin` if it is installed on the system
 and otherwise to `/bin/false`.
 
-### Skeleton Files
+### Create Home Directory
 
 When the object has a `homedir` property that is *not* `/dev/null` then
-it *may* also have a boolean `skel` property. If set to `true` and the
+it *may* also have a boolean `mkdir` property. If set to `true` and the
 home directory does not already exist, then `useradd` will be instructed
 to create the home directory. That *usually* results in the contents of
 `/etc/skel/` being copied into the home directory.
 
-If the `skel` property is not set, it is treated as if it is `false`.
+If the `mkdir` property is not set, it is treated as if it is `false`.
 
 Validation Failures and Handling
 --------------------------------
@@ -247,10 +247,10 @@ that is not `/bin/bash` or `/bin/sh`, then `/bin/false` will be used
 instead. That should never happen unless the JSON file is improperly
 modified after install.
 
-If the `skel` option is passed to the `yjl-sysuser` command and does
+If the `mkdir` option is passed to the `yjl-sysuser` command and does
 not evaluate to `true` then it will be assigned a value of `false`.
 
-If the `yjl-sysuser` command retrieves a `skel` from the JSON file
+If the `yjl-sysuser` command retrieves a `mkdir` from the JSON file
 that does not evaluate to `true` then it will be assigned a value of
 false.
 

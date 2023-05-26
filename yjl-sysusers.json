@@ -6,7 +6,7 @@
         "comment": "r00t",
         "homedir": "/root",
         "shell": "/bin/bash",
-        "skel": true
+        "mkdir": true
     },
     "bin": {
         "myid": 1,
@@ -374,7 +374,7 @@
         "comment": "TeXLive Administrator",
         "homedir": "/opt/texlive/tladmin",
         "shell": "/bin/bash",
-        "skel": true
+        "mkdir": true
     },
     "tttexlive": {
         "myid": 458,
@@ -383,7 +383,7 @@
         "comment": "iiTeXLive Administrator",
         "homedir": "/opt/iitexlive/tladmin",
         "shell": "/bin/bash",
-        "skel": true
+        "mkdir": true
     },
     "nobody": {
         "myid": 65534,
