@@ -4,7 +4,8 @@ yjl\-sysusers \- Add system users and groups
 .SH SYNOPSIS
 .HP \w'\fByjl-sysusers\fR\ 'u
 \fByjl-sysusers\fR [\fIOPTIONS\fR] \fIACCOUNT\fR
-.\" --- continue later
+.\" ---
+.\" --- end Synopsis
 .SH DESCRIPTION
 .PP
 \fByjl\-sysusers\fR is a wrapper script to the operating system
@@ -14,18 +15,19 @@ without the need to assign them manually\&.
 .PP
 Static UID and GID values, as well as some other parameters useful to
 the \fBuseradd\fR command, are defined in the file
-\fByjl\-sysusers.json\fR which is normally located in the directory
+\fByjl\-sysusers\&.json\fR which is normally located in the directory
 /var/lib/yjl\-sysusers\&.
 .PP
 \fByjl\-sysusers\fR was developed with RPM package scriptlets in
 mind\&.
-.\" --- continue later
+.\" ---
+.\" --- end Description
 .SH OPTIONS
 .PP
 Options can be used when \fIACCOUNT\fR has not been described
-in the \fByjl\-sysusers.json\fR file or to override default
-settings for \fIACCOUNT\fR as defined in the \fByjl\-sysusers.json\fR
-file\&.
+in the \fByjl\-sysusers\&.json\fR file or to override default
+settings for \fIACCOUNT\fR as defined in the
+\fByjl\-sysusers\&.json\fR file\&.
 .PP
 \fB\-h\fR, \fB\-\-help\fR
 .RS 4
@@ -53,6 +55,10 @@ characters plus underscore, forward\-slash, and hyphen\&.
 Define the login shell to be used with the system user account\&.
 If \fISHELL\fR is not present in /etc/shells or is not installed on
 the system, then /sbin/nologin or /bin/false will be substituted\&.
+.sp
+Any argument that is not full-path is invalid, so you can just
+use \fInoshell\fR as the \fISHELL\fR arguement to guarantee that
+either /sbin/nologin or /bin/false are used as the login shell.
 .sp
 \fByjl\-sysuers\fR will use /sbin/nologin for any \fIACCOUNT\fR
 that does have a valid \fISHELL\fR specified unless /sbin/nologin
@@ -95,17 +101,21 @@ Define whether or not the home directory for user \fIACCOUNT\fR should
 be created\&. The default with system accounts is not to create the
 directory automatically\&.
 .RE
-.\" --- insert NOTES here
+.\" ---
+.\" --- end Options
 .SH USAGE NOTES
 .PP
+Python 3.9 or newer is needed for \fByjl\-sysusers\fR\&.
+.sp
 The boolean options (\fB\-\-useradd\fR, \fB\-\-groupadd\fR, and
 \fB\-\-mkdir\fR) are case sensitive \fITrue\fR or \fIFalse\fR\&.
 .sp
 When \fB\-\-groupadd \fIFalse\fR is used without using
 \fB\-g\fR, \fB\-\-group\fR \fIGROUP\fR then the system group
-\fBnogroup\fR
+\fInogroup\fR
 will be used as the primary group for \fIACCOUNT\fR\&.
 .\" ---
+.\" --- end Usage Notes
 .SH PACKAGER NOTES
 .PP
 When creating an RPM (or other) package that has files owned by
@@ -114,7 +124,7 @@ the package \fI%pre\fR scriptlet to ensure the appropriate
 users and groups exist at the time the files are installed\&.
 .sp
 RPM packagers should use the macro \fB%{_yjl_sysusers}\fR rather
-that the command \fByjl\-sysusers\fR or
+than the command \fByjl\-sysusers\fR or
 \fB/usr/sbin/yjl\-sysusers\fR\&.
 .sp
 RPM packagers should \fBRequires(pre): %{_yjl_sysusers}\fR\&.
@@ -133,7 +143,7 @@ desired\&. It is often better to have the package create the
 \fBhome\fR directory when a home directory is needed\&.
 .sp
 Packagers should never assume the contents of the
-\fByjl-sysusers.json\fR file are correct for the package, but
+\fByjl-sysusers\&.json\fR file are correct for the package, but
 should specify the correct option parameters when ensuring that
 \fIACCOUNT\fR exists\&.
 .sp
@@ -147,38 +157,89 @@ A secondary motive for this wrapper script is to allow for the
 internationalization of system user account descriptions (the
 \fICOMMENT\fR of /etc/passwd) at the time of package install\&.
 .sp
-Lazy packaging where the packager relies upon \fByjl-sysusers.json\fR
+Lazy packaging where the packager relies upon
+\fByjl-sysusers\&.json\fR
 to have correct user account parameters is not a motive for this
 package, although compensating for lazy packaging was a motive for
 allowing sane \fBuseradd\fR defaults to be specified in that file\&.
 .PP
+.\" ---
 .\" --- end Packager Notes
+.SH CONFIGURATION
+.PP
+The default options on a per-\fIACCOUNT\fR basis for accounts with
+preferred static UID/GID assignment are in the
+\fByjl-sysconfig\&.json\fR
+file\&. All options except for the UID/GID can be overriden with
+options passed to \fByjl\-sysusers\fR\&.
+.PP
+The range of dynamically generated UID/GID values is currently
+hard-coded within the load_id_list() function\&. A future version
+of this program will make that easier to configure\&.
+.PP
+The current default group name to use for user accounts created
+with \fB\-\-groupadd\fR \fIFalse\fR and without
+\fB\-g\fR, \fB\-\-group\fR \fIGROUP\fR is currently hard-coded
+within the request_gpname_from_json() function\&. A future version
+of this program will make that easier to configure\&.
+.PP
+.\" ---
+.\" --- end configuration
 .SH EXAMPLES
 .PP
-\f[B]yjl\-sysusers\f[] \f[I]somename\f[]
-.PD 0
-.P
-.PD
-: If \f[I]somename\f[] is defined in /var/lib/yjl\-sysusers.json then
-the user and/or group will be created according to the paramaters in
-that file.
-If \f[I]somename\f[] is \f[B]NOT\f[] defined in that file, then both a
-user and group will be created using /dev/null as the home directory and
-/sbin/login (or /bin/false) as the login shell.
+\fByjl-sysusers\fR \fB\-\-useradd\fR \fIFalse\fR \fIplocate\fR
+.sp
+.RS 4
+Ensure the \fIplocate\fR group exists, without create a \fIplocate\fR user\&.
+.RE
 .PP
-\f[B]yjl\-sysusers\f[] \f[B]\-g\f[] \f[I]mail\f[] \f[I]sendmail\f[]
-.PD 0
-.P
-.PD
-: If \f[I]mail\f[] is defined in /var/lib/yjl\-sysusers.json then the
-group \f[I]mail\f[] will be created using the \f[I]GID\f[] defined
-there, unless already in use.
-Otherwise it will created with a \f[I]GID\f[] from the dynamic range for
-system groups.
-If the user \f[I]sendmail\f[] is defined in /var/lib/yjl\-sysuers.json
-then the user \f[I]sendmail\f[] will be created using the parameters
-defined there, but will be created using \f[I]mail\f[] as the primary
-group regardless of the parameters in that file.
+\fByjl-sysusers\fR
+\fB\-g\fR \fImail\fR
+\fB\-h\fR \fI/var/lib/sendmail\fR
+\fB\-s\fR \fInoshell\fR
+\fIsendmail\fR
+.sp
+.RS 4
+Ensure the \fImail\fR group exists. Ensure the \fIsendmail\fR user exists,
+creating it if necessary using \fI/var/lib/sendmail\fR as the \fIHOME\fR
+directory, using either /sbin/nologin or /bin/false as the login shell\&.
+.sp
+If the \fIsendmail\fR user does not already exist, it will be created
+with \fImail\fR as the primary group it belongs to.
+.RE
+.PP
+\fByjl-sysusers\fR
+\fB\-\-useradd\fR \fIFalse\fR
+\fImail\fR &&
+.br
+\fByjl-sysusers\fR
+\fB\-\-groupadd\fR \fITrue\fR
+\fB\-\-useradd\fR \fITrue\fR \\
+.br
+.RS 2
+\fB\-h\fR \fI/var/lib/sendmail\fR
+\fB\-s\fR \fInoshell\fR
+\fIsendmail\fR &&
+.RE
+.br
+\fBusermod\fR \fB\-a\fR
+\fB\-G\fR \fImail\fR
+\fIsendmail\fR
+.sp
+.RS 4
+First ensure that the \fImail\fR group exists\&. Then ensure that the
+\fIsendmail\fR user exists as in the previous example, only if the
+user is created, it is created with \fIsendmail\fR as the primary
+group\&. Finally, add the \fIsendmail\fR user to the \fImail\fR
+group\&.
+.sp
+As a packager, btw, that is my preferred method of dealing with
+system users that need to belong to a system group of a different
+name.
+.RE
+.PP
+.\" ---
+.\" --- end Examples
 .SH EXIT STATUS
 .PP
 \f[B]0\f[]
