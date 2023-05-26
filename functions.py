@@ -149,7 +149,7 @@ def add_the_group(gpname: str, gid: int) -> int:
         sys.exit(_("Failed to create the specified group."))
     return existing.gr_gid
 
-def load_id_list(desired: int) -> list[int]:
+def load_id_list(desired: int) -> list:
     """Returns a list of IDs to query for appropriate system group/user creation."""
     mylist = []
     if desired != 65535:
@@ -180,14 +180,14 @@ def find_group_id(gpname: str, desired: int) -> int:
     #  try to create group anyway
     return add_the_group(gpname, desired)
 
-def request_gid_from_json(gpname: str, sysusers: dict[dict]) -> int:
+def request_gid_from_json(gpname: str, sysusers: dict) -> int:
     """Given a group name, attempts to find the preferred Group ID."""
     nameobject = sysusers[gpname]
     if nameobject.get('grp', False):
         return nameobject.get('myid', 65535)
     return 65535
 
-def request_gpname_from_json(username: str, sysusers: dict[dict]) -> str:
+def request_gpname_from_json(username: str, sysusers: dict) -> str:
     """Given a user name, attempts to find the primary group for the user."""
     nameobject = sysusers[username]
     if nameobject.get('grp', False):
@@ -197,7 +197,7 @@ def request_gpname_from_json(username: str, sysusers: dict[dict]) -> str:
         return gpname
     return "nogroup"
 
-def determine_useradd_gid_from_json(username: str, sysusers: dict[dict]) -> int:
+def determine_useradd_gid_from_json(username: str, sysusers: dict) -> int:
     """Given a username, find the appropriate GID for useradd command."""
     gpname = request_gpname_from_json(username, sysusers)
     desired = request_gid_from_json(gpname, sysusers)
@@ -207,7 +207,7 @@ def determine_useradd_gid_from_json(username: str, sysusers: dict[dict]) -> int:
     """
     return find_group_id(gpname, desired)
 
-def determine_useradd_uid_from_json(username: str, sysusers: dict[dict]) -> int:
+def determine_useradd_uid_from_json(username: str, sysusers: dict) -> int:
     """Given a username, find the appropriate UID for useradd command."""
     sameAsGroup = True
     nameobject = sysusers[username]
@@ -245,7 +245,7 @@ def ensure_home_dir(homedir: str) -> None:
     except:
         pass 
 
-def add_the_user(username: str, sysusers: dict[dict]) -> None:
+def add_the_user(username: str, sysusers: dict) -> None:
     gid = determine_useradd_gid_from_json(username, sysusers)
     try:
         existing = pwd.getpwnam(username)
@@ -307,7 +307,7 @@ def add_the_user(username: str, sysusers: dict[dict]) -> None:
         # this only happens in testing, main() checks for root.
         print(mycmd)
 
-def just_do_it(username: str, sysusers: dict[dict]) -> None:
+def just_do_it(username: str, sysusers: dict) -> None:
     """Called by main() to creates the user/group account as needed."""
     nameobject = sysusers[username]
     createuser = nameobject.get('usr', False)
