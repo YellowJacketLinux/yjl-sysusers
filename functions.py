@@ -25,6 +25,7 @@ This script is currently developed on github.
 """
 import os
 import sys
+from pathlib import Path
 import string
 import unicodedata
 import re
@@ -230,6 +231,17 @@ def determine_useradd_uid_from_json(username: str, sysusers: dict[dict]) -> int:
     # Should never ever happen
     sys.exit(_("There do not seem to be any available User IDs left for a system user."))
 
+def ensure_home_dir(homedir: str) -> None:
+    """Creates the parent directory of the home directory if necessary."""
+    path = Path(homedir)
+    parent = path.parent.absolute()
+    if os.path.exists(parent):
+        return
+    try:
+        subprocess.call(["mkdir", "-p", parent])
+    except:
+        pass 
+
 def add_the_user(username: str, sysusers: dict[dict]) -> None:
     gid = determine_useradd_gid_from_json(username, sysusers)
     try:
@@ -275,6 +287,7 @@ def add_the_user(username: str, sysusers: dict[dict]) -> None:
             mkdir = False
     myPREcmd = "/sbin/useradd -g " + str(gid) + " -u " + str(uid) + " -c \"" + comment + "\" -d " + homedir + " -s " + shell
     if mkdir:
+        ensure_home_dir(homedir)
         mycmd = myPREcmd + " --create-home -r " + username
         spclist.append("--create-home")
     else:
