@@ -1,9 +1,36 @@
-.TH "YJL\-SYSUSERS" "8" "May 2023" "yjl\-sysusers 0.1.0" "System Management Commands"
+'\" t
+.\"         Title: yjl-sysusers
+.\"        Author: Michael A. Peters
+.\" Generator: Hand-coded
+.\"      Date: 2023-05-26
+.\"    Manual: System Management Commands
+.\"  Language: English
+.\"
+.TH "YJL\-SYSUSERS" "8" "May 2023" "yjl\-sysusers 0\&.1\&.0" "System Management Commands"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
 .SH "NAME"
 yjl\-sysusers \- Add system users and groups
 .SH SYNOPSIS
 .HP \w'\fByjl-sysusers\fR\ 'u
-\fByjl-sysusers\fR [\fIOPTIONS\fR] \fIACCOUNT\fR
+\fByjl-sysusers\fR [\fIOPTIONS\fR] \fIaccount\fR
 .\" ---
 .\" --- end Synopsis
 .SH DESCRIPTION
@@ -24,9 +51,9 @@ mind\&.
 .\" --- end Description
 .SH OPTIONS
 .PP
-Options can be used when \fIACCOUNT\fR has not been described
+Options can be used when \fIaccount\fR has not been described
 in the \fByjl\-sysusers\&.json\fR file or to override default
-settings for \fIACCOUNT\fR as defined in the
+settings for \fIaccount\fR as defined in the
 \fByjl\-sysusers\&.json\fR file\&.
 .PP
 \fB\-h\fR, \fB\-\-help\fR
@@ -37,7 +64,7 @@ Display help message and exit\&.
 \fB\-c\fR, \fB\-\-comment\fR \&\fICOMMENT\fR
 .RS 4
 Define the comment field to be used in the /etc/passwd file\&.
-This is used to provide a brief description of \fIACCOUNT\fR\&.
+This is used to provide a brief description of \fIaccount\fR\&.
 \fICOMMENT\fR must be printable ASCII, excluding the \\ and :
 characters\&.
 \fICOMMENT\fR must not exceed 60 characters\&.
@@ -60,7 +87,7 @@ Any argument that is not full-path is invalid, so you can just
 use \fInoshell\fR as the \fISHELL\fR arguement to guarantee that
 either /sbin/nologin or /bin/false are used as the login shell.
 .sp
-\fByjl\-sysuers\fR will use /sbin/nologin for any \fIACCOUNT\fR
+\fByjl\-sysuers\fR will use /sbin/nologin for any \fIaccount\fR
 that does have a valid \fISHELL\fR specified unless /sbin/nologin
 is not present on the system\&. In such cases, /bin/false is
 used instead\&.
@@ -68,7 +95,7 @@ used instead\&.
 .PP
 \fB\-\-useradd\fR \fI{True,False}\fR
 .RS 4
-Define whether or not the user name \fIACCOUNT\fR should be created\&.
+Define whether or not the user name \fIaccount\fR should be created\&.
 .sp
 When \fB\-\-useradd\fR is set to \fIFalse\fR then \fB\-\-groupadd\fR
 is automatically set to \fITrue\fR\&.
@@ -76,7 +103,7 @@ is automatically set to \fITrue\fR\&.
 .PP
 \fB\-\-groupadd\fR \fI{True,False}\fR
 .RS 4
-Define whether or not the group name \fIACCOUNT\fR should be created\fR.
+Define whether or not the group name \fIaccount\fR should be created\fR.
 .sp
 When \fB\-\-groupadd\fR is set to \fIFalse\fR then \fB\-\-useradd\fR
 is automatically set to \fITrue\fR\&.
@@ -84,20 +111,20 @@ is automatically set to \fITrue\fR\&.
 .PP
 \fB\-g\fR, \fB\-\-group\fR \fIGROUP\fR
 .RS 4
-Define the primary group for the user \fIACCOUNT\fR with a different
-group name than \fIACCOUNT\fR\&.
+Define the primary group for the user \fIaccount\fR with a different
+group name than \fIaccount\fR\&.
 .sp
 If the group \fIGROUP\fR does not exist, it will be created
 automatically\&.
 .sp
-When \fIGROUP\fR is defined, the group \fIACCOUNT\fR will not be
-created regardless of \fB\-\-groupadd\fR and the user \fIACCOUNT\fR
+When \fIGROUP\fR is defined, the group \fIaccount\fR will not be
+created regardless of \fB\-\-groupadd\fR and the user \fIaccount\fR
 will be created regardless of \fB\-\-useradd\fR\&.
 .RE
 .PP
 \fB\-\-mkdir\fR \fI{True,False}\fR
 .RS 4
-Define whether or not the home directory for user \fIACCOUNT\fR should
+Define whether or not the home directory for user \fIaccount\fR should
 be created\&. The default with system accounts is not to create the
 directory automatically\&.
 .RE
@@ -105,7 +132,7 @@ directory automatically\&.
 .\" --- end Options
 .SH USAGE NOTES
 .PP
-Python 3.9 or newer is needed for \fByjl\-sysusers\fR\&.
+Python 3\&.8 or newer is needed for \fByjl\-sysusers\fR\&.
 .sp
 The boolean options (\fB\-\-useradd\fR, \fB\-\-groupadd\fR, and
 \fB\-\-mkdir\fR) are case sensitive \fITrue\fR or \fIFalse\fR\&.
@@ -113,7 +140,7 @@ The boolean options (\fB\-\-useradd\fR, \fB\-\-groupadd\fR, and
 When \fB\-\-groupadd \fIFalse\fR is used without using
 \fB\-g\fR, \fB\-\-group\fR \fIGROUP\fR then the system group
 \fInogroup\fR
-will be used as the primary group for \fIACCOUNT\fR\&.
+will be used as the primary group for \fIaccount\fR\&.
 .\" ---
 .\" --- end Usage Notes
 .SH PACKAGER NOTES
@@ -145,7 +172,7 @@ desired\&. It is often better to have the package create the
 Packagers should never assume the contents of the
 \fByjl-sysusers\&.json\fR file are correct for the package, but
 should specify the correct option parameters when ensuring that
-\fIACCOUNT\fR exists\&.
+\fIaccount\fR exists\&.
 .sp
 The primary motivation for this wrapper script is to allow for
 truly portable RPM spec files that can build and install on many
@@ -167,7 +194,7 @@ allowing sane \fBuseradd\fR defaults to be specified in that file\&.
 .\" --- end Packager Notes
 .SH CONFIGURATION
 .PP
-The default options on a per-\fIACCOUNT\fR basis for accounts with
+The default options on a per-\fIaccount\fR basis for accounts with
 preferred static UID/GID assignment are in the
 \fByjl-sysconfig\&.json\fR
 file\&. All options except for the UID/GID can be overriden with
@@ -185,6 +212,30 @@ of this program will make that easier to configure\&.
 .PP
 .\" ---
 .\" --- end configuration
+.SH FILES
+.PP
+/usr/sbin/yjl\-sysusers
+.RS 4
+The Python 3 wrapper to \fBgroupadd\fR and \fBuseradd\fR&\.
+This man page describes use of that Python wrapper.
+.RE
+.PP
+/var/lib/yjl\-sysusers/yjl\-sysusers\&.json
+.RS 4
+The JSON database on a per-\fIaccount\fR basis for preferred
+static UID/GID and default options to pass to \fBuseradd\fR\&.
+.RE
+.PP
+/var/lib/rpm/macros/fii
+.RS 4
+The definition of the
+\fB%{_yjl_sysusers}\fR
+macro that is used with \fBrpmbuild\fR to create RPM packages
+that utilize \fByjl\-sysusers\fR\&.
+.RE
+.PP
+.\" ---
+.\" --- end files
 .SH EXAMPLES
 .PP
 \fByjl-sysusers\fR \fB\-\-useradd\fR \fIFalse\fR \fIplocate\fR
@@ -242,27 +293,64 @@ name.
 .\" --- end Examples
 .SH EXIT STATUS
 .PP
-\f[B]0\f[]
-.PD 0
-.P
-.PD
-: Success
+\fI0\fR
+.RS 4
+success
+.RE
 .PP
-\f[B]1\f[]
-.PD 0
-.P
-.PD
-: The program failed to create requested group and/or user.
+\fI1\fR
+.RS 4
+The program failed to create requested group and/or user\&.
+.RE
+.PP
+.\" ---
+.\" --- end exit status
 .SH BUGS
 .PP
-Yes, I have seen Starship Troopers.
-Bugs can be very insideous and hard to get rid of, but I expect them to
-be random and light.
-.SH COPYRIGHT
+The program should not be case sensitive with respect to the boolean
+option parameters\&.
 .PP
-Copyright (c) 2023 YellowJacket GNU/Linux.
-License MIT <https://spdx.org/licenses/MIT.html>.
-This is free software: you are free to change and redistribute it.
+Default nogroup name and the dynamic range for system UID/GID should
+be configurable without modifiying the
+\fByjl\-sysusers\fR script\&.
+.PP
+Perhaps the the
+\fByjl\-sysusers\fR script should be ported to work with Python
+3\&.6\&.
+.PP
+.\" ---
+.\" --- end bugs
+.SH COPYLEFT
+.PP
+\fByjl\-sysusers\fR is
+Copyright (c) 2023 YellowJacket GNU/Linux\&.
+.sp
+.RS 4
+License SPSX:MIT <https://spdx.org/licenses/MIT.html>\&.
+.sp
+\fByjl\-sysusers\fR is
+free software: you are free to change and redistribute it.
 There is no WARRANTY, to the extent permitted by law.
+.RE
+.PP
+This man page is
+Copyright (c) 2023 YellowJacket GNU/Linux\&.
+.sp
+.RS 4
+License SPDX:GFDL\-1\&.3\-or\-later
+.br
+<https://spdx.org/licenses/GFDL-1.3-or-later.html>\&.
+.sp
+Accuracy of this man page is stroven for but explicitly not
+guaranteed\&.
+.RE
+.PP
+.\" ---
+.\" --- end copyleft
 .SH AUTHORS
-YellowJacket GNU/Linux.
+Michael A\&. Peters
+.br
+.RS 8
+<anymouseprophet@gmail.com>
+.RE
+.PP
