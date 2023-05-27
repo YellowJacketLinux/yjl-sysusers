@@ -17,8 +17,8 @@ I then converted the man page to HTML:
 
     man2html yjl-sysusers.8 > yjl-sysusers.8.html
 
-The version of `man2html` produces ugly looking HTML syntax however
-I could then go from html to markdown via pandoc:
+The version of `man2html` in CentOS 7 produces ugly looking HTML syntax
+however I could then go from html to markdown via pandoc:
 
     pandoc -t markdown yjl-sysusers.8.html > yjl-sysusers.8.md
 
