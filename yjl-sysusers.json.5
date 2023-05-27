@@ -1,0 +1,63 @@
+'\" t
+.\"         Title: yjl-sysusers.json
+.\"        Author: Michael A. Peters
+.\" Generator: Hand-coded
+.\"      Date: 2023-05-26
+.\"    Manual: File Formats
+.\"  Language: English
+.\"
+.TH "YJL\-SYSUSERS\&.JSON" "5" "May 2023" "yjl\-sysusers\&.json 0\&.1\&.0" "File Formats"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH NAME
+yjl\-sysusers\&.json \- static system user UID/GID database
+.SH DESCRIPTION
+The
+\fByjl\-sysusers\&.json\fR file is a JSON dictionary of system user
+and group names which have desired static assignment of User ID (UID)
+and Group ID (GID)\&.
+.PP
+JSON (JavaScript Object Notation) was chosen because of both its ease
+of use with Python and its ubiquity with programming languages in
+general\&.
+.PP
+The \fByjl\-sysusers\&.json\fR file is used by the
+\fByjl\-sysusers (8)\fR
+wrapper to
+\fBuseradd (8)\fR and
+\fBgroupadd (8)\fR
+system administration utilities\&.
+.PP
+In addition to static UID and GID assignments,
+\fByjl\-sysusers\&.json\fR also has optional default options to pass
+to the
+\fBuseradd (8)\fR
+command when creating the specified system user account\&.
+.PP
+Additionally, the
+\fByjl\-sysusers\&.json\fR
+file may have an entry titled
+\fB00\-CONFIG\fR
+that configures how the
+\fByjl\-sysusers (8)\fR
+utility handles dynamically assigned system UID and GID numbers\&.
+.PP
+.\" ---
+.\" --- end description
