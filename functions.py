@@ -37,35 +37,27 @@ import argparse
 def _(fubar):
     return fubar
 
-def apstr(input: str) -> str:
-    """Translate the strings used by argparse."""
-    if input == "description":
-        return _("Add system users and groups. See: man 8 yjl-sysusers")
-    if input == "comment":
-        return _("Specify the user comment passwd field.")
-    if input == "home":
-        return _("Specify the user home directory.")
-    if input == "shell":
-        return _("Specify the user login shell.")
-    if input == "uadd":
-        return _("Use False to disable user creation.")
-    if input == "gadd":
-        return _("Use False to disable group creation.")
-    if input == "group":
-        return _("Specify the default group NAME for the user.")
-    if input == "mkdir":
-        return _("Use True to create home directory.")
-    return _("User or Group name to add.")
+APDICT = {
+    "description": _("Add system users and groups. See: man 8 yjl-sysusers"),
+    "comment": _("Specify the user comment passwd field."),
+    "home": _("Specify the user home directory."),
+    "shell": _("Specify the user login shell."),
+    "uadd": _("Use False to disable user creation."),
+    "gadd": _("Use False to disable group creation."),
+    "group": _("Specify the default group NAME for the user."),
+    "mkdir": _("Use True to create home directory."),
+    "account": _("User or Group name to add.")
+}
 
-PSR = argparse.ArgumentParser(description=apstr("description"))
-PSR.add_argument("-c", "--comment", type=str, help=apstr("comment"))
-PSR.add_argument("-d", "--home", type=str, help=apstr("home"))
-PSR.add_argument("-s", "--shell", type=str, help=apstr("shell"))
-PSR.add_argument("--useradd", choices=('True', 'False'), help=apstr("uadd"))
-PSR.add_argument("--groupadd", choices=('True', 'False'), help=apstr("gadd"))
-PSR.add_argument("-g", "--group", type=str, help=apstr("group"))
-PSR.add_argument("--mkdir", choices=('True', 'False'), help=apstr("mkdir"))
-PSR.add_argument('account', type=str, help=apstr("account"))
+PSR = argparse.ArgumentParser(description=APDICT["description"])
+PSR.add_argument("-c", "--comment", type=str, help=APDICT["comment"])
+PSR.add_argument("-d", "--home", type=str, help=APDICT["home"])
+PSR.add_argument("-s", "--shell", type=str, help=APDICT["shell"])
+PSR.add_argument("--useradd", choices=('True', 'False'), help=APDICT["uadd"])
+PSR.add_argument("--groupadd", choices=('True', 'False'), help=APDICT["gadd"])
+PSR.add_argument("-g", "--group", type=str, help=APDICT["group"])
+PSR.add_argument("--mkdir", choices=('True', 'False'), help=APDICT["mkdir"])
+PSR.add_argument('account', type=str, help=APDICT["account"])
 
 def cfg() -> str:
     """Sets the hard-coded location of the configuration file."""
@@ -219,14 +211,11 @@ def determine_useradd_gid_from_json(username: str, sysusers: dict) -> int:
     """Given a username, find the appropriate GID for useradd command."""
     gpname = request_gpname_from_json(username, sysusers)
     desired = request_gid_from_json(gpname, sysusers)
-    """ NOTE: If group does not exist, it will be created.
-            The *actual* GID will be returned which may
-            differ from the "desired" value."""
     return find_group_id(gpname, desired)
 
 def determine_useradd_uid_from_json(username: str, sysusers: dict) -> int:
     """Given a username, find the appropriate UID for useradd command."""
-    same_as_roup = True
+    same_as_group = True
     nameobject = sysusers[username]
     same_as_group = nameobject.get('grp', False)
     if same_as_group:
@@ -235,17 +224,17 @@ def determine_useradd_uid_from_json(username: str, sysusers: dict) -> int:
         desired = nameobject.get('myid', 65535)
     if same_as_group:
         try:
-            existing = pwd.getpwuid(desired)
-            desired = 65535
+            pwd.getpwuid(desired)
         except KeyError:
             return desired
+        desired = 65535
     idlist = load_id_list(desired)
     for i in idlist:
         try:
-            existing = grp.getgrgid(i)
+            grp.getgrgid(i)
         except KeyError:
             try:
-                existing = pwd.getpwuid(i)
+                pwd.getpwuid(i)
             except KeyError:
                 return i
     # Should never ever happen
@@ -345,13 +334,19 @@ def validate_cfg() -> int:
     keylist = list(sysusers.keys())
     for username in keylist:
         if username_check(username) is False:
-            sys.exit(_("The user/group '") + username + _("' is an invald name."))
+            sys.exit(_("The user/group '")
+                     + username
+                     + _("' is an invald name."))
         nameobject = sysusers[username]
         myid = nameobject.get('myid', 65535)
         if userid_check(myid) is False:
-            sys.exit(_("The user/group '") + username + _("' has a missing or invalid 'myid' definition."))
+            sys.exit(_("The user/group '")
+                     + username
+                     + _("' has a missing or invalid 'myid' definition."))
         if myid in usedlist:
-            sys.exit(_("The user/group '") + username + _("' has a duplicate 'myid' definition."))
+            sys.exit(_("The user/group '")
+                     + username
+                     + _("' has a duplicate 'myid' definition."))
         else:
             if myid != 65534:
                 usedlist.append(myid)
@@ -359,16 +354,24 @@ def validate_cfg() -> int:
         mygrp = nameobject.get('grp', False)
         if usr is False:
             if mygrp is False:
-                sys.exit(_("The user/group '") + username + _("' must have at least one of 'usr' or 'grp' set to 'true'."))
+                sys.exit(_("The user/group '")
+                         + username
+                         + _("' must have at least one of 'usr' or 'grp' set to 'true'."))
         comment = nameobject.get('comment', 'A Valid String')
         if usercomment_check(comment) is False:
-            sys.exit(_("The user/group '") + username + _("' has an invalid 'comment' definition."))
+            sys.exit(_("The user/group '")
+                     + username
+                     + _("' has an invalid 'comment' definition."))
         homedir = nameobject.get('homedir', '/dev/null')
         if homedir_check(homedir) is False:
-            sys.exit(_("The user/group '") + username + _("' has an invalid 'homedir' definition."))
+            sys.exit(_("The user/group '")
+                     + username
+                     + _("' has an invalid 'homedir' definition."))
         shell = nameobject.get('shell', '/bin/bash')
         if shell not in shells:
-            sys.exit(_("The user/group '") + username + _("' has an invalid 'shell' definition."))
+            sys.exit(_("The user/group '")
+                     + username
+                     + _("' has an invalid 'shell' definition."))
     myjson = json.dumps(sysusers)
     print(myjson)
     return 0
