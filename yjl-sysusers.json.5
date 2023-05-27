@@ -61,3 +61,102 @@ utility handles dynamically assigned system UID and GID numbers\&.
 .PP
 .\" ---
 .\" --- end description
+.SH FILE LOCATION
+.PP
+Ordinarily this file should be installed as:
+.sp
+.RS 8
+\fB/var/lib/yjl\-sysusers/yjl\-sysusers\&.json\fR
+.RE
+.PP
+The file is a configuration file but it is also a read-only database
+and once installed it should not be modified except by re-installation
+of the package that provides it.
+.PP
+.\" ---
+.\" --- end file location
+.SH ACCOUNT NAME OBJECTS
+.PP
+Each system user and/or group account for which a static ID is desired
+should have an \fBACCOUNT NAME OBJECT\fR using the \fBACCOUNT NAME\fR
+as the index for the object\&.
+.PP
+The following case sensitive properties of an \fBACCOUNT NAME\fR describe
+the \fBACCOUNT\fR:
+.PP
+\fImyid\fR
+.RS 4
+Integer\&. Required\&.
+.sp
+This property is the static UID/GID that should be used, if not already
+in use, when creating a user and/or group of the \fBACCOUNT NAME\fR\&.
+.sp
+The \fBnobody\fR and \fBnogroup\fR entries may share the same \fImyid\fR
+values but all other \fBACCOUNT NAME OBJECTS\fR must have a unique
+\fImyid\fR value\&.
+.sp
+The \fBnobody\fR and \fBnogroup\fR entries may have a \fImyid\fR value
+of \fI65534\fR but all other \fBACCOUNT NAME OBJECTS\fR must have a
+value below \fI1000\fR\&.
+.sp
+The \fBroot\fR entry must have a \fImyid\fR value of \fI0\fR\&.
+.sp
+The \fImyid\fB property should not be within the dynamically assigned
+system user range identified
+by \fISYS_UID_MIN\fR and \fISYS_UID_MAX\fR in the GNU/Linux distribution
+default
+\fB/etc/login\&.defs\fR configuration file\&.
+.RE
+.PP
+\fIusr\fR
+.RS 4
+Boolean\&. Recommended\&. Default value is \fIfalse\fR\&.
+.sp
+This property defines whether the default action of
+\fByjl-sysusers (8)\fR
+should be to create a user account associated with the
+\fBACCOUNT NAME OBJECT\fR\&.
+.sp
+If the \fIusr\fR property is either not defined or defined to
+\fIfalse\fR\ then the \fIgpr\fR property must be defined to
+\fItrue\fR\&.
+.RE
+.PP
+\fIgrp\fR
+.RS 4
+Boolean\&. Recommended\&. Default value is \fIfalse\fR\&.
+.sp
+This property defines whether the default action of
+\fByjl-sysusers (8)\fR
+should be to create a group account associated with the
+\fBACCOUNT NAME OBJECT\fR\&.
+.sp
+If the \fIgrp\fR property is either not defined or defined to
+\fIfalse\fR\ then the \fIusr\fR property must be defined to
+\fItrue\fR\&.
+.RE
+.PP
+\fIgroup\fR
+.RS 4
+String\&. Optional, rarely appropriate\&.
+.sp
+When present, this property defines the primary group that
+a user of the same name as the \fBACCOUNT NAME OBJECT\fR
+should belong to when a group of the same name is not to
+br created\&.
+.sp
+When the \fIgroup\fR property is present, the \fIusr\fR
+property must be defined as \fItrue\fR and the \fIgrp\fR
+property should either not be defined or defined as
+\fIfalse\fR\&.
+.sp
+When the \fIgroup\fR property is present, the string value
+should match the name of another \fBACCOUNT NAME OBJECT\fR
+that has a \fIgrp\fR property of \fItrue\fR\&.
+.RE
+.PP
+\fIcomment\fR
+.RS 4
+String\&. Optional, recommended\&.
+.RE
+.PP
