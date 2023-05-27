@@ -3,7 +3,7 @@
         "myid": 0,
         "usr": true,
         "grp": true,
-        "comment": "r00t",
+        "comment": "root super-user account",
         "homedir": "/root",
         "shell": "/bin/bash",
         "mkdir": true
@@ -381,21 +381,12 @@
         "shell": "/bin/bash",
         "mkdir": true
     },
-    "qqtexlive": {
-        "myid": 460,
-        "usr": true,
-        "grp": true,
-        "comment": "iiTeXLive Administrator",
-        "homedir": "/opt/qqtexlive/tladmin",
-        "shell": "/bin/bash",
-        "mkdir": true
-    },
     "nobody": {
         "myid": 65534,
         "usr": true,
         "grp": false,
         "group": "nogroup",
-        "comment": "Unprivileged User"
+        "comment": "Unprivileged system user"
     },
     "nogroup": {
         "myid": 65534,

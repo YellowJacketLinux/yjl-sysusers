@@ -234,11 +234,144 @@ when it creates a user account of \fBACCOUNT NAME\fR\&.
 \fImkdir\fR
 .RS 4
 Boolean\&. Optional, defaults to \fIfalse\fR\&.
+.sp
+When this property is set to \fItrue\fR then the default behavior
+of \fByjl-sysusers (8)\fR will be to create the home directory
+for \fBACCOUNT NAME\fR if the directory does not already exist when
+\fByjl-sysusers (8)\fR is asked to create a user account for
+\fBACCOUNT NAME\fR\&.
+.sp
+In most cases, that is not desired for system user accounts because
+it will copy the contents of /etc/skel into the created directory\&.
+.sp
+If the \fImkdir\fR property is either not set or is st to \fIfalse\fR
+then the default behavior of \fByjl-sysusers (8)\fR will be to NOT
+create the home directory for \fBACCOUNT NAME\fR when it is asked to
+add the \fBACCOUNT NAME\fR user\&.
 .RE
 .PP
-
 .\" ---
-.\" --- end stuff
+.\" --- end account name object
+.SH 000\-CONFIG
+This space is reserved for future content when the feature is implemented,
+likely in June 2023\&.
+.PP
+.\" ---
+.\" --- end 000-config
+.SH EXAMPLE
+The following is a brief example of a valid \fByjl\-sysusers\&.json\fR file\&.
+.PP
+{
+.RE
+.RS 4
+"root": {
+.RE
+.RS 8
+"myid": 0,
+.br
+"usr": true,
+.br
+"grp": true,
+.br
+"comment": "root super-user account",
+.br
+"homedir": "/root",
+.br
+"shell": "/bin/bash",
+.br
+"mkdir": true
+.RE
+.RS 4
+},
+.br
+"plocate": {
+.RE
+.RS 8
+"myid": 23,
+.br
+"usr": false,
+.br
+"grp": true
+.RE
+.RS 4
+},
+.br
+"fetchmail": {
+.RE
+.RS 8
+"myid": 38,
+.br
+"usr": true,
+.br
+"grp": false,
+.br
+"group": "nogroup"
+.RE
+.RS 4
+},
+.br
+"nobody": {
+.RE
+.RS 8
+"myid": 65534,
+.br
+"usr": true,
+.br
+"grp": false,
+.br
+"group": "nogroup",
+.br
+"comment": "Unprivileged system user"
+.RE
+.RS 4
+},
+.br
+"nogroup": {
+.RE
+.RS 8
+"myid": 65534,
+.br
+"usr": false,
+.br
+"grp": true
+.RE
+.RS 4
+}
+.RE
+}
+.PP
+Obviously the \fBroot\fR user does not need to be mentioned in the
+JSON file, that user must exist on the system before the
+\fByjl\-sysusers (8)\fR utility can be used, but it is good to have
+it for completeness as well as a rather complete example entry\&.
+.PP
+.\" ---
+.\" --- end example
+.SH MODIFICATION
+I recommend against modifications being applied to an installed
+\fByjl\-sysusers\&.json\fR file\&. A JSON mistake will break the
+ability of \fByjl-sysusers (8)\fR to function\&.
+.PP
+It is better to update the JSON in the \fByjl-sysusers\fR source
+package and build an updated package, so that the modification will
+be validated during package creation\&.
+.\" ---
+.\" --- end modification
+.SH FILES
+/var/lib/yjl\-sysuers/yjl\-sysusers\&.json
+.PP
+.\" ---
+.\" --- end files
+.SH SEE ALSO
+\fByjl-sysusers(8)\fR,
+\fBpasswd(5)\fR,
+\fBgroup(5)\fR,
+\fBshells(5)\fR,
+\fBgroupadd(8)\fR,
+\fBuseradd(8)\fR
+.PP
+.\" ---
+.\" --- end see also
 .SH COPYLEFT
 .PP
 \fByjl\-sysusers (8)\fR is
