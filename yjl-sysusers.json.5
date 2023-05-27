@@ -203,5 +203,73 @@ that are lower case alpha-numeric plus underscore,
 forward-slash, and hyphen dashes\&.
 .RE
 .PP
+\fIshell\fR
+.RS 4
+String\&. Optional, rarely appropriate\&.
+.PP
+When present, this property defines the default
+\fIshell\fR field of the /etc/passwd file (see
+\fBman 5 passwd\fR) when
+\fByjl-sysusers (8)\fR creates a user account using the
+name \fBACCOUNT NAME\fR\&.
+.sp
+The only valid values for the \fIshell\fR property of a
+\fBACCOUNT NAME OBJECT\fR in the
+\fByjl-sysusers\&.conf\fR file are
+\fI/bin/bash\fR and \fI/bin/sh\fR\&.
+.sp
+Additional values may be specified to the
+\fByjl-sysusers (8)\fR utility as long as the specified shell
+is in /etc/shells (see
+\fBman 5 shells\fR)\&.
+.sp
+When the \fBACCOUNT NAME OBJECT\fR does not have a \fIshell\fR
+property and a valid \fISHELL\fR option is not passed to the
+\fByjl-sysusers (8)\fR utility, the \fByjl-sysusers (8)\fR utility
+will use \fB/sbin/nologin\fR (if it exists on the system) or
+\fB/bin/false\fR for the \fIshell\fR field of the /etc/passwd file
+when it creates a user account of \fBACCOUNT NAME\fR\&.
+.RE
+.PP
+\fImkdir\fR
+.RS 4
+Boolean\&. Optional, defaults to \fIfalse\fR\&.
+.RE
+.PP
 
-
+.\" ---
+.\" --- end stuff
+.SH COPYLEFT
+.PP
+\fByjl\-sysusers (8)\fR is
+Copyright (c) 2023 YellowJacket GNU/Linux\&.
+.sp
+.RS 4
+License SPDX:MIT <https://spdx.org/licenses/MIT.html>\&.
+.sp
+\fByjl\-sysusers\fR is
+free software: you are free to change and redistribute it\&.
+There is no WARRANTY, to the extent permitted by law\&.
+.RE
+.PP
+This man page is
+Copyright (c) 2023 YellowJacket GNU/Linux\&.
+.sp
+.RS 4
+License SPDX:GFDL\-1\&.3\-or\-later
+.br
+<https://spdx\&.org/licenses/GFDL-1\&.3-or-later\&.html>\&.
+.sp
+Accuracy of this man page is stroven for but explicitly not
+guaranteed\&.
+.RE
+.PP
+.\" ---
+.\" --- end copyleft
+.SH AUTHORS
+Michael A\&. Peters
+.br
+.RS 8
+<anymouseprophet@gmail\&.com>
+.RE
+.PP
