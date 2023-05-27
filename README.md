@@ -19,9 +19,7 @@ have already been used for something else.
 My use case is for RPM `%pre` scriptlets to ensure that the appropriate
 users and groups an RPM package needs exist when the package installs.
 
-See the yjl-sysusers.8 man page. On a system with man installed:
-
-    cat yjl-sysusers.8 |/usr/bin/man -l -
+See the [yjl-sysusers.8](yjl-sysusers.8.md) man page.
 
 
 yjl-sysusers.json
