@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-""" YJL System User and Group Setup 
+""" YJL System User and Group Setup
 
 This program installs system (non-human) users and groups using parameters
 provided in '/var/lib/yjl-sysuers/yjl-sysuers.json', some of which can
@@ -26,8 +26,6 @@ This script is currently developed on github.
 import os
 import sys
 from pathlib import Path
-import string
-import unicodedata
 import re
 import json
 import grp
@@ -39,15 +37,25 @@ import argparse
 def _(fubar):
     return fubar
 
-parser = argparse.ArgumentParser(description=_("Add system users and groups. See: man 1 yjl-sysusers"))
-parser.add_argument("-c", "--comment", type=str, help=_("Specify the user comment passwd field."))
-parser.add_argument("-d", "--home", type=str, help=_("Specify the user home directory."))
-parser.add_argument("-s", "--shell", type=str, help=_("Specify the user login shell."))
-parser.add_argument("--useradd", choices=('True','False'), help=_("Use False to disable user creation."))
-parser.add_argument("--groupadd", choices=('True','False'), help=_("Use False to disable group creation."))
-parser.add_argument("-g", "--group", type=str, help=_("Specify the default group NAME for the user."))
-parser.add_argument("--mkdir", choices=('True','False'), help=_("Use True to create home directory."))
-parser.add_argument('account', type=str, help=_("User or Group name to add."))
+apdes = _("Add system users and groups. See: man 1 yjl-sysusers")
+apcomment = _("Specify the user comment passwd field.")
+aphome = _("Specify the user home directory.")
+apshell = _("Specify the user login shell.")
+apuseradd = _("Use False to disable user creation.")
+apgroupadd = _("Use False to disable group creation.")
+apgroup = _("Specify the default group NAME for the user.")
+apmkdir = _("Use True to create home directory.")
+apaccount = _("User or Group name to add.")
+# end argparse string assignments
+parser = argparse.ArgumentParser(description=apdes)
+parser.add_argument("-c", "--comment", type=str, help=apcomment)
+parser.add_argument("-d", "--home", type=str, help=aphome)
+parser.add_argument("-s", "--shell", type=str, help=apshell)
+parser.add_argument("--useradd", choices=('True', 'False'), help=apuseradd)
+parser.add_argument("--groupadd", choices=('True', 'False'), help=apgroupadd)
+parser.add_argument("-g", "--group", type=str, help=apgroup)
+parser.add_argument("--mkdir", choices=('True', 'False'), help=apmkdir)
+parser.add_argument('account', type=str, help=apaccount)
 
 def cfg() -> str:
     """Sets the hard-coded location of the configuration file."""
@@ -55,7 +63,7 @@ def cfg() -> str:
     cfgdir = ''
     if len(cfgdir) == 0:
         return jsonfile
-    return(cfgdir + '/' + jsonfile)
+    return cfgdir + '/' + jsonfile
 
 def username_check(checkme: str) -> bool:
     """Validates input against YJL rules for system user/group names."""
@@ -81,7 +89,8 @@ def usercomment_check(checkme: str, onlyascii=True) -> bool:
         if (len(checkme) == 0) or (len(checkme) > 60):
             return False
         if onlyascii:
-            return checkme.isascii()
+            return all(ord(char) < 128 for char in checkme)
+#            return checkme.isascii()
         return True
     return False
 
@@ -116,7 +125,7 @@ def shell_check(checkme: str, syshells=False) -> bool:
     """Validates the input can be used as a system user login shell."""
     myshells = ['/bin/bash', '/bin/sh']
     if os.path.isfile('/sbin/nologin'):
-        myshells.append('/sbin/nologin') 
+        myshells.append('/sbin/nologin')
     if syshells:
         try:
             with open('/etc/shells') as file:
@@ -131,7 +140,7 @@ def shell_check(checkme: str, syshells=False) -> bool:
     return False
 
 def add_the_group(gpname: str, gid: int) -> int:
-    """Attempts to create a system group using the specified ID, returns actual group ID when successful."""
+    """Wrapper to the actual groupadd command. Returns GID on success."""
     mycmd = "/sbin/groupadd " + "-f -g " + str(gid) + " -r " + gpname
     myuid = os.getuid()
     if myuid == 0:
@@ -154,9 +163,9 @@ def load_id_list(desired: int) -> list:
     mylist = []
     if desired != 65535:
         mylist.append(desired)
-    for i in range(300,400):
+    for i in range(300, 400):
         mylist.append(i)
-    for i in range(500,1000):
+    for i in range(500, 1000):
         mylist.append(i)
     return mylist
 
@@ -168,14 +177,14 @@ def find_group_id(gpname: str, desired: int) -> int:
     except KeyError:
         pass
     idlist = load_id_list(desired)
-    for x in idlist:
+    for i in idlist:
         try:
-            existing = grp.getgrgid(x)
+            existing = grp.getgrgid(i)
         except KeyError:
             try:
-                existing = pwd.getpwuid(x)
+                existing = pwd.getpwuid(i)
             except KeyError:
-                return add_the_group(gpname, x)
+                return add_the_group(gpname, i)
     # Should never reach this point but if it does
     #  try to create group anyway
     return add_the_group(gpname, desired)
@@ -209,28 +218,28 @@ def determine_useradd_gid_from_json(username: str, sysusers: dict) -> int:
 
 def determine_useradd_uid_from_json(username: str, sysusers: dict) -> int:
     """Given a username, find the appropriate UID for useradd command."""
-    sameAsGroup = True
+    same_as_roup = True
     nameobject = sysusers[username]
-    sameAsGroup = nameobject.get('grp', False)
-    if sameAsGroup:
+    same_as_group = nameobject.get('grp', False)
+    if same_as_group:
         desired = determine_useradd_gid_from_json(username, sysusers)
     else:
         desired = nameobject.get('myid', 65535)
-    if sameAsGroup:
+    if same_as_group:
         try:
             existing = pwd.getpwuid(desired)
             desired = 65535
         except KeyError:
             return desired
     idlist = load_id_list(desired)
-    for x in idlist:
+    for i in idlist:
         try:
-            existing = grp.getgrgid(x)
+            existing = grp.getgrgid(i)
         except KeyError:
             try:
-                existing = pwd.getpwuid(x)
+                existing = pwd.getpwuid(i)
             except KeyError:
-                return x
+                return i
     # Should never ever happen
     sys.exit(_("There do not seem to be any available User IDs left for a system user."))
 
@@ -243,12 +252,14 @@ def ensure_home_dir(homedir: str) -> None:
     try:
         subprocess.call(["mkdir", "-p", parent])
     except:
-        pass 
+        pass
 
 def add_the_user(username: str, sysusers: dict) -> None:
+    """Wrapper to the actual useradd command."""
     gid = determine_useradd_gid_from_json(username, sysusers)
     try:
-        existing = pwd.getpwnam(username)
+        #existing = pwd.getpwnam(username)
+        pwd.getpwnam(username)
         return
     except KeyError:
         pass
@@ -288,13 +299,9 @@ def add_the_user(username: str, sysusers: dict) -> None:
                 mkdir = True
         else:
             mkdir = False
-    myPREcmd = "/sbin/useradd -g " + str(gid) + " -u " + str(uid) + " -c \"" + comment + "\" -d " + homedir + " -s " + shell
     if mkdir:
         ensure_home_dir(homedir)
-        mycmd = myPREcmd + " --create-home -r " + username
         spclist.append("--create-home")
-    else:
-        mycmd = myPREcmd + " -r " + username
     spclist.append("-r")
     spclist.append(username)
     myuid = os.getuid()
@@ -305,7 +312,7 @@ def add_the_user(username: str, sysusers: dict) -> None:
             sys.exit(_("Failed to create the specified user."))
     else:
         # this only happens in testing, main() checks for root.
-        print(mycmd)
+        print(spclist)
 
 def just_do_it(username: str, sysusers: dict) -> None:
     """Called by main() to creates the user/group account as needed."""
@@ -314,7 +321,8 @@ def just_do_it(username: str, sysusers: dict) -> None:
     if createuser:
         add_the_user(username, sysusers)
     else:
-        gid = determine_useradd_gid_from_json(username, sysusers)
+        #gid = determine_useradd_gid_from_json(username, sysusers)
+        determine_useradd_gid_from_json(username, sysusers)
 
 def validate_cfg() -> int:
     """Validates the JSON configuration file and if successful, dumps contents to screen."""
@@ -328,7 +336,6 @@ def validate_cfg() -> int:
         sys.exit(_("Could not load the JSON data file:") + " " + jsonfile)
     keylist = list(sysusers.keys())
     for username in keylist:
-        check = username_check(username)
         if username_check(username) is False:
             sys.exit(_("The user/group '") + username + _("' is an invald name."))
         nameobject = sysusers[username]
@@ -341,9 +348,9 @@ def validate_cfg() -> int:
             if myid != 65534:
                 usedlist.append(myid)
         usr = nameobject.get('usr', False)
-        grp = nameobject.get('grp', False)
+        mygrp = nameobject.get('grp', False)
         if usr is False:
-            if grp is False:
+            if mygrp is False:
                 sys.exit(_("The user/group '") + username + _("' must have at least one of 'usr' or 'grp' set to 'true'."))
         comment = nameobject.get('comment', 'A Valid String')
         if usercomment_check(comment) is False:
@@ -375,7 +382,7 @@ def main(args) -> int:
         with open(jsonfile) as data_file:
             sysusers = json.load(data_file)
     except:
-       sys.exit(_("Could not load the JSON data file:") + " " + jsonfile)
+        sys.exit(_("Could not load the JSON data file:") + " " + jsonfile)
     keylist = list(sysusers.keys())
     if username in keylist:
         pass
