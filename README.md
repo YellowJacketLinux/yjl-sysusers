@@ -3,16 +3,13 @@ yjl-sysusers
 
 __PARTS OF THIS README NEED TO BE FIXED__
 
-At present this is works except for the minor detail that it does not
-*actually* work, see [TODO](TODO.md) for details.
-
 This project includes a single utility and a JSON file. In the git
 source, that utility is simply called `functions.py` but it gets
 installed as `/usr/sbin/yjl-sysusers.py` with a single-line change
 to specify the location on the filesystem of the JSON file.
 
-I am developing this using Python 3.11.3 but I think it has been
-tested in Python 3.6.4 without issues.
+I am developing this using Python 3.11.3 but it has been tested in
+Python 3.6.4 (CentOS 7) without issues.
 
 The purpose is to provide an easy way to provide consistent user ID
 and group ID numbers for system users (as opposed to human login users)
@@ -22,16 +19,9 @@ have already been used for something else.
 My use case is for RPM `%pre` scriptlets to ensure that the appropriate
 users and groups an RPM package needs exist when the package installs.
 
-If the necessary parameters are described in the JSON file, the only
-argument the script needs is the name of the user (or group) account
-to create. If the necessary parameters are *not* described in the JSON
-file or if the packager wants different parameters, every parameter
-can be defined as an argument to the script *except* for the UID/GID
-to request, that is only definable in the JSON file.
+See the yjl-sysusers.8 man page. On a system with man installed:
 
-Note the script still works to create users and groups not defined in
-the JSON file, it just uses appropriate dynamic IDs outside the range
-reserved for static IDs.
+    cat yjl-sysusers.8 |/usr/bin/man -l -
 
 
 yjl-sysusers.json
@@ -255,48 +245,4 @@ If the `useradd` program called by the `yjl-sysuser` utility should
 fail with a bad exit status, the `yjl-sysuser` utility will fail with
 a bad exit status. That should never happen unless the operating system
 is broken.
-
-Example Usage in RPM
---------------------
-
-For a package like `plocate` that only needs a group added, add the
-following conditional `Requires`:
-
-    %if 0%{?_yjl_sysusers:1} == 1
-    Requires(pre): %{_yjl_sysusers}
-    %endif
-
-Then for the scriptlet:
-
-    %pre
-    %if 0%{?_yjl_sysusers:1} == 1
-    %{_yjl_sysusers} plocate
-    %else
-    getent group plocate >/dev/null 2>&1 ||groupadd -r plocate
-    %endif
-
-When the RPM spec file is built on a system that has `yjl-sysusers`
-as part of the RPM build environment, the package will require the
-`/usr/sbin/yjl-sysusers` utility and then use it in the pre scriptlet
-to create the group with the specified group ID, or an alternate in
-the unlikely case a group with the specified ID already exists.
-
-When the RPM spec file is built on another system, it will still create
-the needed group if it does not already exist, but the group ID will
-be selected based upon the `SYS_GID_MIN-SYS_GID_MAX` range as defined
-in `login.defs`.
-
-Thus, the spec file remains at least somewhat portable.
-
-In the event the package installs on a system that does not have
-`plocate` defined in the JSON file, it will still create the group---
-but will also create a user as well as that is the default when the
-JSON file does not tell it what to do for a user. That actually does
-not hurt anything but you can avoid it by adding the `-p False` switch
-to the `%{_yjl_sysusers}` command.
-
-If you are creating RPM spec files for a distribution, you probably do
-not need to mess with switches as long as JSON file is correct but if
-you are creating generic RPM spec files, you probably do want to use
-the switches to manually specify the needed parameters for user creation.
 
