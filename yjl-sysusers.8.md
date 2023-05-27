@@ -117,7 +117,7 @@ vanilla Python 3.11.3 (released 2023 April 05).
 The boolean options (**--useradd**, **--groupadd**, and **--mkdir**) are
 case sensitive *True* or *False*.
 
-When **--groupadd***False* is used without using **-g**, **--group**
+When **--groupadd** *False* is used without using **-g**, **--group**
 *GROUP* then the system group *nogroup* will be used as the primary
 group for *account*.  
 
@@ -337,6 +337,6 @@ Index
 
 * * * * *
 
-This document was created by [man2html](/man/man2html), using the manual
+This document was created by man2html, using the manual
 pages.\
  Time: 02:28:23 GMT, May 27, 2023
