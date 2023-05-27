@@ -37,25 +37,35 @@ import argparse
 def _(fubar):
     return fubar
 
-apdes = _("Add system users and groups. See: man 1 yjl-sysusers")
-apcomment = _("Specify the user comment passwd field.")
-aphome = _("Specify the user home directory.")
-apshell = _("Specify the user login shell.")
-apuseradd = _("Use False to disable user creation.")
-apgroupadd = _("Use False to disable group creation.")
-apgroup = _("Specify the default group NAME for the user.")
-apmkdir = _("Use True to create home directory.")
-apaccount = _("User or Group name to add.")
-# end argparse string assignments
-parser = argparse.ArgumentParser(description=apdes)
-parser.add_argument("-c", "--comment", type=str, help=apcomment)
-parser.add_argument("-d", "--home", type=str, help=aphome)
-parser.add_argument("-s", "--shell", type=str, help=apshell)
-parser.add_argument("--useradd", choices=('True', 'False'), help=apuseradd)
-parser.add_argument("--groupadd", choices=('True', 'False'), help=apgroupadd)
-parser.add_argument("-g", "--group", type=str, help=apgroup)
-parser.add_argument("--mkdir", choices=('True', 'False'), help=apmkdir)
-parser.add_argument('account', type=str, help=apaccount)
+def apstr(input: str) -> str:
+    """Translate the strings used by argparse."""
+    if input == "description":
+        return _("Add system users and groups. See: man 8 yjl-sysusers")
+    if input == "comment":
+        return _("Specify the user comment passwd field.")
+    if input == "home":
+        return _("Specify the user home directory.")
+    if input == "shell":
+        return _("Specify the user login shell.")
+    if input == "uadd":
+        return _("Use False to disable user creation.")
+    if input == "gadd":
+        return _("Use False to disable group creation.")
+    if input == "group":
+        return _("Specify the default group NAME for the user.")
+    if input == "mkdir":
+        return _("Use True to create home directory.")
+    return _("User or Group name to add.")
+
+PSR = argparse.ArgumentParser(description=apstr("description"))
+PSR.add_argument("-c", "--comment", type=str, help=apstr("comment"))
+PSR.add_argument("-d", "--home", type=str, help=apstr("home"))
+PSR.add_argument("-s", "--shell", type=str, help=apstr("shell"))
+PSR.add_argument("--useradd", choices=('True', 'False'), help=apstr("uadd"))
+PSR.add_argument("--groupadd", choices=('True', 'False'), help=apstr("gadd"))
+PSR.add_argument("-g", "--group", type=str, help=apstr("group"))
+PSR.add_argument("--mkdir", choices=('True', 'False'), help=apstr("mkdir"))
+PSR.add_argument('account', type=str, help=apstr("account"))
 
 def cfg() -> str:
     """Sets the hard-coded location of the configuration file."""
@@ -90,7 +100,6 @@ def usercomment_check(checkme: str, onlyascii=True) -> bool:
             return False
         if onlyascii:
             return all(ord(char) < 128 for char in checkme)
-#            return checkme.isascii()
         return True
     return False
 
@@ -159,7 +168,7 @@ def add_the_group(gpname: str, gid: int) -> int:
     return existing.gr_gid
 
 def load_id_list(desired: int) -> list:
-    """Returns a list of IDs to query for appropriate system group/user creation."""
+    """Returns list of IDs to query for system group/user creation."""
     mylist = []
     if desired != 65535:
         mylist.append(desired)
@@ -170,7 +179,7 @@ def load_id_list(desired: int) -> list:
     return mylist
 
 def find_group_id(gpname: str, desired: int) -> int:
-    """Returns the ID associated with input group name, creating group first if needed."""
+    """Returns the ID associated with input group name."""
     try:
         existing = grp.getgrnam(gpname)
         return existing.gr_gid
@@ -212,8 +221,7 @@ def determine_useradd_gid_from_json(username: str, sysusers: dict) -> int:
     desired = request_gid_from_json(gpname, sysusers)
     """ NOTE: If group does not exist, it will be created.
             The *actual* GID will be returned which may
-            differ from the "desired" value.
-    """
+            differ from the "desired" value."""
     return find_group_id(gpname, desired)
 
 def determine_useradd_uid_from_json(username: str, sysusers: dict) -> int:
@@ -366,7 +374,7 @@ def validate_cfg() -> int:
     return 0
 
 def main(args) -> int:
-    """Does some things. Not finished."""
+    """Loads JSON file, applies argparse options."""
     if args.account == "000":
         validate_cfg()
         return 0
@@ -434,6 +442,6 @@ def main(args) -> int:
 
 
 if __name__ == '__main__':
-    sys.exit(main(parser.parse_args()))
+    sys.exit(main(PSR.parse_args()))
 
 # EOF
