@@ -158,5 +158,50 @@ that has a \fIgrp\fR property of \fItrue\fR\&.
 \fIcomment\fR
 .RS 4
 String\&. Optional, recommended\&.
+.sp
+When present, this property defines the default ASCII English
+version of the \fICOMMENT\fR
+(also called \fIGECOS\fR) field of the /etc/passwd file (see
+\fBman 5 passwd\fR) when
+\fByjl-sysusers (8)\fR creates a user account using the name
+\fBACCOUNT NAME\fR\&.
+.sp
+When the \fIcomment\fR property is not defined,
+\fByjl-sysusers (8)\fR will default to using
+"\fBACCOUNT NAME\fR system user account"
+as the \fICOMMENT\fR when it creates a user account using the
+name \fBACCOUNT NAME\fR\&.
+.sp
+The \fIcomment\fR property must be printable ASCII of no more
+than 60 characters in length and must contain a colon or a
+back\-slash\&.
+.sp
+When translations are available,
+\fByjl-sysusers (8)\fR
+will use translations of this property as provided by GNU
+gettext for systems that uses a non-English default
+language\&.
 .RE
 .PP
+\fIhomedir\fR
+.RS 4
+String\&. Optional\&. Defaults to /dev/null\&.
+.sp
+When present, this property defines the default
+\fIdirectory\fR field of the /etc/passwd file (see
+\fBman 5 passwd\fR) when
+\fByjl-sysusers (8)\fR creates a user account using the
+name \fBACCOUNT NAME\fR\&.
+.sp
+This is usually called the "home directory" because
+it defines the \fIHOME\fR environment variable for the
+user account\&.
+.sp
+The \fByjl-sysusers (8)\fR utility enforces stricter rules
+for system accounts, only allowing \fIhomedir\fR values
+that are lower case alpha-numeric plus underscore,
+forward-slash, and hyphen dashes\&.
+.RE
+.PP
+
+
