@@ -132,8 +132,10 @@ directory automatically\&.
 .\" --- end Options
 .SH USAGE NOTES
 .PP
-Python 3\&.7 or newer is needed for \fByjl\-sysusers\fR\&.
-That minimum requirement is due to the str.isascii() method\&.
+Python 3 is needed for \fByjl\-sysusers\fR\&. Testing has been
+done with the CentOS 7 packaged
+Python 3\&.6\&.4 (released 2017 December 19) and with vanilla
+Python 3\&.11\&.3 (released 2023 April 05)\&.
 .sp
 The boolean options (\fB\-\-useradd\fR, \fB\-\-groupadd\fR, and
 \fB\-\-mkdir\fR) are case sensitive \fITrue\fR or \fIFalse\fR\&.
@@ -321,10 +323,6 @@ option parameters\&.
 Default nogroup name and the dynamic range for system UID/GID should
 be configurable without modifiying the
 \fByjl\-sysusers\fR script\&.
-.PP
-Perhaps the the
-\fByjl\-sysusers\fR script should be ported to work with Python
-3\&.6\&.
 .PP
 .\" ---
 .\" --- end bugs

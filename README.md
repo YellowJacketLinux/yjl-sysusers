@@ -11,11 +11,8 @@ source, that utility is simply called `functions.py` but it gets
 installed as `/usr/sbin/yjl-sysusers.py` with a single-line change
 to specify the location on the filesystem of the JSON file.
 
-I know the `.isascii()` function requires Python 3.8+ and I *believe*
-some of the type hints require Python 3.9+.
-
-I am developing this using Python 3.11.3 but I think it should work
-in Python 3.9+ without issue.
+I am developing this using Python 3.11.3 but I think it has been
+tested in Python 3.6.4 without issues.
 
 The purpose is to provide an easy way to provide consistent user ID
 and group ID numbers for system users (as opposed to human login users)
