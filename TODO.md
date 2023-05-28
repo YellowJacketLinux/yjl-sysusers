@@ -3,13 +3,10 @@ TODO
 
 Right now it mostly works.
 
+Need an installer (Makefile)
+
 It needs to be integrated with gettext for string i18n string
 translation.
 
-I still need to make a `man 5` page.
-
-Note to self:
-
-    cat foo.N |/usr/bin/man -l -
-
-Other TODO stuff is in the yjl-sysusers.8 page.
+Need to fix the bugs referenced in
+[yjl-sysusers.8](docs/yjl-sysusers.8.md#bugs)
