@@ -50,7 +50,7 @@
         "homedir": "/sbin",
         "shell": "/sbin/shutdown",
         "atypshell": true
-    }
+    },
     "nobody": {
         "myid": 65534,
         "usr": true,
