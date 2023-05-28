@@ -214,7 +214,7 @@ If the *sendmail* user does not already exist, it will be created with
 *mail* as the primary group it belongs to.
 
     yjl-sysusers --useradd False mail && \
-    yjl-sysusers --groupadd *True* --useradd True \
+    yjl-sysusers --groupadd True --useradd True \
       -h /var/lib/sendmail -s noshell sendmail && \
     usermod -a -G mail sendmail
 
