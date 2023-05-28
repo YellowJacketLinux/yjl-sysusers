@@ -3,6 +3,7 @@ PYTHON = python3
 INSTALL = /usr/bin/install
 CHMOD = /usr/bin/chmod
 SED = /usr/bin/sed
+RM = /bin/rm
 # Filesystem paths
 DATADIR = /usr/share
 MANDIR = /usr/share/man
@@ -30,3 +31,10 @@ install-program:
 	$(INSTALL) -d $(DESTDIR)$(SBINDIR)
 	$(SED) -e s?"cfgdir = ''"?"cfgdir = '$(DATADIR)/yjl-sysusers'"? < functions.py > $(DESTDIR)$(SBINDIR)/yjl-sysusers
 	$(CHMOD) 0750 $(DESTDIR)$(SBINDIR)/yjl-sysusers
+
+uninstall:
+	$(RM) -f $(DESTDIR)$(RPMMACRODIR)/macros.yjl-sysusers
+	$(RM) -f $(DESTDIR)$(MANDIR)/man8/yjl-sysusers.8
+	$(RM) -f $(DESTDIR)$(MANDIR)/man5/yjl-sysusers.json.5
+	$(RM) -f $(DESTDIR)$(DATADIR)/yjl-sysusers/yjl-sysusers.json
+	$(RM) -f $(DESTDIR)$(SBINDIR)/yjl-sysusers
