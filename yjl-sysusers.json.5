@@ -27,7 +27,7 @@
 .\" * MAIN CONTENT STARTS HERE *
 .\" -----------------------------------------------------------------
 .SH NAME
-yjl\-sysusers\&.json \- static system user UID/GID database
+yjl\-sysusers\&.json \- static system account UID/GID database
 .SH DESCRIPTION
 The
 \fByjl\-sysusers\&.json\fR file is a JSON dictionary of system user
@@ -97,15 +97,17 @@ Each system user and/or group account for which a static ID is desired
 should have an \fBACCOUNT NAME OBJECT\fR using the \fBACCOUNT NAME\fR
 as the index for the object\&.
 .PP
-The following case sensitive properties of an \fBACCOUNT NAME\fR describe
-the defaults for the \fBACCOUNT\fR:
+The following case sensitive properties of an \fBACCOUNT NAME OBJECT\fR
+describe the defaults for the system user/group accounts of the name
+\fBACCOUNT NAME INDEX\fR:
 .PP
 \fImyid\fR
 .RS 4
 Integer\&. Required\&.
 .sp
 This property is the static UID/GID that should be used, if not already
-in use, when creating a user and/or group of the \fBACCOUNT NAME\fR\&.
+in use, when creating a user and/or group of the
+\fBACCOUNT NAME INDEX\fR\&.
 .sp
 The \fBnobody\fR and \fBnogroup\fR entries may share the same \fImyid\fR
 values but all other \fBACCOUNT NAME OBJECTS\fR must have a unique
@@ -254,14 +256,14 @@ Boolean\&. Optional, defaults to \fIfalse\fR\&.
 .sp
 When this property is set to \fItrue\fR then the default behavior
 of \fByjl-sysusers (8)\fR will be to create the home directory
-for \fBACCOUNT NAME\fR if the directory does not already exist when
-\fByjl-sysusers (8)\fR is asked to create a user account for
+for \fBACCOUNT NAME INDEX\fR if the directory does not already exist
+when \fByjl-sysusers (8)\fR is asked to create a user account for
 \fBACCOUNT NAME INDEX\fR\&.
 .sp
 In most cases, that is not desired for system user accounts because
 it will copy the contents of /etc/skel into the created directory\&.
 .sp
-If the \fImkdir\fR property is either not set or is st to \fIfalse\fR
+If the \fImkdir\fR property is either not set or is set to \fIfalse\fR
 then the default behavior of \fByjl-sysusers (8)\fR will be to NOT
 create the home directory for \fBACCOUNT NAME INDEX\fR when it is
 asked to add the \fBACCOUNT NAME INDEX\fR user\&.
@@ -397,7 +399,7 @@ The \fByjl\-sysusers (8)\fR utility is
 Copyright (c) 2023 YellowJacket GNU/Linux\&.
 .sp
 .RS 4
-License SPDX:MIT <https://spdx.org/licenses/MIT.html>\&.
+License: SPDX:MIT <https://spdx.org/licenses/MIT.html>\&.
 .sp
 \fByjl\-sysusers\fR is
 free software: you are free to change and redistribute it\&.
