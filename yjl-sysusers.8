@@ -32,29 +32,29 @@ yjl\-sysusers \- Add system users and groups
 .HP \w'\fByjl-sysusers\fR\ 'u
 \fByjl\-sysusers\fR [\fIOPTIONS\fR] \fIaccount\fR
 .\" ---
+.PP
 .\" --- end Synopsis
 .SH DESCRIPTION
-.PP
 \fByjl\-sysusers\fR is a wrapper script to the operating system
-\fBgroupadd\fR and \fBuseradd\fR commands that allows respecting
+\fBgroupadd (8)\fR and \fBuseradd (8)\fR commands that allows respecting
 the operating system static UID and GID assignment when available,
 without the need to assign them manually\&.
 .PP
 Static UID and GID values, as well as some other parameters useful to
 the \fBuseradd\fR command, are defined in the file
-\fByjl\-sysusers\&.json\fR which is normally located in the directory
+\fByjl\-sysusers\&.json (5)\fR which is normally located in the directory
 /var/lib/yjl\-sysusers\&.
 .PP
 \fByjl\-sysusers\fR was developed with RPM package scriptlets in
 mind\&.
 .\" ---
+.PP
 .\" --- end Description
 .SH OPTIONS
-.PP
 Options can be used when \fIaccount\fR has not been described
-in the \fByjl\-sysusers\&.json\fR file or to override default
+in the \fByjl\-sysusers\&.json (5)\fR file or to override default
 settings for \fIaccount\fR as defined in the
-\fByjl\-sysusers\&.json\fR file\&.
+\fByjl\-sysusers\&.json (5)\fR file\&.
 .PP
 \fB\-h\fR, \fB\-\-help\fR
 .RS 4
@@ -129,9 +129,9 @@ be created\&. The default with system accounts is not to create the
 directory automatically\&.
 .RE
 .\" ---
+.PP
 .\" --- end Options
 .SH USAGE NOTES
-.PP
 Python 3 is needed for \fByjl\-sysusers\fR\&. Testing has been
 done with the CentOS 7 packaged
 Python 3\&.6\&.4 (released 2017 December 19) and with vanilla
@@ -145,9 +145,9 @@ When \fB\-\-groupadd\fR \fIFalse\fR is used without using
 \fInogroup\fR
 will be used as the primary group for \fIaccount\fR\&.
 .\" ---
+.PP
 .\" --- end Usage Notes
 .SH PACKAGER NOTES
-.PP
 When creating an RPM (or other) package that has files owned by
 non-root users and groups, you should use \fByjl\-sysusers\fR in
 the package \fI%pre\fR scriptlet to ensure the appropriate
@@ -192,11 +192,10 @@ Lazy packaging where the packager relies upon
 to have correct user account parameters is not a motive for this
 package, although compensating for lazy packaging was a motive for
 allowing sane \fBuseradd\fR defaults to be specified in that file\&.
-.PP
 .\" ---
+.PP
 .\" --- end Packager Notes
 .SH CONFIGURATION
-.PP
 The default options on a per-\fIaccount\fR basis for accounts with
 preferred static UID/GID assignment are in the
 \fByjl-sysconfig\&.json\fR
@@ -212,35 +211,33 @@ with \fB\-\-groupadd\fR \fIFalse\fR and without
 \fB\-g\fR, \fB\-\-group\fR \fIGROUP\fR is currently hard-coded
 within the request_gpname_from_json() function\&. A future version
 of this program will make that easier to configure\&.
-.PP
 .\" ---
+.PP
 .\" --- end configuration
 .SH FILES
-.PP
 /usr/sbin/yjl\-sysusers
 .RS 4
-The Python 3 wrapper to \fBgroupadd\fR and \fBuseradd\fR&\.
+The Python 3 wrapper to \fBgroupadd (8)\fR and \fBuseradd (8)\fR&\.
 This man page describes use of that Python wrapper.
 .RE
 .PP
 /var/lib/yjl\-sysusers/yjl\-sysusers\&.json
 .RS 4
 The JSON database on a per-\fIaccount\fR basis for preferred
-static UID/GID and default options to pass to \fBuseradd\fR\&.
+static UID/GID and default options to pass to \fBuseradd (8)\fR\&.
 .RE
 .PP
 /usr/lib/rpm/macros.d/macros\&.yjl-sysusers
 .RS 4
 The definition of the
 \fB%{_yjl_sysusers}\fR
-macro that is used with \fBrpmbuild\fR to create RPM packages
+macro that is used with \fBrpmbuild (8)\fR to create RPM packages
 that utilize \fByjl\-sysusers\fR\&.
 .RE
-.PP
 .\" ---
+.PP
 .\" --- end files
 .SH EXAMPLES
-.PP
 \fByjl-sysusers\fR \fB\-\-useradd\fR \fIFalse\fR \fIplocate\fR
 .sp
 .RS 4
@@ -291,8 +288,8 @@ As a packager, btw, that is my preferred method of dealing with
 system users that need to belong to a system group of a different
 name.
 .RE
-.PP
 .\" ---
+.PP
 .\" --- end Examples
 .SH EXIT STATUS
 .PP
@@ -305,30 +302,41 @@ success
 .RS 4
 The program failed to create requested group and/or user\&.
 .RE
-.PP
 .\" ---
+.PP
 .\" --- end exit status
 .SH TODO
 .PP
 Implement GNU gettext i18n and get some translations\&. Fix the bugs
 listed below\&.
-.PP
 .\" ---
+.PP
 .\" --- end todo
 .SH BUGS
-.PP
 The program should not be case sensitive with respect to the boolean
 option parameters\&.
 .PP
 Default nogroup name and the dynamic range for system UID/GID should
 be configurable without modifiying the
 \fByjl\-sysusers\fR script\&.
-.PP
 .\" ---
-.\" --- end bugs
-.SH COPYLEFT
 .PP
-\fByjl\-sysusers\fR is
+.\" --- end bugs
+.SH SEE ALSO
+\fByjl-sysusers\&.json(5)\fR,
+\fBpasswd(5)\fR,
+\fBgroup(5)\fR,
+\fBlogin\&.defs(5)\fR,
+\fBshells(5)\fR,
+\fBgroupadd(8)\fR,
+\fBuseradd(8)\fR,
+\fBusermod(8)\fR,
+\fBrpmbuild(8)\fR
+.\" ---
+.PP
+.\" --- end see also
+.SH COPYLEFT
+The \fByjl\-sysusers\fR utility is
 Copyright (c) 2023 YellowJacket GNU/Linux\&.
 .sp
 .RS 4
@@ -350,8 +358,8 @@ License SPDX:GFDL\-1\&.3\-or\-later
 Accuracy of this man page is stroven for but explicitly is not
 guaranteed\&.
 .RE
-.PP
 .\" ---
+.PP
 .\" --- end copyleft
 .SH AUTHORS
 Michael A\&. Peters
@@ -359,4 +367,6 @@ Michael A\&. Peters
 .RS 8
 <anymouseprophet@gmail\&.com>
 .RE
+.\" ---
 .PP
+.\" --- end authors
