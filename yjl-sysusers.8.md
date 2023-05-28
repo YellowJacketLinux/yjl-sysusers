@@ -24,24 +24,26 @@ SYNOPSIS
 DESCRIPTION
 -----------
 
-**yjl-sysusers** is a wrapper script to the operating system
-**groupadd** and **useradd** commands that allows respecting
+**yjl-sysusers** is a wrapper script to the operating system **groupadd
+(8)** and **useradd (8)** commands that allows respecting
 
 the operating system static UID and GID assignment when available,
 without the need to assign them manually.
 
 Static UID and GID values, as well as some other parameters useful to
-the **useradd** command, are defined in the file **yjl-sysusers.json**
-which is normally located in the directory /var/lib/yjl-sysusers.
+the **useradd** command, are defined in the file **yjl-sysusers.json
+(5)** which is normally located in the directory /var/lib/yjl-sysusers.
 
-**yjl-sysusers** was developed with RPM package scriptlets in mind.  
+**yjl-sysusers** was developed with RPM package scriptlets in mind.
+
+ 
 
 OPTIONS
 -------
 
 Options can be used when *account* has not been described in the
-**yjl-sysusers.json** file or to override default settings for *account*
-as defined in the **yjl-sysusers.json** file.
+**yjl-sysusers.json (5)** file or to override default settings for
+*account* as defined in the **yjl-sysusers.json (5)** file.
 
 **-h**, **--help**
 
@@ -119,7 +121,9 @@ case sensitive *True* or *False*.
 
 When **--groupadd** *False* is used without using **-g**, **--group**
 *GROUP* then the system group *nogroup* will be used as the primary
-group for *account*.  
+group for *account*.
+
+ 
 
 PACKAGER NOTES
 --------------
@@ -190,18 +194,18 @@ FILES
 
 /usr/sbin/yjl-sysusers
 
-The Python 3 wrapper to **groupadd** and **useradd**&. This man page
-describes use of that Python wrapper.
+The Python 3 wrapper to **groupadd (8)** and **useradd (8)**&. This man
+page describes use of that Python wrapper.
 
 /var/lib/yjl-sysusers/yjl-sysusers.json
 
 The JSON database on a per-*account* basis for preferred static UID/GID
-and default options to pass to **useradd**.
+and default options to pass to **useradd (8)**.
 
 /usr/lib/rpm/macros.d/macros.yjl-sysusers
 
 The definition of the **%{\_yjl\_sysusers}** macro that is used with
-**rpmbuild** to create RPM packages that utilize **yjl-sysusers**.
+**rpmbuild (8)** to create RPM packages that utilize **yjl-sysusers**.
 
  
 
@@ -272,10 +276,26 @@ configurable without modifiying the **yjl-sysusers** script.
 
  
 
+SEE ALSO
+--------
+
+**[yjl-sysusers.json](/man/man2html?5+yjl-sysusers.json)(5)**,
+**[passwd](/man/man2html?5+passwd)(5)**,
+**[group](/man/man2html?5+group)(5)**,
+**[login.defs](/man/man2html?5+login.defs)(5)**,
+**[shells](/man/man2html?5+shells)(5)**,
+**[groupadd](/man/man2html?8+groupadd)(8)**,
+**[useradd](/man/man2html?8+useradd)(8)**,
+**[usermod](/man/man2html?8+usermod)(8)**,
+**[rpmbuild](/man/man2html?8+rpmbuild)(8)**
+
+ 
+
 COPYLEFT
 --------
 
-**yjl-sysusers** is Copyright (c) 2023 YellowJacket GNU/Linux.
+The **yjl-sysusers** utility is Copyright (c) 2023 YellowJacket
+GNU/Linux.
 
 License SPDX:MIT
 \<[https://spdx.org/licenses/MIT.html](https://spdx.org/licenses/MIT.html)\>.
@@ -289,7 +309,8 @@ License SPDX:GFDL-1.3-or-later \
 
 \<[https://spdx.org/licenses/GFDL-1.3-or-later.html](https://spdx.org/licenses/GFDL-1.3-or-later.html)\>.
 
-Accuracy of this man page is stroven for but explicitly not guaranteed.
+Accuracy of this man page is stroven for but explicitly is not
+guaranteed.
 
  
 
@@ -331,12 +352,14 @@ Index
 
 [BUGS](#lbAM)
 
-[COPYLEFT](#lbAN)
+[SEE ALSO](#lbAN)
 
-[AUTHORS](#lbAO)
+[COPYLEFT](#lbAO)
+
+[AUTHORS](#lbAP)
 
 * * * * *
 
 This document was created by man2html, using the manual
 pages.\
- Time: 02:28:23 GMT, May 27, 2023
+ Time: 00:36:48 GMT, May 28, 2023
