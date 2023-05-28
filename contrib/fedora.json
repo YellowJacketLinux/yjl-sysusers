@@ -1,0 +1,29 @@
+{
+    "000-CONFIG {
+        "nogroup": "nobody"
+    }
+    "root": {
+        "myid": 0,
+        "usr": true,
+        "grp": true,
+        "comment": "root super-user account",
+        "homedir": "/root",
+        "shell": "/bin/bash",
+        "mkdir": true
+    },
+    "bin": {
+        "myid": 1,
+        "usr": true,
+        "grp": true
+    },
+    "daemon": {
+        "myid": 2,
+        "usr": true,
+        "grp": true,
+    },
+    "nobody": {
+        "myid": 65534,
+        "usr": true,
+        "grp": true
+    }
+}
