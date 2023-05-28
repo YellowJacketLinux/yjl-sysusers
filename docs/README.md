@@ -1,6 +1,13 @@
 Generating Docs
 ===============
 
+__NOTE:__ In the development branch, the markdown version of man pages
+may lag behind their corresponding roff man page.
+
+Markdown conversion is done as a final step before merge with main.
+
+---------------
+
 Initially I tried writing the yjl-sysusers.8 man page in markdown and
 then converting to man via pandoc.
 
