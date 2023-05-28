@@ -246,10 +246,12 @@ def ensure_home_dir(homedir: str) -> None:
     parent = path.parent.absolute()
     if os.path.exists(parent):
         return
-    try:
-        subprocess.call(["mkdir", "-p", parent])
-    except:
-        pass
+    myuid = os.getuid()
+    if myuid == 0:
+        try:
+            subprocess.call(["mkdir", "-p", parent])
+        except:
+            pass
 
 def add_the_user(username: str, sysusers: dict) -> None:
     """Wrapper to the actual useradd command."""
