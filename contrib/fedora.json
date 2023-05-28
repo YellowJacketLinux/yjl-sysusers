@@ -19,8 +19,38 @@
     "daemon": {
         "myid": 2,
         "usr": true,
-        "grp": true,
+        "grp": true
     },
+    "adm": {
+        "myid": 3,
+        "groupid": 4,
+        "usr": true,
+        "grp": true
+    },
+    "lp": {
+        "myid": 4,
+        "groupid": 7,
+        "usr": true,
+        "grp": true
+    },
+    "sync": {
+        "myid": 5,
+        "usr": true,
+        "grp": false,
+        "group": "root",
+        "homedir": "/sbin",
+        "shell": "/bin/sync",
+        "atypshell": true
+    },
+    "shutdown": {
+        "myid": 6,
+        "usr": true,
+        "grp": false,
+        "group": "root",
+        "homedir": "/sbin",
+        "shell": "/sbin/shutdown",
+        "atypshell": true
+    }
     "nobody": {
         "myid": 65534,
         "usr": true,
