@@ -9,6 +9,11 @@ MANDIR = /usr/share/man
 SBINDIR = /usr/sbin
 RPMMACRODIR = /usr/lib/rpm/macros.d
 
+dummy:
+	echo "run make install"
+
+install: install-macros install-man install-json install-program
+
 install-macros:
 	$(INSTALL) -Dm644 macros.yjl-sysusers $(DESTDIR)$(RPMMACRODIR)/macros.yjl-sysusers
 
