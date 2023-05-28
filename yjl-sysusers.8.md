@@ -24,17 +24,16 @@ SYNOPSIS
 DESCRIPTION
 -----------
 
-**yjl-sysusers** is a wrapper script to the operating system **groupadd
-(8)** and **useradd (8)** commands that allows respecting
-
+`yjl-sysusers` is a wrapper script to the operating system `groupadd
+(8)` and `useradd (8)` commands that allows respecting
 the operating system static UID and GID assignment when available,
 without the need to assign them manually.
 
 Static UID and GID values, as well as some other parameters useful to
-the **useradd** command, are defined in the file **yjl-sysusers.json
-(5)** which is normally located in the directory /var/lib/yjl-sysusers.
+the `useradd (8)` command, are defined in the file `yjl-sysusers.json
+(5)` which is normally located in the directory `/var/lib/yjl-sysusers`.
 
-**yjl-sysusers** was developed with RPM package scriptlets in mind.
+`yjl-sysusers` was developed with RPM package scriptlets in mind.
 
  
 
@@ -42,70 +41,62 @@ OPTIONS
 -------
 
 Options can be used when *account* has not been described in the
-**yjl-sysusers.json (5)** file or to override default settings for
-*account* as defined in the **yjl-sysusers.json (5)** file.
+`yjl-sysusers.json (5)` file or to override default settings for
+*account* as defined in the `yjl-sysusers.json (5)` file.
 
-**-h**, **--help**
+* `-h`, `--help`  
+  Display help message and exit.
 
-Display help message and exit.
+* `-c`, `--comment` *COMMENT*  
+  Define the comment field to be used in the `/etc/passwd` file. This is
+  used to provide a brief description of *account*. *COMMENT* must be
+  printable ASCII, excluding the \\ and : characters. *COMMENT* must not
+  exceed 60 characters.
 
-**-c**, **--comment** *COMMENT*
+* `d`, `--home` *HOME*  
+  Define the home directory to be used with the system user account. It
+  must be full path and can only use lower-case alpha-numeric characters
+  plus underscore, forward-slash, and hyphen.
 
-Define the comment field to be used in the /etc/passwd file. This is
-used to provide a brief description of *account*. *COMMENT* must be
-printable ASCII, excluding the \\ and : characters. *COMMENT* must not
-exceed 60 characters.
+* `-s`, `--shell` *SHELL*  
+  Define the login shell to be used with the system user account. If
+  *SHELL* is not present in /etc/shells or is not installed on the system,
+  then `/sbin/nologin` or `/bin/false` will be substituted.
 
-**-d**, **--home** *HOME*
+  Any argument that is not full-path is invalid, so you can just use
+  *noshell* as the *SHELL* arguement to guarantee that either
+  `/sbin/nologin` or `/bin/false` are used as the login shell.
 
-Define the home directory to be used with the system user account. It
-must be full path and can only use lower-case alpha-numeric characters
-plus underscore, forward-slash, and hyphen.
+  `yjl-sysuers` will use `/sbin/nologin` for any *account* that does have
+  a valid *SHELL* specified unless `/sbin/nologin` is not present on the
+  system. In such cases, `/bin/false` is used instead.
 
-**-s**, **--shell** *SHELL*
+* `--useradd` *{True,False}*  
+  Define whether or not the user name *account* should be created.
 
-Define the login shell to be used with the system user account. If
-*SHELL* is not present in /etc/shells or is not installed on the system,
-then /sbin/nologin or /bin/false will be substituted.
+  When `--useradd` is set to *False* then `--groupadd` is
+  automatically set to *True*.
 
-Any argument that is not full-path is invalid, so you can just use
-*noshell* as the *SHELL* arguement to guarantee that either
-/sbin/nologin or /bin/false are used as the login shell.
+* `--groupadd` *{True,False}*  
+  Define whether or not the group name *account* should be created.
 
-**yjl-sysuers** will use /sbin/nologin for any *account* that does have
-a valid *SHELL* specified unless /sbin/nologin is not present on the
-system. In such cases, /bin/false is used instead.
+  When `--groupadd` is set to *False* then `--useradd` is
+  automatically set to *True*.
 
-**--useradd** *{True,False}*
+* `-g`, `--group` *GROUP*  
+  Define the primary group for the user *account* with a different group
+  name than *account*.
 
-Define whether or not the user name *account* should be created.
+  If the group *GROUP* does not exist, it will be created automatically.
 
-When **--useradd** is set to *False* then **--groupadd** is
-automatically set to *True*.
+  When *GROUP* is defined, the group *account* will not be created
+  regardless of `--groupadd` and the user *account* will be created
+  regardless of `--useradd`.
 
-**--groupadd** *{True,False}*
-
-Define whether or not the group name *account* should be created.
-
-When **--groupadd** is set to *False* then **--useradd** is
-automatically set to *True*.
-
-**-g**, **--group** *GROUP*
-
-Define the primary group for the user *account* with a different group
-name than *account*.
-
-If the group *GROUP* does not exist, it will be created automatically.
-
-When *GROUP* is defined, the group *account* will not be created
-regardless of **--groupadd** and the user *account* will be created
-regardless of **--useradd**.
-
-**--mkdir** *{True,False}*
-
-Define whether or not the home directory for user *account* should be
-created. The default with system accounts is not to create the directory
-automatically.
+* `--mkdir` *{True,False}*  
+  Define whether or not the home directory for user *account* should be
+  created. The default with system accounts is not to create the directory
+  automatically.
 
  
 
