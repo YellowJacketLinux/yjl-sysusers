@@ -200,27 +200,23 @@ FILES
 EXAMPLES
 --------
 
-**yjl-sysusers** **--useradd** *False* *plocate*
+    yjl-sysusers --useradd False plocate
 
 Ensure the *plocate* group exists, without creating a *plocate* user.
 
-**yjl-sysusers** **-g** *mail* **-h** */var/lib/sendmail* **-s**
-*noshell* *sendmail*
+    yjl-sysusers -g mail -h /var/lib/sendmail -s noshell sendmail
 
 Ensure the *mail* group exists. Ensure the *sendmail* user exists,
-creating it if necessary using */var/lib/sendmail* as the *HOME*
-directory, using either /sbin/nologin or /bin/false as the login shell.
+creating it if necessary using `/var/lib/sendmail` as the *HOME*
+directory, using either `/sbin/nologin` or `/bin/false` as the login shell.
 
 If the *sendmail* user does not already exist, it will be created with
 *mail* as the primary group it belongs to.
 
-**yjl-sysusers** **--useradd** *False* *mail* && \
- **yjl-sysusers** **--groupadd** *True* **--useradd** *True* \\ \
-
-**-h** */var/lib/sendmail* **-s** *noshell* *sendmail* &&
-
-\
- **usermod** **-a** **-G** *mail* *sendmail*
+    yjl-sysusers --useradd False mail && \
+    yjl-sysusers --groupadd *True* --useradd True \
+      -h /var/lib/sendmail -s noshell sendmail && \
+    usermod -a -G mail sendmail
 
 First ensure that the *mail* group exists. Then ensure that the
 *sendmail* user exists as in the previous example, only if the user is
@@ -235,13 +231,8 @@ users that need to belong to a system group of a different name.
 EXIT STATUS
 -----------
 
-*0*
-
-success
-
-*1*
-
-The program failed to create requested group and/or user.
+* *0* --- success
+* *1* --- The program failed to create requested group and/or user.
 
  
 
@@ -260,14 +251,14 @@ The program should not be case sensitive with respect to the boolean
 option parameters.
 
 Default nogroup name and the dynamic range for system UID/GID should be
-configurable without modifiying the **yjl-sysusers** script.
+configurable without modifiying the `yjl-sysusers` script.
 
  
 
 SEE ALSO
 --------
 
-**[yjl-sysusers.json](yjl-sysusers.json.5.md)(5)**,
+**[yjl-sysusers.json (5)](yjl-sysusers.json.5.md)**,
 **passwd(5)**,
 **group(5)**,
 **login.defs(5)**,
@@ -282,20 +273,17 @@ SEE ALSO
 COPYLEFT
 --------
 
-The **yjl-sysusers** utility is Copyright (c) 2023 YellowJacket
+The `yjl-sysusers` utility is Copyright (c) 2023 YellowJacket
 GNU/Linux.
 
-License SPDX:MIT
-\<[https://spdx.org/licenses/MIT.html](https://spdx.org/licenses/MIT.html)\>.
+License: [SPDX:MIT](https://spdx.org/licenses/MIT.html)
 
-**yjl-sysusers** is free software: you are free to change and
+`yjl-sysusers` is free software: you are free to change and
 redistribute it. There is no WARRANTY, to the extent permitted by law.
 
 This man page is Copyright (c) 2023 YellowJacket GNU/Linux.
 
-License SPDX:GFDL-1.3-or-later \
-
-\<[https://spdx.org/licenses/GFDL-1.3-or-later.html](https://spdx.org/licenses/GFDL-1.3-or-later.html)\>.
+License: [SPDX:GFDL-1.3-or-later](https://spdx.org/licenses/GFDL-1.3-or-later.html)
 
 Accuracy of this man page is stroven for but explicitly is not
 guaranteed.
@@ -305,9 +293,7 @@ guaranteed.
 AUTHORS
 -------
 
-Michael A. Peters \
-
-\<[anymouseprophet@gmail.com](mailto:anymouseprophet@gmail.com)\>
+[Michael A. Peters](mailto:anymouseprophet@gmail.com)
 
 * * * * *
 
@@ -316,35 +302,35 @@ Michael A. Peters \
 Index
 -----
 
-[NAME](#lbAB)
+[NAME](#name)
 
-[SYNOPSIS](#lbAC)
+[SYNOPSIS](#synopsis)
 
-[DESCRIPTION](#lbAD)
+[DESCRIPTION](#description)
 
-[OPTIONS](#lbAE)
+[OPTIONS](#options)
 
-[USAGE NOTES](#lbAF)
+[USAGE NOTES](#usage-notes)
 
-[PACKAGER NOTES](#lbAG)
+[PACKAGER NOTES](#packager-notes)
 
-[CONFIGURATION](#lbAH)
+[CONFIGURATION](#configuration)
 
-[FILES](#lbAI)
+[FILES](#files)
 
-[EXAMPLES](#lbAJ)
+[EXAMPLES](#examples)
 
-[EXIT STATUS](#lbAK)
+[EXIT STATUS](#exit-status)
 
-[TODO](#lbAL)
+[TODO](#todo)
 
-[BUGS](#lbAM)
+[BUGS](#bugs)
 
-[SEE ALSO](#lbAN)
+[SEE ALSO](#see-also)
 
-[COPYLEFT](#lbAO)
+[COPYLEFT](#copyleft)
 
-[AUTHORS](#lbAP)
+[AUTHORS](#authors)
 
 * * * * *
 
