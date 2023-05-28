@@ -1,7 +1,7 @@
 {
     "000-CONFIG {
         "nogroup": "nobody"
-    }
+    },
     "root": {
         "myid": 0,
         "usr": true,
