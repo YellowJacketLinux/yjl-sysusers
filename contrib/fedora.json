@@ -51,6 +51,43 @@
         "shell": "/sbin/shutdown",
         "atypshell": true
     },
+    "halt": {
+        "myid": 7,
+        "usr": true,
+        "grp": false,
+        "group": "root",
+        "homedir": "/sbin",
+        "shell": "/sbin/halt",
+        "atypshell": true
+    },
+    "mail": {
+        "myid": 8,
+        "groupid": 12,
+        "usr": true,
+        "grp": true,
+        "homedir": "/var/spool/mail"
+    },
+    "operator": {
+        "myid": 11,
+        "usr": true,
+        "grp": false,
+        "group": "root",
+        "homedir": "/root"
+    },
+    "games": {
+        "myid": 12,
+        "usr": true,
+        "grp": false,
+        "group": "users",
+        "homedir": "/usr/games"
+    },
+    "ftp": {
+        "myid": 14,
+        "groupid": 50,
+        "usr": true,
+        "grp": true,
+        "homedir": "/var/ftp"
+    },
     "nobody": {
         "myid": 65534,
         "usr": true,
