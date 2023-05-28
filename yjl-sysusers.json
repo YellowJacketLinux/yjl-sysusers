@@ -198,7 +198,7 @@
         "myid": 50,
         "usr": true,
         "grp": true,
-        "comment": "sshd PrivSep",
+        "comment": "Privilege-separated SSH",
         "homedir": "/var/lib/sshd"
     },
     "stunnel": {

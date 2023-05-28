@@ -14,24 +14,33 @@
     "bin": {
         "myid": 1,
         "usr": true,
-        "grp": true
+        "grp": true,
+        "homedir": "/bin"
     },
     "daemon": {
         "myid": 2,
         "usr": true,
-        "grp": true
+        "grp": true,
+        "homedir": "/sbin"
     },
     "adm": {
         "myid": 3,
         "groupid": 4,
         "usr": true,
-        "grp": true
+        "grp": true,
+        "homedir": "/var/adm"
     },
+    "sys" {
+        "myid": 3,
+        "usr": false,
+        "grp": true
+        }
     "lp": {
         "myid": 4,
         "groupid": 7,
         "usr": true,
-        "grp": true
+        "grp": true,
+        "homedir": "/var/spool/lpd"
     },
     "sync": {
         "myid": 5,
@@ -42,6 +51,11 @@
         "shell": "/bin/sync",
         "atypshell": true
     },
+    "tty": {
+        "myid": 5,
+        "usr": false,
+        "grp": true
+    }
     "shutdown": {
         "myid": 6,
         "usr": true,
@@ -50,6 +64,11 @@
         "homedir": "/sbin",
         "shell": "/sbin/shutdown",
         "atypshell": true
+    },
+    "disk": {
+        "myid": 6,
+        "usr": false,
+        "grp": true
     },
     "halt": {
         "myid": 7,
@@ -67,6 +86,21 @@
         "grp": true,
         "homedir": "/var/spool/mail"
     },
+    "mem": {
+        "myid": 8,
+        "usr": false,
+        "grp": true
+    },
+    "kmem": {
+        "myid": 9,
+        "usr": false,
+        "grp": true
+    },
+    "wheel": {
+        "myid": 10,
+        "usr": false,
+        "grp": true
+    },
     "operator": {
         "myid": 11,
         "usr": true,
@@ -74,11 +108,16 @@
         "group": "root",
         "homedir": "/root"
     },
+    "cdrom": {
+        "myid": 11,
+        "usr": false,
+        "grp": true
+    }
     "games": {
         "myid": 12,
+        "groupid": 20,
         "usr": true,
-        "grp": false,
-        "group": "users",
+        "grp": true,
         "homedir": "/usr/games"
     },
     "ftp": {
@@ -88,9 +127,74 @@
         "grp": true,
         "homedir": "/var/ftp"
     },
+    "man": {
+        "myid": 15,
+        "usr": false,
+        "grp": true
+    },
+    "dialout": {
+        "myid": 18,
+        "usr": false,
+        "grp": true
+    },
+    "floppy": {
+        "myid": 19,
+        "usr": false,
+        "grp": true
+    },
+    "utmp": {
+        "myid": 22,
+        "usr": false,
+        "grp": true
+    }
+    "rpc": {
+        "myid": 32,
+        "usr": true,
+        "grp": true,
+        "homedir": "/var/lib/rpcbind"
+    },
+    "tape": {
+        "myid": 33,
+        "usr": false,
+        "grp": true
+    },
+    "gdm": {
+        "myid": 42,
+        "usr": true,
+        "grp": true,
+        "homedir": "/var/lib/gdm"
+    },
+    "tss": {
+        "myid": 59,
+        "usr": true,
+        "grp": true
+        "comment": "Account used by the trousers package to sandbox the tcsd daemon"
+    },
+    "tcpdump": {
+        "myid": 72,
+        "usr": true,
+        "grp": true
+    },
+    "sshd": {
+        "myid": 74,
+        "usr": true,
+        "grp": true,
+        "comment": "Privilege-separated SSH",
+        "homedir": "/var/empty/sshd"
+    },
+    "dbus": {
+        "myid": 81,
+        "usr": true,
+        "grp": true
+    },
+    "ceph": {
+        "myid": 167,
+        "usr": true,
+        "grp": true
+    },
     "nobody": {
         "myid": 65534,
         "usr": true,
-        "grp": true
+        "grp": true,
     }
 }
