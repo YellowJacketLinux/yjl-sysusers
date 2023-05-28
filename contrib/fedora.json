@@ -1,5 +1,5 @@
 {
-    "000-CONFIG" {
+    "000-CONFIG": {
         "nogroup": "nobody"
     },
     "root": {
