@@ -1,6 +1,7 @@
 {
     "000-CONFIG": {
-        "nogroup": "nobody"
+        "nogroup": "nobody",
+        "dupok": [3, 5, 6, 8, 11]
     },
     "root": {
         "myid": 0,
@@ -30,11 +31,11 @@
         "grp": true,
         "homedir": "/var/adm"
     },
-    "sys" {
+    "sys": {
         "myid": 3,
         "usr": false,
         "grp": true
-        }
+        },
     "lp": {
         "myid": 4,
         "groupid": 7,
@@ -55,7 +56,7 @@
         "myid": 5,
         "usr": false,
         "grp": true
-    }
+    },
     "shutdown": {
         "myid": 6,
         "usr": true,
@@ -112,7 +113,7 @@
         "myid": 11,
         "usr": false,
         "grp": true
-    }
+    },
     "games": {
         "myid": 12,
         "groupid": 20,
@@ -146,7 +147,7 @@
         "myid": 22,
         "usr": false,
         "grp": true
-    }
+    },
     "rpc": {
         "myid": 32,
         "usr": true,
@@ -167,7 +168,7 @@
     "tss": {
         "myid": 59,
         "usr": true,
-        "grp": true
+        "grp": true,
         "comment": "Account used by the trousers package to sandbox the tcsd daemon"
     },
     "tcpdump": {
@@ -195,6 +196,6 @@
     "nobody": {
         "myid": 65534,
         "usr": true,
-        "grp": true,
+        "grp": true
     }
 }
