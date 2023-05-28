@@ -167,10 +167,10 @@ facilities into the preferred language of the system\&.
 Packagers should usually avoid using
 \fB\-\-mkdir\fR \fITrue\fR\&.
 .sp
-When \fBuseradd\fR creates the \fIHOME\fR directory, it also copies
+When \fBuseradd (8)\fR creates the \fIHOME\fR directory, it also copies
 the contents of /etc/skel into that directory\&. Usually that is not
 desired\&. It is often better to have the package create the
-\fBhome\fR directory when a home directory is needed\&.
+\fIhome\fR directory when a home directory is needed\&.
 .sp
 Packagers should never assume the contents of the
 \fByjl-sysusers\&.json\fR file are correct for the package, but
@@ -188,17 +188,17 @@ internationalization of system user account descriptions (the
 \fICOMMENT\fR of /etc/passwd) at the time of package install\&.
 .sp
 Lazy packaging where the packager relies upon
-\fByjl-sysusers\&.json\fR
+\fByjl-sysusers\&.json (5)\fR
 to have correct user account parameters is not a motive for this
 package, although compensating for lazy packaging was a motive for
-allowing sane \fBuseradd\fR defaults to be specified in that file\&.
+allowing sane \fBuseradd (8)\fR defaults to be specified in that file\&.
 .\" ---
 .PP
 .\" --- end Packager Notes
 .SH CONFIGURATION
 The default options on a per-\fIaccount\fR basis for accounts with
 preferred static UID/GID assignment are in the
-\fByjl-sysconfig\&.json\fR
+\fByjl-sysconfig\&.json (5)\fR
 file\&. All options except for the UID/GID can be overriden with
 options passed to \fByjl\-sysusers\fR\&.
 .PP
@@ -217,7 +217,7 @@ of this program will make that easier to configure\&.
 .SH FILES
 /usr/sbin/yjl\-sysusers
 .RS 4
-The Python 3 wrapper to \fBgroupadd (8)\fR and \fBuseradd (8)\fR&\.
+The Python 3 wrapper to \fBgroupadd (8)\fR and \fBuseradd (8)\fR\&.
 This man page describes use of that Python wrapper.
 .RE
 .PP

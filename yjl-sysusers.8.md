@@ -103,14 +103,14 @@ Options can be used when *account* has not been described in the
 USAGE NOTES
 -----------
 
-Python 3 is needed for **yjl-sysusers**. Testing has been done with the
+Python 3 is needed for `yjl-sysusers`. Testing has been done with the
 CentOS 7 packaged Python 3.6.4 (released 2017 December 19) and with
 vanilla Python 3.11.3 (released 2023 April 05).
 
-The boolean options (**--useradd**, **--groupadd**, and **--mkdir**) are
+The boolean options (`--useradd`, `--groupadd`, and `--mkdir`) are
 case sensitive *True* or *False*.
 
-When **--groupadd** *False* is used without using **-g**, **--group**
+When `--groupadd` *False* is used without using `-g`, `--group`
 *GROUP* then the system group *nogroup* will be used as the primary
 group for *account*.
 
@@ -120,27 +120,27 @@ PACKAGER NOTES
 --------------
 
 When creating an RPM (or other) package that has files owned by non-root
-users and groups, you should use **yjl-sysusers** in the package *%pre*
+users and groups, you should use `yjl-sysusers` in the package `%pre`
 scriptlet to ensure the appropriate users and groups exist at the time
 the files are installed.
 
-RPM packagers should use the macro **%{\_yjl\_sysusers}** rather than
-the command **yjl-sysusers** or **/usr/sbin/yjl-sysusers**.
+RPM packagers should use the macro `%{\_yjl\_sysusers}` rather than
+the command `yjl-sysusers` or `/usr/sbin/yjl-sysusers`.
 
-RPM packagers should **Requires(pre): %{\_yjl\_sysusers}**.
+RPM packagers should `Requires(pre): %{\_yjl\_sysusers}`.
 
-Packagers should avoid using **-c**, **--comment** *COMMENT* as it can
+Packagers should avoid using `-c`, `--comment` *COMMENT* as it can
 interfere with the string being properly translated via gettext i18n
 facilities into the preferred language of the system.
 
-Packagers should usually avoid using **--mkdir** *True*.
+Packagers should usually avoid using `--mkdir` *True*.
 
-When **useradd** creates the *HOME* directory, it also copies the
-contents of /etc/skel into that directory. Usually that is not desired.
-It is often better to have the package create the **home** directory
+When `useradd (8)` creates the *HOME* directory, it also copies the
+contents of `/etc/skel` into that directory. Usually that is not desired.
+It is often better to have the package create the *home* directory
 when a home directory is needed.
 
-Packagers should never assume the contents of the **yjl-sysusers.json**
+Packagers should never assume the contents of the `yjl-sysusers.json`
 file are correct for the package, but should specify the correct option
 parameters when ensuring that *account* exists.
 
@@ -152,12 +152,12 @@ wants to enforce.
 
 A secondary motive for this wrapper script is to allow for the
 internationalization of system user account descriptions (the *COMMENT*
-of /etc/passwd) at the time of package install.
+of `/etc/passwd`) at the time of package install.
 
-Lazy packaging where the packager relies upon **yjl-sysusers.json** to
+Lazy packaging where the packager relies upon `yjl-sysusers.json (5)` to
 have correct user account parameters is not a motive for this package,
 although compensating for lazy packaging was a motive for allowing sane
-**useradd** defaults to be specified in that file.
+`useradd (8)` defaults to be specified in that file.
 
  
 
@@ -165,16 +165,16 @@ CONFIGURATION
 -------------
 
 The default options on a per-*account* basis for accounts with preferred
-static UID/GID assignment are in the **yjl-sysconfig.json** file. All
+static UID/GID assignment are in the `yjl-sysconfig.json (5)` file. All
 options except for the UID/GID can be overriden with options passed to
-**yjl-sysusers**.
+`yjl-sysusers`.
 
 The range of dynamically generated UID/GID values is currently
 hard-coded within the load\_id\_list() function. A future version of
 this program will make that easier to configure.
 
 The current default group name to use for user accounts created with
-**--groupadd** *False* and without **-g**, **--group** *GROUP* is
+`--groupadd` *False* and without `-g`, `--group` *GROUP* is
 currently hard-coded within the request\_gpname\_from\_json() function.
 A future version of this program will make that easier to configure.
 
@@ -183,20 +183,17 @@ A future version of this program will make that easier to configure.
 FILES
 -----
 
-/usr/sbin/yjl-sysusers
+* `/usr/sbin/yjl-sysusers`  
+  The Python 3 wrapper to `groupadd (8)` and `useradd (8)`. This man
+  page describes use of that Python wrapper.
 
-The Python 3 wrapper to **groupadd (8)** and **useradd (8)**&. This man
-page describes use of that Python wrapper.
+* `/var/lib/yjl-sysusers/yjl-sysusers.json`  
+  The JSON database on a per-*account* basis for preferred static UID/GID
+  and default options to pass to `useradd (8)`.
 
-/var/lib/yjl-sysusers/yjl-sysusers.json
-
-The JSON database on a per-*account* basis for preferred static UID/GID
-and default options to pass to **useradd (8)**.
-
-/usr/lib/rpm/macros.d/macros.yjl-sysusers
-
-The definition of the **%{\_yjl\_sysusers}** macro that is used with
-**rpmbuild (8)** to create RPM packages that utilize **yjl-sysusers**.
+* `/usr/lib/rpm/macros.d/macros.yjl-sysusers`  
+  The definition of the `%{\_yjl\_sysusers}` macro that is used with
+  `rpmbuild (8)` to create RPM packages that utilize `yjl-sysusers`.
 
  
 
