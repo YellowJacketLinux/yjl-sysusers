@@ -228,52 +228,40 @@ EXAMPLE
 
 The following is a brief example of a valid **yjl-sysusers.json** file.
 
-{
-
-"root": {
-
-"myid": 0, \
- "usr": true, \
- "grp": true, \
- "comment": "root super-user account", \
- "homedir": "/root", \
- "shell": "/bin/bash", \
- "mkdir": true
-
-}, \
- "plocate": {
-
-"myid": 23, \
- "usr": false, \
- "grp": true
-
-}, \
- "fetchmail": {
-
-"myid": 38, \
- "usr": true, \
- "grp": false, \
- "group": "nogroup"
-
-}, \
- "nobody": {
-
-"myid": 65534, \
- "usr": true, \
- "grp": false, \
- "group": "nogroup", \
- "comment": "Unprivileged system user"
-
-}, \
- "nogroup": {
-
-"myid": 65534, \
- "usr": false, \
- "grp": true
-
-}
-
-}
+    {
+        "root": {
+            "myid": 0,
+            "usr": true,
+            "grp": true,
+            "comment": "root super-user account",
+            "homedir": "/root",
+            "shell": "/bin/bash",
+            "mkdir": true
+        },
+            "plocate": {
+            "myid": 23,
+            "usr": false,
+            "grp": true
+        },
+        "fetchmail": {
+            "myid": 38,
+            "usr": true,
+            "grp": false,
+            "group": "nogroup"
+        },
+        "nobody": {
+            "myid": 65534,
+            "usr": true,
+            "grp": false,
+            "group": "nogroup",
+            "comment": "Unprivileged system user"
+        },
+        "nogroup": {
+            "myid": 65534,
+            "usr": false,
+            "grp": true
+        }
+    }
 
 Obviously the **root** user does not need to be mentioned in the JSON
 file, that user must exist on the system before the **yjl-sysusers (8)**
@@ -305,13 +293,13 @@ FILES
 SEE ALSO
 --------
 
-**[yjl-sysusers](/man/man2html?8+yjl-sysusers)(8)**,
-**[passwd](/man/man2html?5+passwd)(5)**,
-**[group](/man/man2html?5+group)(5)**,
-**[login.defs](/man/man2html?5+login.defs)(5)**,
-**[shells](/man/man2html?5+shells)(5)**,
-**[groupadd](/man/man2html?8+groupadd)(8)**,
-**[useradd](/man/man2html?8+useradd)(8)**
+**[yjl-sysusers](yjl-sysusers.8.md)(8)**,
+**passwd(5)**,
+**group(5)**,
+**login.defs(5)**,
+**shells(5)**,
+**groupadd(8)**,
+**useradd(8)**
 
  
 

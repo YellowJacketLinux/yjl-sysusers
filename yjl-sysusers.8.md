@@ -279,15 +279,15 @@ configurable without modifiying the **yjl-sysusers** script.
 SEE ALSO
 --------
 
-**[yjl-sysusers.json](/man/man2html?5+yjl-sysusers.json)(5)**,
-**[passwd](/man/man2html?5+passwd)(5)**,
-**[group](/man/man2html?5+group)(5)**,
-**[login.defs](/man/man2html?5+login.defs)(5)**,
-**[shells](/man/man2html?5+shells)(5)**,
-**[groupadd](/man/man2html?8+groupadd)(8)**,
-**[useradd](/man/man2html?8+useradd)(8)**,
-**[usermod](/man/man2html?8+usermod)(8)**,
-**[rpmbuild](/man/man2html?8+rpmbuild)(8)**
+**[yjl-sysusers.json](yjl-sysusers.json.5.md)(5)**,
+**passwd(5)**,
+**group(5)**,
+**login.defs(5)**,
+**shells(5)**,
+**groupadd(8)**,
+**useradd(8)**,
+**usermod(8)**,
+**rpmbuild(8)**
 
  
 
