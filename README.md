@@ -1,6 +1,10 @@
 yjl-sysusers
 ============
 
+__VERSION 0.1.0 PRE-RELEASE__
+
+For installation instructions, see [INSTALL.md](INSTALL.md)
+
 This project includes a single utility and a JSON file. In the git
 source, that utility is simply called `functions.py` but it gets
 installed as `/usr/sbin/yjl-sysusers` with a single-line change

@@ -43,7 +43,7 @@ FILE LOCATION
 
 Ordinarily this file should be installed as:
 
-    /var/lib/yjl-sysusers/yjl-sysusers.json
+    /usr/share/yjl-sysusers/yjl-sysusers.json
 
 The file is a configuration file but it is also a read-only database and
 once installed it should not be modified except by re-installation of
@@ -280,7 +280,7 @@ during package creation.
 FILES
 -----
 
-    /var/lib/yjl-sysuers/yjl-sysusers.json
+    /usr/share/yjl-sysuers/yjl-sysusers.json
 
  
 

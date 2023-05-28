@@ -31,7 +31,7 @@ without the need to assign them manually.
 
 Static UID and GID values, as well as some other parameters useful to
 the `useradd (8)` command, are defined in the file `yjl-sysusers.json
-(5)` which is normally located in the directory `/var/lib/yjl-sysusers`.
+(5)` which is normally located in the directory `/usr/share/yjl-sysusers`.
 
 `yjl-sysusers` was developed with RPM package scriptlets in mind.
 
@@ -187,7 +187,7 @@ FILES
   The Python 3 wrapper to `groupadd (8)` and `useradd (8)`. This man
   page describes use of that Python wrapper.
 
-* `/var/lib/yjl-sysusers/yjl-sysusers.json`  
+* `/usr/share/yjl-sysusers/yjl-sysusers.json`  
   The JSON database on a per-*account* basis for preferred static UID/GID
   and default options to pass to `useradd (8)`.
 
