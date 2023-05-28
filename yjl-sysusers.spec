@@ -45,7 +45,8 @@ make install PYTHON=%{python3} RPMMACRODIR=%{_rpmmacrodir} DESTDIR=%{buildroot}
 %attr(0644,root,root) %{_mandir}/man5/yjl-sysusers.json.5*
 %attr(0644,root,root) %{_mandir}/man8/yjl-sysusers.8*
 %license LICENSE
-%doc CHARITYWARE.md LICENSE README.md TODO.md YJL-Notes.md yjl-sysusers.json
+%doc CHARITYWARE.md LICENSE README.md TODO.md yjl-sysusers.json
+%doc docs/yjl-sysusers.json.5.md docs/yjl-sysusers.8.md
 
 %changelog
 * Sun May 28 2023 Michael A. Peters <anymouseprophet@gmail.com> - 0.1.0-1
