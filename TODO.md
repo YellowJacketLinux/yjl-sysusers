@@ -2,7 +2,7 @@ TODO
 ====
 
 validate json "groupid" property, including checks for duplicates
-update man pages for string length change on COMMENT field
+validate json "atypshell" property (make sure boolean if exists)
 
 allow for use of groupid property
 allow for use of atypshell property
