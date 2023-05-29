@@ -2,7 +2,7 @@
 
 Name:     yjl-sysusers
 Version:  %{gitv}
-Release:	1%{?dist}
+Release:  1%{?dist}
 Summary:  utility for adding system groups and users
 BuildArch:  noarch
 
