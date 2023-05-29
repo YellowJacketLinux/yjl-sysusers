@@ -60,6 +60,12 @@ that network or organization.
 For the file format, see
 [yjl-sysusers.json.5](docs/yjl-sysusers.json.5.md) man page.
 
+As long as `yjl-sysusers.json` matches the specification of your
+distribution and the requirements of your distribution, you should
+be able to install this package and then any RPM package that uses
+`yjl-sysusers` to ensure system groups and users exist should do the
+right thing on your system.
+
 
 Validation Failures and Handling
 --------------------------------
