@@ -10,9 +10,6 @@ allow for use of atypshell property
 
 update man pages for new properties
 
-silence pylint where it is just plain wrong
--- leave warnings that are valid
-
 --------------------------------
 
 Right now it mostly works.

@@ -73,7 +73,9 @@ def myjson() -> str:
 
 def username_check(checkme: str) -> bool:
     """Validates input against YJL rules for system user/group names."""
+    # pylint: disable=anomalous-backslash-in-string
     pattern = re.compile("^[a-z_]([a-z0-9_-]{0,31}|[a-z0-9_-]{0,30}\$)$")
+    # pylint: enable=anomalous-backslash-in-string
     if isinstance(checkme, str):
         if pattern.match(checkme):
             return True
@@ -246,8 +248,10 @@ def determine_useradd_uid_from_json(username: str, sysusers: dict) -> int:
 
 def ensure_home_dir(homedir: str) -> None:
     """Creates the parent directory of the home directory if necessary."""
+    # pylint: disable=no-member
     path = Path(homedir)
     parent = path.parent.absolute()
+    # pylint: enable=no-member
     if os.path.exists(parent):
         return
     myuid = os.getuid()
@@ -329,8 +333,10 @@ def just_do_it(username: str, sysusers: dict) -> None:
 
 def validate_cfg(cfgdict: dict) -> None:
     """Validates the 000-CONFIG json object"""
+    # pylint: disable=global-statement
     global NOGROUP
     global DUPOK
+    # pylint: enable=global-statement
     NOGROUP = cfgdict.get("nogroup", "nogroup")
     DUPOK = cfgdict.get("dupok", [])
     if username_check(NOGROUP) is False:
