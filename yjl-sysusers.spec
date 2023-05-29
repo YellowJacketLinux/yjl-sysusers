@@ -1,4 +1,4 @@
-%global gitv 0.1.0
+%global gitv 0.1.5
 
 Name:     yjl-sysusers
 Version:  %{gitv}
@@ -36,6 +36,11 @@ yjl-sysusers was developed with RPM package scriptlets in mind.
 %install
 PYTHON=%{python3} RPMMACRODIR=%{_rpmmacrodir} DESTDIR=%{buildroot} \
 make install-rpm
+# Adjust README.md for %%doc
+sed -i '/For installation instructions/d' README.md
+sed -i '/justsayno.jpg/d' README.md
+sed -i '5d' README.md
+sed -i 's?docs/yjl?yjl?g' README.md
 
 %files
 %defattr(-,root,root,-)
@@ -46,7 +51,7 @@ make install-rpm
 %attr(0644,root,root) %{_mandir}/man5/yjl-sysusers.json.5*
 %attr(0644,root,root) %{_mandir}/man8/yjl-sysusers.8*
 %license LICENSE
-%doc CHARITYWARE.md LICENSE README.md TODO.md yjl-sysusers.json
+%doc CHARITYWARE.md LICENSE README.md yjl-sysusers.json
 %doc docs/yjl-sysusers.json.5.md docs/yjl-sysusers.8.md
 
 %changelog
