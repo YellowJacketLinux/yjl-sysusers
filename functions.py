@@ -35,7 +35,7 @@ import argparse
 
 # Initial globals
 NOGROUP = "nogroup"
-DUPOK = [65534]
+DUPOK = []
 
 # Dummy until gettext is used
 def _(fubar):
@@ -332,7 +332,7 @@ def validate_cfg(cfgdict: dict) -> None:
     global NOGROUP
     global DUPOK
     NOGROUP = cfgdict.get("nogroup", "nogroup")
-    DUPOK = cfgdict.get("dupok", [65534])
+    DUPOK = cfgdict.get("dupok", [])
     if username_check(NOGROUP) is False:
         sys.exit(_("Invalid default nogroup in 000-CONFIG"))
     for i in DUPOK:

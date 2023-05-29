@@ -1,4 +1,7 @@
 {
+    "000-CONFIG": {
+        "dupok": [65534]
+    },
     "root": {
         "myid": 0,
         "usr": true,
