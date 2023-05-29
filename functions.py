@@ -33,6 +33,10 @@ import pwd
 import subprocess
 import argparse
 
+# Initial globals
+NOGROUP = "nogroup"
+DUPOK = [65534]
+
 # Dummy until gettext is used
 def _(fubar):
     return fubar
@@ -59,7 +63,7 @@ PSR.add_argument("-g", "--group", type=str, help=APDICT["group"])
 PSR.add_argument("--mkdir", choices=('True', 'False'), help=APDICT["mkdir"])
 PSR.add_argument('account', type=str, help=APDICT["account"])
 
-def cfg() -> str:
+def myjson() -> str:
     """Sets the hard-coded location of the configuration file."""
     jsonfile = 'yjl-sysusers.json'
     cfgdir = ''
@@ -88,7 +92,7 @@ def usercomment_check(checkme: str, onlyascii=True) -> bool:
     if isinstance(checkme, str) and checkme.isprintable():
         if checkme.__contains__(":") or checkme.__contains__("\\"):
             return False
-        if (len(checkme) == 0) or (len(checkme) > 60):
+        if (len(checkme) == 0) or (len(checkme) > 120):
             return False
         if onlyascii:
             return all(ord(char) < 128 for char in checkme)
@@ -202,10 +206,10 @@ def request_gpname_from_json(username: str, sysusers: dict) -> str:
     nameobject = sysusers[username]
     if nameobject.get('grp', False):
         return username
-    gpname = nameobject.get('group', 'nogroup')
+    gpname = nameobject.get('group', NOGROUP)
     if username_check(gpname):
         return gpname
-    return "nogroup"
+    return NOGROUP
 
 def determine_useradd_gid_from_json(username: str, sysusers: dict) -> int:
     """Given a username, find the appropriate GID for useradd command."""
@@ -323,17 +327,33 @@ def just_do_it(username: str, sysusers: dict) -> None:
         #gid = determine_useradd_gid_from_json(username, sysusers)
         determine_useradd_gid_from_json(username, sysusers)
 
-def validate_cfg() -> int:
+def validate_cfg(cfgdict: dict) -> None:
+    """Validates the 000-CONFIG json object"""
+    global NOGROUP
+    global DUPOK
+    NOGROUP = cfgdict.get("nogroup", "nogroup")
+    DUPOK = cfgdict.get("dupok", [65534])
+    if username_check(NOGROUP) is False:
+        sys.exit(_("Invalid default nogroup in 000-CONFIG"))
+    for i in DUPOK:
+        if userid_check(i) is False:
+            sys.exit(_("Invalid ID number in 000-CONFIG dupok"))
+    return
+
+def validate_json() -> int:
     """Validates the JSON configuration file and if successful, dumps contents to screen."""
     usedlist = []
     shells = ["/bin/bash", "/bin/sh"]
-    jsonfile = cfg()
+    jsonfile = myjson()
     try:
         with open(jsonfile) as data_file:
             sysusers = json.load(data_file)
     except:
         sys.exit(_("Could not load the JSON data file:") + " " + jsonfile)
     keylist = list(sysusers.keys())
+    if "000-CONFIG" in keylist:
+        validate_cfg(sysusers["000-CONFIG"])
+        keylist.remove("000-CONFIG")
     for username in keylist:
         if username_check(username) is False:
             sys.exit(_("The user/group '")
@@ -350,7 +370,7 @@ def validate_cfg() -> int:
                      + username
                      + _("' has a duplicate 'myid' definition."))
         else:
-            if myid != 65534:
+            if myid not in DUPOK:
                 usedlist.append(myid)
         usr = nameobject.get('usr', False)
         mygrp = nameobject.get('grp', False)
@@ -370,18 +390,24 @@ def validate_cfg() -> int:
                      + username
                      + _("' has an invalid 'homedir' definition."))
         shell = nameobject.get('shell', '/bin/bash')
-        if shell not in shells:
+        atypshell = nameobject.get('atypshell', False)
+        if atypshell:
+            if path_check(shell) is False:
+                sys.exit(_("The user/group '")
+                         + username
+                         + _("' has an invalid 'shell' definition."))
+        elif shell not in shells:
             sys.exit(_("The user/group '")
                      + username
                      + _("' has an invalid 'shell' definition."))
-    myjson = json.dumps(sysusers)
-    print(myjson)
+    valid_json = json.dumps(sysusers)
+    print(valid_json)
     return 0
 
 def main(args) -> int:
     """Loads JSON file, applies argparse options."""
     if args.account == "000":
-        validate_cfg()
+        validate_json()
         return 0
     myuid = os.getuid()
     if myuid != 0:
@@ -390,13 +416,15 @@ def main(args) -> int:
         username = args.account
     else:
         sys.exit(args.account + " " + _("is not valid for a system user/group account name."))
-    jsonfile = cfg()
+    jsonfile = myjson()
     try:
         with open(jsonfile) as data_file:
             sysusers = json.load(data_file)
     except:
         sys.exit(_("Could not load the JSON data file:") + " " + jsonfile)
     keylist = list(sysusers.keys())
+    if "000-CONFIG" in keylist:
+        validate_cfg(sysusers["000-CONFIG"])
     if username in keylist:
         pass
     else:
