@@ -159,17 +159,37 @@
         "usr": false,
         "grp": true
     },
+    "utempter": {
+        "myid": 35,
+        "usr": false,
+        "grp": true
+    },
+    "video": {
+        "myid": 39,
+        "usr": false,
+        "grp": true
+    },
     "gdm": {
         "myid": 42,
         "usr": true,
         "grp": true,
         "homedir": "/var/lib/gdm"
     },
+    "lock": {
+        "myid": 54,
+        "usr": false,
+        "grp": true
+    },
     "tss": {
         "myid": 59,
         "usr": true,
         "grp": true,
         "comment": "Account used by the trousers package to sandbox the tcsd daemon"
+    },
+    "audio": {
+        "myid": 63,
+        "usr": false,
+        "grp": true
     },
     "tcpdump": {
         "myid": 72,
@@ -186,6 +206,16 @@
     "dbus": {
         "myid": 81,
         "usr": true,
+        "grp": true
+    },
+    "users": {
+        "myid": 100,
+        "usr": false,
+        "grp": true
+    },
+    "mock": {
+        "myid": 135,
+        "usr": false,
         "grp": true
     },
     "ceph": {
