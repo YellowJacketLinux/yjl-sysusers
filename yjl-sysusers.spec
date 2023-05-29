@@ -34,7 +34,8 @@ yjl-sysusers was developed with RPM package scriptlets in mind.
 # cat contrib/whatever.json > yjl-sysusers.json
 
 %install
-make install PYTHON=%{python3} RPMMACRODIR=%{_rpmmacrodir} DESTDIR=%{buildroot}
+PYTHON=%{python3} RPMMACRODIR=%{_rpmmacrodir} DESTDIR=%{buildroot} \
+make install-rpm
 
 %files
 %defattr(-,root,root,-)
@@ -50,5 +51,5 @@ make install PYTHON=%{python3} RPMMACRODIR=%{_rpmmacrodir} DESTDIR=%{buildroot}
 
 %changelog
 * Sun May 28 2023 Michael A. Peters <anymouseprophet@gmail.com> - 0.1.0-1
-- Initial reference spec file
+- Reference spec file
 

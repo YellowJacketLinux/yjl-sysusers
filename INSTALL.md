@@ -34,9 +34,11 @@ __Fourth__, run the command
 
     make install
 
-More properly when building an RPM package etc.:
+More properly when building an RPM package:
 
-    DESTDIR=%{buildroot} make install
+    DESTDIR=%{buildroot} make install-rpm
+
+See the reference `yjl-sysusers.spec` file.
 
 __Fifth__, if your `yjl-sysusers.json` file is complete for the
 static UID/GID assignments of your GNU/Linux distribution, consider
