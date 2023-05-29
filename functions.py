@@ -33,9 +33,10 @@ import pwd
 import subprocess
 import argparse
 
-# Initial globals
+# Initial globals that get reset
 NOGROUP = "nogroup"
 DUPOK = []
+ATYPSHELL = False
 
 # Dummy until gettext is used
 def _(fubar):
@@ -130,6 +131,8 @@ def homedir_check(checkme: str) -> bool:
 
 def shell_check(checkme: str, syshells=False) -> bool:
     """Validates the input can be used as a system user login shell."""
+    if ATYPSHELL:
+        return path_check(checkme)
     myshells = ['/bin/bash', '/bin/sh']
     if os.path.isfile('/sbin/nologin'):
         myshells.append('/sbin/nologin')
@@ -346,6 +349,13 @@ def validate_cfg(cfgdict: dict) -> None:
             sys.exit(_("Invalid ID number in 000-CONFIG dupok"))
     return
 
+def invalid_definition(name: str, prop: str) -> str:
+    return(_("The user/group '")
+           + name
+           + _("' has an invalid '")
+           + prop
+           + _("' definition."))
+
 def validate_json() -> int:
     """Validates the JSON configuration file and if successful, dumps contents to screen."""
     usedlist = []
@@ -387,31 +397,28 @@ def validate_json() -> int:
                          + _("' must have at least one of 'usr' or 'grp' set to 'true'."))
         comment = nameobject.get('comment', 'A Valid String')
         if usercomment_check(comment) is False:
-            sys.exit(_("The user/group '")
-                     + username
-                     + _("' has an invalid 'comment' definition."))
+            sys.exit(invalid_definition(username, "comment"))
         homedir = nameobject.get('homedir', '/dev/null')
         if homedir_check(homedir) is False:
-            sys.exit(_("The user/group '")
-                     + username
-                     + _("' has an invalid 'homedir' definition."))
+            sys.exit(invalid_definition(username, "homedir"))
         shell = nameobject.get('shell', '/bin/bash')
         atypshell = nameobject.get('atypshell', False)
+        if isinstance(atypshell, bool) is False:
+            sys.exit(invalid_definition(username, "atypshell"))
         if atypshell:
             if path_check(shell) is False:
-                sys.exit(_("The user/group '")
-                         + username
-                         + _("' has an invalid 'shell' definition."))
+                sys.exit(invalid_definition(username, "shell"))
         elif shell not in shells:
-            sys.exit(_("The user/group '")
-                     + username
-                     + _("' has an invalid 'shell' definition."))
+            sys.exit(invalid_definition(username, "shell"))
     valid_json = json.dumps(sysusers)
     print(valid_json)
     return 0
 
 def main(args) -> int:
     """Loads JSON file, applies argparse options."""
+    # pylint: disable=global-statement
+    global ATYPSHELL
+    # pylint: enable=global-statement
     if args.account == "000":
         validate_json()
         return 0
@@ -431,9 +438,7 @@ def main(args) -> int:
     keylist = list(sysusers.keys())
     if "000-CONFIG" in keylist:
         validate_cfg(sysusers["000-CONFIG"])
-    if username in keylist:
-        pass
-    else:
+    if username not in keylist:
         sysusers[username] = {'myid': 65535, 'usr': True, 'grp': True}
     # modify sysusers[username] based upon arguements
     if args.comment is not None:
@@ -476,6 +481,7 @@ def main(args) -> int:
         else:
             sysusers[username].update({"mkdir": False})
     #
+    ATYPSHELL = sysusers[username].get("atypshell", False)
     just_do_it(username, sysusers)
     return 0
 
