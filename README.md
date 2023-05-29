@@ -1,7 +1,7 @@
 yjl-sysusers
 ============
 
-__VERSION 0.1.0 PRE-RELEASE__
+__VERSION 0.1.5 PRE-RELEASE__
 
 For installation instructions, see [INSTALL.md](INSTALL.md)
 
@@ -52,6 +52,11 @@ assignments for certain users and groups, as well as distribution-
 specific configurations for how to handle things like dynamic UID/GID
 allocation.
 
+A network or organization administrator of multiple system—even different
+distributions—can customize the JSON and rebuild the package to add
+specific static allocations that are needed for use cases specific to
+that network or organization.
+
 For the file format, see
 [yjl-sysusers.json.5](docs/yjl-sysusers.json.5.md) man page.
 
@@ -89,8 +94,35 @@ the proper assignment of files belonging to users and groups the
 script is asked to create can still be made.
 
 
-Distribution Packaging Rant
----------------------------
+Python Notes
+------------
+
+Python 3 is required. A few distributions (like CentOS 7) are still
+at present supported that use Python 2 as the distribution Python
+interpreter, but AFAIK all of those distributions offer Python 3 as
+well.
+
+I strive to always have a `pylint` score at or above 9 but even when
+at such a score, reported issues should be looked at.
+
+False positives are disables and `global keyword` warnings are disabled,
+this utility has a genuine use case for the `global keyword`.
+
+The `pylint` utility reports some code readability warnings about coding
+style that need to be dealt with for the sake of readability. It is
+correct about those. They will be dealt with.
+
+The `pylint` utility also reports some `No exception type(s) specified
+(bare-except)` warnings.
+
+At least some of those are safe to ignore, but I do not feel comfortable
+disabling that warning.
+
+
+My Arrogant Distribution Packaging Rant
+---------------------------------------
+
+By ‘My Arrogant’, I mean me.
 
 I literally __HATE__ distribution specific macros and how they have
 proliferated in quantity and complexity since the ‘Good Old Days’.
@@ -119,7 +151,7 @@ distribution I loved when Red Hat Linux became Fedora Core.
 Most RPM based distributions are guilty of the same thing, clearly
 making RPM unsuitable as an LSB-mandated package manager.
 
-I like it when used properly, but it is too easy for GNU/Linux
+I like RPM when used properly, but it is too easy for GNU/Linux
 distributions to do the wrong thing and decrease cross-distribution
 compatibility.
 
