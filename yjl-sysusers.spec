@@ -28,6 +28,8 @@ yjl-sysusers was developed with RPM package scriptlets in mind.
 
 %prep
 %setup -q
+# set shebang to full path
+sed -i 's?/usr/bin/env python3?%{python3}?' functions.py
 
 %build
 # If a distribution specific JSON exists in contrib, then
