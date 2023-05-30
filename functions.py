@@ -509,6 +509,9 @@ def validate_json() -> int:
         myid = nameobject.get('myid', OS_MAX_PLUS_ONE)
         groupid = nameobject.get('groupid', myid)
         usedlist = validate_no_duplicates(username, myid, groupid, usedlist)
+        protected = nameobject.get('protected', False)
+        if isinstance(protected, bool) is False:
+            fail_invalid_definition(username, "protected")
     valid_json = json.dumps(sysusers)
     print(valid_json)
     return 0

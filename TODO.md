@@ -1,14 +1,9 @@
 TODO
 ====
 
-validate json "groupid" property, including checks for duplicates
-validate json "atypshell" property (make sure boolean if exists)
-
-allow for use of groupid property
-allow for use of atypshell property
--- add command argument for atypshell
-
 update man pages for new properties
+
+add configuration for dynamic range
 
 --------------------------------
 
