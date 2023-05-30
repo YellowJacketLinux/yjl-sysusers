@@ -32,6 +32,7 @@ import grp
 import pwd
 import subprocess
 import argparse
+from datetime import datetime, timezone
 
 # Initial globals that get reset
 NOGROUP = "nogroup"
@@ -498,6 +499,8 @@ def validate_json() -> int:
     if "000-CONFIG" in keylist:
         validate_cfg(sysusers["000-CONFIG"])
         keylist.remove("000-CONFIG")
+    else:
+        sysusers["000-CONFIG"] = {}
     for username in keylist:
         if username_check(username) is False:
             sys.exit(_("The user/group '")
@@ -512,6 +515,8 @@ def validate_json() -> int:
         protected = nameobject.get('protected', False)
         if isinstance(protected, bool) is False:
             fail_invalid_definition(username, "protected")
+    now = datetime.now(timezone.utc).isoformat('T', 'seconds')
+    sysusers['000-CONFIG'].update({"validated": now})
     valid_json = json.dumps(sysusers)
     print(valid_json)
     return 0

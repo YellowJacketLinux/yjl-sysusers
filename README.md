@@ -11,7 +11,7 @@ installed as `/usr/sbin/yjl-sysusers` with a single-line change
 to specify the location on the filesystem of the JSON file.
 
 This project is currently being developed using Python 3.11.3 but it
-has been tested in Python 3.6.4 (CentOS 7) without issues.
+has been tested in Python 3.6.4 (CentOS 7.9.2009) without issues.
 
 The purpose is to provide an easy way to provide consistent static
 user ID and group ID numbers for system users (as opposed to human login
@@ -107,6 +107,9 @@ Python 3 is required. A few distributions (like CentOS 7) are still
 at present supported that use Python 2 as the distribution Python
 interpreter, but AFAIK all of those distributions offer Python 3 as
 well.
+
+One feature I know requires Python 3.6+, the script has been tested
+in Python 3.6.8 (CentOS 7.9.2009) and it works.
 
 I strive to always have a `pylint` score at or above 9 but even when
 at such a score, reported issues should be looked at.
