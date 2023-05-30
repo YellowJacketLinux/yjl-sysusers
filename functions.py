@@ -44,6 +44,48 @@ OS_MAX_PLUS_ONE = 65535
 def _(fubar):
     return fubar
 
+# JSON Validation Errors
+def fail_invalid_definition(name: str, prop: str) -> None:
+    """Exits with invalid definition error string."""
+    sys.exit(_("The user/group '")
+             + name
+             + _("' has an invalid '")
+             + prop
+             + _("' definition."))
+
+def fail_invalid_usrgrp(name) -> None:
+    """Exits with invalid usr grp string."""
+    sys.exit(_("The user/group '")
+             + name
+             + _("' must have at least one of 'usr' or 'grp' defined as 'true'"))
+
+def fail_groupid_without_user(name) -> None:
+    """Exits with invalid groupid usr string."""
+    sys.exit(_("The user/group '")
+             + name
+             + _("' can not define 'groupid' if 'usr' is not defined as 'true'"))
+
+def fail_groupid_without_group(name) -> None:
+    """Exits with invalid groupid grp string."""
+    sys.exit(_("The user/group '")
+             + name
+             + _("' can not define 'groupid' if 'grp' is not defined as 'true'"))
+
+def fail_groupid_with_groupname(name) -> None:
+    """Exits with invalid groupid and group string."""
+    sys.exit(_("The user/group '")
+             + name
+             + _("' can not define a 'group' if 'groupid' is defined."))
+
+def fail_duplicate_id(name: str, qaw: str, thenum: int) -> None:
+    """Exits with dupplicate ID string."""
+    sys.exit(_("The user/group '")
+             + name
+             + _("' in the '")
+             + qaw
+             + _("' property re-used the id '")
+             + str(thenum) + "'")
+
 APDICT = {
     "description": _("Add system users and groups. See: man 8 yjl-sysusers"),
     "comment": _("Specify the user comment passwd field."),
@@ -373,18 +415,84 @@ def validate_cfg(cfgdict: dict) -> None:
             sys.exit(_("Invalid ID number in 000-CONFIG dupok"))
     return
 
-def invalid_definition(name: str, prop: str) -> None:
-    """Exits wuth invalid definition error string"""
-    sys.exit(_("The user/group '")
-             + name
-             + _("' has an invalid '")
-             + prop
-             + _("' definition."))
+def validate_no_groupid_conflicts(username: str, nameobject: dict) -> None:
+    """Validates that groupid is used sanely."""
+    myid = nameobject.get('myid', OS_MAX_PLUS_ONE)
+    groupid = nameobject.get('groupid', OS_MAX_PLUS_ONE)
+    group = nameobject.get('group', '')
+    myusr = nameobject.get('usr', False)
+    mygrp = nameobject.get('grp', False)
+    if userid_check(groupid) is False:
+        fail_invalid_definition(username, "grp")
+    if myid == groupid:
+        fail_invalid_definition(username, "groupid")
+    if myusr is False:
+        fail_groupid_without_user(username)
+    if mygrp is False:
+        fail_groupid_without_group(username)
+    if len(group) > 0:
+        fail_groupid_with_groupname(username)
+
+def validate_user_group(username: str, nameobject: dict) -> None:
+    """Validates the user and group id related definitions."""
+    myid = nameobject.get('myid', OS_MAX_PLUS_ONE)
+    groupid = nameobject.get('groupid', OS_MAX_PLUS_ONE)
+    group = nameobject.get('group', '')
+    myusr = nameobject.get('usr', False)
+    mygrp = nameobject.get('grp', False)
+    if isinstance(myusr, bool) is False:
+        fail_invalid_definition(username, "usr")
+    if isinstance(mygrp, bool) is False:
+        fail_invalid_definition(username, "grp")
+    if isinstance(group, str) is False:
+        fail_invalid_definition(username, "group")
+    if myusr is False:
+        if mygrp is False:
+            fail_invalid_usrgrp(username)
+    if userid_check(myid) is False:
+        fail_invalid_definition(username, "usr")
+    if groupid != OS_MAX_PLUS_ONE:
+        validate_no_groupid_conflicts(username, nameobject)
+
+def validate_useradd_attributes(username: str, nameobject: dict) -> None:
+    """Validates the optional useradd attributes."""
+    shells = ["/bin/bash", "/bin/sh"]
+    comment = nameobject.get('comment', 'A Valid String')
+    homedir = nameobject.get('homedir', '/dev/null')
+    shell = nameobject.get('shell', '/bin/bash')
+    atypshell = nameobject.get('atypshell', False)
+    if isinstance(atypshell, bool) is False:
+        fail_invalid_definition(username, "atypshell")
+    if usercomment_check(comment) is False:
+        fail_invalid_definition(username, "comment")
+    if homedir_check(homedir) is False:
+        fail_invalid_definition(username, "homedir")
+    if atypshell:
+        if path_check(shell) is False:
+            fail_invalid_definition(username, "shell")
+    elif shell not in shells:
+        fail_invalid_definition(username, "shell")
+
+def validate_no_duplicates(username: str, myid: int, groupid: int, usedlist: list) -> list:
+    """verifies accidental multiple assignment in JSON has not happened."""
+    if myid not in DUPOK:
+        if myid in usedlist:
+            print(myid)
+            fail_duplicate_id(username, 'myid', myid)
+        else:
+            usedlist.append(myid)
+    if myid == groupid:
+        return usedlist
+    if groupid in DUPOK:
+        return usedlist
+    if groupid in usedlist:
+        fail_duplicate_id(username, 'groupid', groupid)
+    usedlist.append(groupid)
+    return usedlist
 
 def validate_json() -> int:
     """Validates the JSON configuration file and if successful, dumps contents to screen."""
     usedlist = []
-    shells = ["/bin/bash", "/bin/sh"]
     sysusers = load_json()
     keylist = list(sysusers.keys())
     if "000-CONFIG" in keylist:
@@ -396,44 +504,11 @@ def validate_json() -> int:
                      + username
                      + _("' is an invald name."))
         nameobject = sysusers[username]
+        validate_user_group(username, nameobject)
+        validate_useradd_attributes(username, nameobject)
         myid = nameobject.get('myid', OS_MAX_PLUS_ONE)
-        if userid_check(myid) is False:
-            sys.exit(_("The user/group '")
-                     + username
-                     + _("' has a missing or invalid 'myid' definition."))
-        if myid in usedlist:
-            sys.exit(_("The user/group '")
-                     + username
-                     + _("' has a duplicate 'myid' definition."))
-        else:
-            if myid not in DUPOK:
-                usedlist.append(myid)
-        usr = nameobject.get('usr', False)
-        if isinstance(usr, bool) is False:
-            invalid_definition(username, "usr")
-        mygrp = nameobject.get('grp', False)
-        if isinstance(usr, bool) is False:
-            invalid_definition(username, "grp")
-        if usr is False:
-            if mygrp is False:
-                sys.exit(_("The user/group '")
-                         + username
-                         + _("' must have at least one of 'usr' or 'grp' set to 'true'."))
-        comment = nameobject.get('comment', 'A Valid String')
-        if usercomment_check(comment) is False:
-            invalid_definition(username, "comment")
-        homedir = nameobject.get('homedir', '/dev/null')
-        if homedir_check(homedir) is False:
-            invalid_definition(username, "homedir")
-        shell = nameobject.get('shell', '/bin/bash')
-        atypshell = nameobject.get('atypshell', False)
-        if isinstance(atypshell, bool) is False:
-            invalid_definition(username, "atypshell")
-        if atypshell:
-            if path_check(shell) is False:
-                invalid_definition(username, "shell")
-        elif shell not in shells:
-            invalid_definition(username, "shell")
+        groupid = nameobject.get('groupid', myid)
+        usedlist = validate_no_duplicates(username, myid, groupid, usedlist)
     valid_json = json.dumps(sysusers)
     print(valid_json)
     return 0

@@ -1,7 +1,7 @@
 {
     "000-CONFIG": {
         "nogroup": "nobody",
-        "dupok": [3, 5, 6, 8, 11]
+        "dupok": [3, 4, 5, 6, 7, 8, 11, 12]
     },
     "root": {
         "myid": 0,
