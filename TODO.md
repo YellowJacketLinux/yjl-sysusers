@@ -1,9 +1,18 @@
 TODO
 ====
 
-update man pages for new properties
-
 add configuration for dynamic range
+add timestamp to installed config file
+validate CONFIG-000 description and maintainer
+
+nuke --adduser and --addgroup options, make
+*true* Boolean --useronly --grouponly and
+--userandgroup options.
+
+make --mkdir *true* boolean, default False
+
+add --info option
+add --delete option
 
 --------------------------------
 
