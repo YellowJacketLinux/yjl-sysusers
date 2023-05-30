@@ -72,6 +72,15 @@ def myjson() -> str:
         return jsonfile
     return cfgdir + '/' + jsonfile
 
+def load_json() -> dict:
+    """Loads the JSON file and returns a dictionary."""
+    jsonfile = myjson()
+    try:
+        with open(jsonfile) as data_file:
+            return json.load(data_file)
+    except:
+        sys.exit(_("Could not load the JSON data file:") + " " + jsonfile)
+
 def username_check(checkme: str) -> bool:
     """Validates input against YJL rules for system user/group names."""
     # pylint: disable=anomalous-backslash-in-string
@@ -361,12 +370,7 @@ def validate_json() -> int:
     """Validates the JSON configuration file and if successful, dumps contents to screen."""
     usedlist = []
     shells = ["/bin/bash", "/bin/sh"]
-    jsonfile = myjson()
-    try:
-        with open(jsonfile) as data_file:
-            sysusers = json.load(data_file)
-    except:
-        sys.exit(_("Could not load the JSON data file:") + " " + jsonfile)
+    sysusers = load_json()
     keylist = list(sysusers.keys())
     if "000-CONFIG" in keylist:
         validate_cfg(sysusers["000-CONFIG"])
@@ -430,12 +434,7 @@ def main(args) -> int:
         username = args.account
     else:
         sys.exit(args.account + " " + _("is not valid for a system user/group account name."))
-    jsonfile = myjson()
-    try:
-        with open(jsonfile) as data_file:
-            sysusers = json.load(data_file)
-    except:
-        sys.exit(_("Could not load the JSON data file:") + " " + jsonfile)
+    sysusers = load_json()
     keylist = list(sysusers.keys())
     if "000-CONFIG" in keylist:
         validate_cfg(sysusers["000-CONFIG"])
