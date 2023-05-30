@@ -120,10 +120,30 @@ value below \fI1000\fR\&.
 .sp
 The \fBroot\fR entry must have a \fImyid\fR value of \fI0\fR\&.
 .sp
-The \fImyid\fR property should not be within the dynamically assigned
-system user range identified
-by \fISYS_UID_MIN\fR and \fISYS_UID_MAX\fR in the GNU/Linux distribution
-default
+The \fImyid\fR property should not be within the dynamically
+assigned system user range identified by
+\fISYS_UID_MIN\fR and \fISYS_UID_MAX\fR
+in the GNU/Linux distribution default
+\fB/etc/login\&.defs\fR configuration file\&. See
+\fBman 5 login\&.defs\fR\&.
+.RE
+.PP
+\fIgroupid\fR
+.RS 4
+Integer\&. Optional\&.
+.sp
+This property is exclusively for cases where both a user and group
+with the name \fBACCOUNT NAME INDEX\fR should be created, but with
+a statically assigned GID that differs from the UID\&.
+.sp
+In this special case, both boolean properties \fIusr\fR and
+\fIgrp\fR must be assigned values of \fItrue\fR and the string
+property \fIgroup\fR must not be set\&.
+.sp
+The \fIgroupid\fR property should not be within the dynamically
+assigned system user range identified by
+\fISYS_UID_MIN\fR and \fISYS_UID_MAX\fR
+in the GNU/Linux distribution default
 \fB/etc/login\&.defs\fR configuration file\&. See
 \fBman 5 login\&.defs\fR\&.
 .RE
@@ -173,6 +193,9 @@ property should either not be defined or defined as
 When the \fIgroup\fR property is present, the string value
 should match the name of another \fBACCOUNT NAME INDEX\fR
 that has a \fIgrp\fR property of \fItrue\fR\&.
+.sp
+The \fIgroup\fR property can not be set in combination with
+the \fIgroupid\fR property\&.
 .RE
 .PP
 \fIcomment\fR
@@ -233,7 +256,8 @@ When present, this property defines the default
 \fByjl-sysusers (8)\fR creates a user account using the
 name \fBACCOUNT NAME INDEX\fR\&.
 .sp
-The only valid values for the \fIshell\fR property of an
+The only valid values for the \fIshell\fR property (unless the
+\fIatypshell\fR property is set to \fItrue\fR) of an
 \fBACCOUNT NAME OBJECT\fR in the
 \fByjl-sysusers\&.conf\fR file are
 \fI/bin/bash\fR and \fI/bin/sh\fR\&.
@@ -249,6 +273,15 @@ property and a valid \fISHELL\fR option is not passed to the
 will use \fB/sbin/nologin\fR (if it exists on the system) or
 \fB/bin/false\fR for the \fIshell\fR field of the /etc/passwd file
 when it creates a user account named \fBACCOUNT NAME INDEX\fR\&.
+.RE
+.PP
+\fIatypshell\fR
+.RS 4
+Boolean\&. Optional, defaults to \fIfalse\fR\&.
+.sp
+When this property is \fItrue\fR, no validation of the
+\fIshell\fR is performed except to verify it is a valid
+filesystem path.
 .RE
 .PP
 \fImkdir\fR
@@ -268,6 +301,20 @@ If the \fImkdir\fR property is either not set or is set to \fIfalse\fR
 then the default behavior of \fByjl-sysusers (8)\fR will be to NOT
 create the home directory for \fBACCOUNT NAME INDEX\fR when it is
 asked to add the \fBACCOUNT NAME INDEX\fR user\&.
+.RE
+.PP
+\fIprotected\fR
+.RS 4
+Boolean\&. Optional, defaults to \fIfalse\fR\&.
+.sp
+This property defines whether or not \fBACCOUNT NAME INDEX\fR
+should be protected from deletion by the
+\fByjl-sysuers (8)\fR utility\&.
+.sp
+When the \fIprotected\fR option is set to \fItrue\fR, attempts
+to delete a group or user with the \fBACCOUNT NAME INDEX\fR
+name by the
+\fByjl-sysuers (8)\fR utility will fail\&.
 .RE
 .\" ---
 .PP
