@@ -38,6 +38,10 @@ from datetime import datetime, timezone
 NOGROUP = "nogroup"
 DUPOK = []
 ATYPSHELL = False
+CFGDESC = ""
+CFGMAIN = ""
+CFGMODT = ""
+CFGVALT = ""
 # used as non-collision dummy intiger to trigger dynamic
 OS_MAX_PLUS_ONE = 65535
 
@@ -86,6 +90,13 @@ def fail_duplicate_id(name: str, qaw: str, thenum: int) -> None:
              + qaw
              + _("' property re-used the id '")
              + str(thenum) + "'")
+
+def fail_badcfg_property(prop: str, strict: bool) -> None:
+    """If strict, exits with message about bad 000-CONFIG property."""
+    if strict:
+        sys.exit(_("The property '")
+                 + prop
+                 + _("' in '000-CONFIG' is invalid."))
 
 APDICT = {
     "description": _("Add system users and groups. See: man 8 yjl-sysusers"),
@@ -398,22 +409,56 @@ def just_do_it(username: str, sysusers: dict) -> None:
     if createuser:
         add_the_user(username, sysusers)
     else:
-        #gid = determine_useradd_gid_from_json(username, sysusers)
+        # this causes group to be added
         determine_useradd_gid_from_json(username, sysusers)
 
-def validate_cfg(cfgdict: dict) -> None:
+def val_cfg_string(prop: str, checkme: str, strict: bool) -> str:
+    """Validates a string from cfg is a string."""
+    if isinstance(checkme, str) is False:
+        fail_badcfg_property(prop, strict)
+        return ""
+    if checkme.isprintable():
+        return checkme
+    else:
+        fail_badcfg_property(prop, strict)
+    return ""
+
+def val_cfg_datetime(prop: str, checkme: str, strict: bool) -> str:
+    """validates a datetime string from cfg and returns ISO 8601 string"""
+    checkme = val_cfg_string(prop, checkme, strict)
+    if len(checkme) == 0:
+        return ""
+    try:
+        dto = parser.parse(checkme, default=parser.parse("00:00Z"))
+    except:
+        fail_badcfg_property(prop, strict)
+        return ""
+    return dto.isoformat('T', 'seconds')
+
+def validate_cfg(cfgdict: dict, strict: bool) -> None:
     """Validates the 000-CONFIG json object."""
     # pylint: disable=global-statement
     global NOGROUP
     global DUPOK
+    # cfg metadata
+    global CFGDESC
+    global CFGMAIN
+    global CFGMODT
+    global CFGVALT
     # pylint: enable=global-statement
     NOGROUP = cfgdict.get("nogroup", "nogroup")
     DUPOK = cfgdict.get("dupok", [])
     if username_check(NOGROUP) is False:
-        sys.exit(_("Invalid default nogroup in 000-CONFIG"))
+        fail_badcfg_property("nogroup", strict)
+        NOGROUP = "nogroup"
     for i in DUPOK:
         if userid_check(i) is False:
-            sys.exit(_("Invalid ID number in 000-CONFIG dupok"))
+            fail_badcfg_property("dupok", strict)
+            DUPOK = []
+    CFGDESC = val_cfg_string("description", cfgdict.get("description", ""), strict)
+    CFGMAIN = val_cfg_string("maintainer", cfgdict.get("maintainer", ""), strict)
+    CFGMODT = val_cfg_datetime("modified", cfgdict.get("modified", ""), strict)
+    CFGVALT = val_cfg_datetime("validated", cfgdict.get("validated", ""), strict)
     return
 
 def validate_no_groupid_conflicts(username: str, nameobject: dict) -> None:
@@ -497,7 +542,7 @@ def validate_json() -> int:
     sysusers = load_json()
     keylist = list(sysusers.keys())
     if "000-CONFIG" in keylist:
-        validate_cfg(sysusers["000-CONFIG"])
+        validate_cfg(sysusers["000-CONFIG"], True)
         keylist.remove("000-CONFIG")
     else:
         sysusers["000-CONFIG"] = {}
@@ -517,6 +562,8 @@ def validate_json() -> int:
             fail_invalid_definition(username, "protected")
     now = datetime.now(timezone.utc).isoformat('T', 'seconds')
     sysusers['000-CONFIG'].update({"validated": now})
+    if len(CFGMODT) > 0:
+        sysusers['000-CONFIG'].update({"modified": CFGMODT})
     valid_json = json.dumps(sysusers)
     print(valid_json)
     return 0
@@ -539,7 +586,7 @@ def main(args) -> int:
     sysusers = load_json()
     keylist = list(sysusers.keys())
     if "000-CONFIG" in keylist:
-        validate_cfg(sysusers["000-CONFIG"])
+        validate_cfg(sysusers["000-CONFIG"], False)
     if username not in keylist:
         sysusers[username] = {'myid': OS_MAX_PLUS_ONE, 'usr': True, 'grp': True}
     # modify sysusers[username] based upon arguements
