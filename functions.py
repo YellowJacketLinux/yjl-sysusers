@@ -37,6 +37,8 @@ import argparse
 NOGROUP = "nogroup"
 DUPOK = []
 ATYPSHELL = False
+# used as non-collision dummy intiger to trigger dynamic
+OS_MAX_PLUS_ONE = 65535
 
 # Dummy until gettext is used
 def _(fubar):
@@ -180,7 +182,7 @@ def add_the_group(gpname: str, gid: int) -> int:
 def load_id_list(desired: int) -> list:
     """Returns list of IDs to query for system group/user creation."""
     mylist = []
-    if desired != 65535:
+    if desired != OS_MAX_PLUS_ONE:
         mylist.append(desired)
     for i in range(300, 400):
         mylist.append(i)
@@ -212,8 +214,9 @@ def request_gid_from_json(gpname: str, sysusers: dict) -> int:
     """Given a group name, attempts to find the preferred Group ID."""
     nameobject = sysusers[gpname]
     if nameobject.get('grp', False):
-        return nameobject.get('myid', 65535)
-    return 65535
+        default = nameobject.get('myid', OS_MAX_PLUS_ONE)
+        return nameobject.get('groupid', default)
+    return OS_MAX_PLUS_ONE
 
 def request_gpname_from_json(username: str, sysusers: dict) -> str:
     """Given a user name, attempts to find the primary group for the user."""
@@ -233,19 +236,23 @@ def determine_useradd_gid_from_json(username: str, sysusers: dict) -> int:
 
 def determine_useradd_uid_from_json(username: str, sysusers: dict) -> int:
     """Given a username, find the appropriate UID for useradd command."""
-    same_as_group = True
     nameobject = sysusers[username]
-    same_as_group = nameobject.get('grp', False)
+    if nameobject.get('grp', False):
+        test_a = nameobject.get('myid', OS_MAX_PLUS_ONE)
+        test_b = nameobject.get('groupid', test_a)
+        same_as_group = (test_a == test_b)
+    else:
+        same_as_group = False
     if same_as_group:
         desired = determine_useradd_gid_from_json(username, sysusers)
     else:
-        desired = nameobject.get('myid', 65535)
+        desired = nameobject.get('myid', OS_MAX_PLUS_ONE)
     if same_as_group:
         try:
             pwd.getpwuid(desired)
         except KeyError:
             return desired
-        desired = 65535
+        desired = OS_MAX_PLUS_ONE
     idlist = load_id_list(desired)
     for i in idlist:
         try:
@@ -257,6 +264,36 @@ def determine_useradd_uid_from_json(username: str, sysusers: dict) -> int:
                 return i
     # Should never ever happen
     sys.exit(_("There do not seem to be any available User IDs left for a system user."))
+
+def determine_useradd_comment(username: str, nameobject: dict) -> str:
+    """Returns string for useradd comment argument"""
+    comment = nameobject.get('comment', '')
+    if usercomment_check(comment):
+        return translate_comment(comment)
+    return username + " " + _("system user account")
+
+def determine_useradd_homedir(nameobject: dict) -> str:
+    """Returns string for useradd home argument"""
+    homedir = nameobject.get('homedir', '/dev/null')
+    if homedir_check(homedir):
+        return homedir
+    return "/dev/null"
+
+def determine_useradd_shell(nameobject: dict) -> str:
+    """Returns string for useradd shell argument"""
+    extrashells = nameobject.get('extrashells', False)
+    shell = nameobject.get('shell', '/sbin/nologin')
+    if shell_check(shell, extrashells):
+        return shell
+    return "/bin/false"
+
+def determine_useradd_mkdir(homedir: str, nameobject: dict) -> bool:
+    """Returns True if useradd should create home directory."""
+    if homedir == "/dev/null":
+        return False
+    if os.path.exists(homedir):
+        return False
+    return nameobject.get('mkdir', False)
 
 def ensure_home_dir(homedir: str) -> None:
     """Creates the parent directory of the home directory if necessary."""
@@ -285,40 +322,18 @@ def add_the_user(username: str, sysusers: dict) -> None:
     uid = determine_useradd_uid_from_json(username, sysusers)
     spclist = ["useradd", "-g", str(gid), "-u", str(uid)]
     nameobject = sysusers[username]
-    extrashells = nameobject.get('extrashells', False)
-    checkme = nameobject.get('comment', '')
-    if usercomment_check(checkme):
-        comment = translate_comment(checkme)
-    else:
-        comment = username + " " + _("system user account")
+    # comment field
     spclist.append("-c")
-    spclist.append(comment)
-    checkme = nameobject.get('homedir', '/dev/null')
-    if homedir_check(checkme):
-        homedir = checkme
-    else:
-        homedir = "/dev/null"
+    spclist.append(determine_useradd_comment(username, nameobject))
+    # home directory field
+    homedir = determine_useradd_homedir(nameobject)
     spclist.append("-d")
     spclist.append(homedir)
-    checkme = nameobject.get('shell', '/sbin/nologin')
-    if shell_check(checkme, extrashells):
-        shell = checkme
-    else:
-        shell = "/bin/false"
+    # login shell
     spclist.append("-s")
-    spclist.append(shell)
-    if homedir == "/dev/null":
-        mkdir = False
-    else:
-        testme = nameobject.get('mkdir', False)
-        if testme:
-            if os.path.exists(homedir):
-                mkdir = False
-            else:
-                mkdir = True
-        else:
-            mkdir = False
-    if mkdir:
+    spclist.append(determine_useradd_shell(nameobject))
+    # create home directory
+    if determine_useradd_mkdir(homedir, nameobject):
         ensure_home_dir(homedir)
         spclist.append("--create-home")
     spclist.append("-r")
@@ -358,13 +373,13 @@ def validate_cfg(cfgdict: dict) -> None:
             sys.exit(_("Invalid ID number in 000-CONFIG dupok"))
     return
 
-def invalid_definition(name: str, prop: str) -> str:
-    """Provides invalid definition error string"""
-    return(_("The user/group '")
-           + name
-           + _("' has an invalid '")
-           + prop
-           + _("' definition."))
+def invalid_definition(name: str, prop: str) -> None:
+    """Exits wuth invalid definition error string"""
+    sys.exit(_("The user/group '")
+             + name
+             + _("' has an invalid '")
+             + prop
+             + _("' definition."))
 
 def validate_json() -> int:
     """Validates the JSON configuration file and if successful, dumps contents to screen."""
@@ -381,7 +396,7 @@ def validate_json() -> int:
                      + username
                      + _("' is an invald name."))
         nameobject = sysusers[username]
-        myid = nameobject.get('myid', 65535)
+        myid = nameobject.get('myid', OS_MAX_PLUS_ONE)
         if userid_check(myid) is False:
             sys.exit(_("The user/group '")
                      + username
@@ -394,7 +409,11 @@ def validate_json() -> int:
             if myid not in DUPOK:
                 usedlist.append(myid)
         usr = nameobject.get('usr', False)
+        if isinstance(usr, bool) is False:
+            invalid_definition(username, "usr")
         mygrp = nameobject.get('grp', False)
+        if isinstance(usr, bool) is False:
+            invalid_definition(username, "grp")
         if usr is False:
             if mygrp is False:
                 sys.exit(_("The user/group '")
@@ -402,19 +421,19 @@ def validate_json() -> int:
                          + _("' must have at least one of 'usr' or 'grp' set to 'true'."))
         comment = nameobject.get('comment', 'A Valid String')
         if usercomment_check(comment) is False:
-            sys.exit(invalid_definition(username, "comment"))
+            invalid_definition(username, "comment")
         homedir = nameobject.get('homedir', '/dev/null')
         if homedir_check(homedir) is False:
-            sys.exit(invalid_definition(username, "homedir"))
+            invalid_definition(username, "homedir")
         shell = nameobject.get('shell', '/bin/bash')
         atypshell = nameobject.get('atypshell', False)
         if isinstance(atypshell, bool) is False:
-            sys.exit(invalid_definition(username, "atypshell"))
+            invalid_definition(username, "atypshell")
         if atypshell:
             if path_check(shell) is False:
-                sys.exit(invalid_definition(username, "shell"))
+                invalid_definition(username, "shell")
         elif shell not in shells:
-            sys.exit(invalid_definition(username, "shell"))
+            invalid_definition(username, "shell")
     valid_json = json.dumps(sysusers)
     print(valid_json)
     return 0
@@ -439,7 +458,7 @@ def main(args) -> int:
     if "000-CONFIG" in keylist:
         validate_cfg(sysusers["000-CONFIG"])
     if username not in keylist:
-        sysusers[username] = {'myid': 65535, 'usr': True, 'grp': True}
+        sysusers[username] = {'myid': OS_MAX_PLUS_ONE, 'usr': True, 'grp': True}
     # modify sysusers[username] based upon arguements
     if args.comment is not None:
         if usercomment_check(args.comment):
