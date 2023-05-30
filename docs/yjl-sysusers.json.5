@@ -1,9 +1,9 @@
 '\" t
-.\"         Title: yjl-sysusers.json
-.\"        Author: Michael A. Peters
+.\"     Title: yjl-sysusers.json
+.\"    Author: Michael A. Peters
 .\" Generator: Hand-coded
-.\"      Date: 2023-05-26
-.\"  Modified: 2023-05-29
+.\"   Created: 2023-05-26
+.\"  Modified: 2023-05-30
 .\"    Manual: File Formats
 .\"  Language: English
 .\"
@@ -320,8 +320,65 @@ name by the
 .PP
 .\" --- end account name object
 .SH 000\-CONFIG
-This space is reserved for future content when the feature is implemented,
-likely in June 2023\&.
+.PP
+This section of the
+\fByjl-sysusers\&.json\fR
+file modifies some of the default behavior of
+\fByjl-sysusers (8)\fR\&.
+.PP
+\fIdescription\fR
+.RS 4
+String\&. Optional\&.
+.sp
+A UTF-8 string describing the GNU/Linux distribution and version the
+\fByjl-sysusers\&.conf\fR
+file was created for\&.
+.RE
+.PP
+\fImaintainer\fR
+.RS 4
+String\&. Optional\&.
+.sp
+A UTF-8 string identifying the maintainer of the
+\fByjl-sysusers\&.conf\fR
+file\&.
+.RE
+.PP
+\fInogroup\fR
+.RS 4
+String\&. Optional, defaults to
+"\fInogroup\fR"\&.
+.sp
+An ASCII string following the rules of an
+\fBACCOUNT NAME INDEX\fR
+that defines what group a system user should use for its
+primary group if a group of the same name is not to be
+created and a specified
+group name is not provided\&.
+.RE
+.PP
+\fIdupok\fR
+.RS 4
+List of Integers\&. Optional, defaults to empty list\&.
+.sp
+A JSON list of integers for which more than one
+\fBACCOUNT NAME OBJECT\fR
+may share the same
+\fImyid\fR
+or
+\fImygroup\fR
+value\&.
+.sp
+This is necessary when a static UID/GID is assigned to
+a different user name and group name\&.
+.sp
+This also can also be used for cases where two different
+services provide the same capabilities resulting in them
+not likely to be installed at the same time, such as the
+multiple different implementations of the
+\fBlocate (1)\fR
+database\&.
+.RE
 .\" ---
 .PP
 .\" --- end 000-config
