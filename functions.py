@@ -350,6 +350,7 @@ def validate_cfg(cfgdict: dict) -> None:
     return
 
 def invalid_definition(name: str, prop: str) -> str:
+    """Provides invalid definition error string"""
     return(_("The user/group '")
            + name
            + _("' has an invalid '")
