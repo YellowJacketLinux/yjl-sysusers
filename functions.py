@@ -53,25 +53,25 @@ def fail_invalid_definition(name: str, prop: str) -> None:
              + prop
              + _("' definition."))
 
-def fail_invalid_usrgrp(name) -> None:
+def fail_invalid_usrgrp(name: str) -> None:
     """Exits with invalid usr grp string."""
     sys.exit(_("The user/group '")
              + name
              + _("' must have at least one of 'usr' or 'grp' defined as 'true'"))
 
-def fail_groupid_without_user(name) -> None:
+def fail_groupid_without_user(name: str) -> None:
     """Exits with invalid groupid usr string."""
     sys.exit(_("The user/group '")
              + name
              + _("' can not define 'groupid' if 'usr' is not defined as 'true'"))
 
-def fail_groupid_without_group(name) -> None:
+def fail_groupid_without_group(name: str) -> None:
     """Exits with invalid groupid grp string."""
     sys.exit(_("The user/group '")
              + name
              + _("' can not define 'groupid' if 'grp' is not defined as 'true'"))
 
-def fail_groupid_with_groupname(name) -> None:
+def fail_groupid_with_groupname(name: str) -> None:
     """Exits with invalid groupid and group string."""
     sys.exit(_("The user/group '")
              + name
@@ -308,21 +308,21 @@ def determine_useradd_uid_from_json(username: str, sysusers: dict) -> int:
     sys.exit(_("There do not seem to be any available User IDs left for a system user."))
 
 def determine_useradd_comment(username: str, nameobject: dict) -> str:
-    """Returns string for useradd comment argument"""
+    """Returns string for useradd comment argument."""
     comment = nameobject.get('comment', '')
     if usercomment_check(comment):
         return translate_comment(comment)
     return username + " " + _("system user account")
 
 def determine_useradd_homedir(nameobject: dict) -> str:
-    """Returns string for useradd home argument"""
+    """Returns string for useradd home argument."""
     homedir = nameobject.get('homedir', '/dev/null')
     if homedir_check(homedir):
         return homedir
     return "/dev/null"
 
 def determine_useradd_shell(nameobject: dict) -> str:
-    """Returns string for useradd shell argument"""
+    """Returns string for useradd shell argument."""
     extrashells = nameobject.get('extrashells', False)
     shell = nameobject.get('shell', '/sbin/nologin')
     if shell_check(shell, extrashells):
@@ -401,7 +401,7 @@ def just_do_it(username: str, sysusers: dict) -> None:
         determine_useradd_gid_from_json(username, sysusers)
 
 def validate_cfg(cfgdict: dict) -> None:
-    """Validates the 000-CONFIG json object"""
+    """Validates the 000-CONFIG json object."""
     # pylint: disable=global-statement
     global NOGROUP
     global DUPOK
@@ -491,7 +491,7 @@ def validate_no_duplicates(username: str, myid: int, groupid: int, usedlist: lis
     return usedlist
 
 def validate_json() -> int:
-    """Validates the JSON configuration file and if successful, dumps contents to screen."""
+    """Validates the JSON configuration file and if successful, dumps contents to console."""
     usedlist = []
     sysusers = load_json()
     keylist = list(sysusers.keys())
