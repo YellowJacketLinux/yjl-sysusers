@@ -115,8 +115,9 @@ False positives are disables and `global keyword` warnings are disabled,
 this utility has a genuine use case for the `global keyword`.
 
 The `pylint` utility reports some code readability warnings about coding
-style that need to be dealt with for the sake of readability. It is
-correct about those. They will be dealt with.
+style with respect to the `main()` function that *probably* need to be
+dealt with for the sake of readability. It is correct about those. That
+function probably needs to be refactored.
 
 The `pylint` utility also reports some `No exception type(s) specified
 (bare-except)` warnings.
@@ -128,7 +129,7 @@ disabling that warning.
 My Arrogant Distribution Packaging Rant
 ---------------------------------------
 
-By ‘My Arrogant’, I mean me.
+By ‘My Arrogant’, I do mean me.
 
 I literally __HATE__ distribution specific macros and how they have
 proliferated in quantity and complexity since the ‘Good Old Days’.
