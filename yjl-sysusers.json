@@ -1,5 +1,8 @@
 {
     "000-CONFIG": {
+        "description": "YellowJacket GNU/Linux 6.1",
+        "maintainer": "github upstream",
+        "modified": "2023-05-30",
         "dupok": [65534]
     },
     "root": {
