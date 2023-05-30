@@ -81,7 +81,7 @@ Every potential system user and group account for which a statically
 assigned UID/GID desired should have an \fBACCOUNT NAME OBJECT\fR\&.
 .PP
 The \fBACCOUNT NAME INDEX\fR is the index of that object in the
-\fByjl-sysusers\&.json\fR file and must match the name of the potential
+\fByjl\-sysusers\&.json\fR file and must match the name of the potential
 system user or group account\&.
 .PP
 The \fByjl\-sysusers (8)\fR utility is stricter about system account names
@@ -153,7 +153,7 @@ in the GNU/Linux distribution default
 Boolean\&. Recommended\&. Default value is \fIfalse\fR\&.
 .sp
 This property defines whether the default action of
-\fByjl-sysusers (8)\fR
+\fByjl\-sysusers (8)\fR
 should be to create a user account with the the user name of the
 \fBACCOUNT NAME INDEX\fR\&.
 .sp
@@ -167,7 +167,7 @@ If the \fIusr\fR property is either not defined or defined to
 Boolean\&. Recommended\&. Default value is \fIfalse\fR\&.
 .sp
 This property defines whether the default action of
-\fByjl-sysusers (8)\fR
+\fByjl\-sysusers (8)\fR
 should be to create a group account with the group name of the
 \fBACCOUNT NAME INDEX\fR\&.
 .sp
@@ -206,11 +206,11 @@ When present, this property defines the default ASCII English
 version of the \fICOMMENT\fR
 (also called \fIGECOS\fR) field of the /etc/passwd file (see
 \fBman 5 passwd\fR) when
-\fByjl-sysusers (8)\fR creates a user account using the name
+\fByjl\-sysusers (8)\fR creates a user account using the name
 \fBACCOUNT NAME INDEX\fR\&.
 .sp
 When the \fIcomment\fR property is not defined,
-\fByjl-sysusers (8)\fR will default to using
+\fByjl\-sysusers (8)\fR will default to using
 "\fBACCOUNT NAME INDEX\fR system user account"
 as the \fICOMMENT\fR when it creates a user account using the
 name \fBACCOUNT NAME INDEX\fR\&.
@@ -220,7 +220,7 @@ than 120 characters in length and must not contain a colon or a
 back\-slash\&.
 .sp
 When translations are available,
-\fByjl-sysusers (8)\fR
+\fByjl\-sysusers (8)\fR
 will use translations of this property as provided by GNU
 gettext for systems that uses a non-English default
 language\&.
@@ -233,14 +233,14 @@ String\&. Optional\&. Defaults to /dev/null\&.
 When present, this property defines the default
 \fIdirectory\fR field of the /etc/passwd file (see
 \fBman 5 passwd\fR) when
-\fByjl-sysusers (8)\fR creates a user account using the
+\fByjl\-sysusers (8)\fR creates a user account using the
 name \fBACCOUNT NAME INDEX\fR\&.
 .sp
 This is usually called the "home directory" because
 it defines the \fIHOME\fR environment variable for the
 user account\&.
 .sp
-The \fByjl-sysusers (8)\fR utility enforces stricter rules
+The \fByjl\-sysusers (8)\fR utility enforces stricter rules
 for system accounts, only allowing \fIhomedir\fR values
 that are lower case alpha-numeric plus underscore,
 forward-slash, and hyphen dashes\&.
@@ -253,23 +253,23 @@ String\&. Optional, rarely appropriate\&.
 When present, this property defines the default
 \fIshell\fR field of the /etc/passwd file (see
 \fBman 5 passwd\fR) when
-\fByjl-sysusers (8)\fR creates a user account using the
+\fByjl\-sysusers (8)\fR creates a user account using the
 name \fBACCOUNT NAME INDEX\fR\&.
 .sp
 The only valid values for the \fIshell\fR property (unless the
 \fIatypshell\fR property is set to \fItrue\fR) of an
 \fBACCOUNT NAME OBJECT\fR in the
-\fByjl-sysusers\&.conf\fR file are
+\fByjl\-sysusers\&.conf\fR file are
 \fI/bin/bash\fR and \fI/bin/sh\fR\&.
 .sp
 Additional values may be specified to the
-\fByjl-sysusers (8)\fR utility as long as the specified shell
+\fByjl\-sysusers (8)\fR utility as long as the specified shell
 is in /etc/shells (see
 \fBman 5 shells\fR)\&.
 .sp
 When the \fBACCOUNT NAME OBJECT\fR does not have a \fIshell\fR
 property and a valid \fISHELL\fR option is not passed to the
-\fByjl-sysusers (8)\fR utility, the \fByjl-sysusers (8)\fR utility
+\fByjl\-sysusers (8)\fR utility, the \fByjl\-sysusers (8)\fR utility
 will use \fB/sbin/nologin\fR (if it exists on the system) or
 \fB/bin/false\fR for the \fIshell\fR field of the /etc/passwd file
 when it creates a user account named \fBACCOUNT NAME INDEX\fR\&.
@@ -289,16 +289,16 @@ filesystem path.
 Boolean\&. Optional, defaults to \fIfalse\fR\&.
 .sp
 When this property is set to \fItrue\fR then the default behavior
-of \fByjl-sysusers (8)\fR will be to create the home directory
+of \fByjl\-sysusers (8)\fR will be to create the home directory
 for \fBACCOUNT NAME INDEX\fR if the directory does not already exist
-when \fByjl-sysusers (8)\fR is asked to create a user account for
+when \fByjl\-sysusers (8)\fR is asked to create a user account for
 \fBACCOUNT NAME INDEX\fR\&.
 .sp
 In most cases, that is not desired for system user accounts because
 it will copy the contents of /etc/skel into the created directory\&.
 .sp
 If the \fImkdir\fR property is either not set or is set to \fIfalse\fR
-then the default behavior of \fByjl-sysusers (8)\fR will be to NOT
+then the default behavior of \fByjl\-sysusers (8)\fR will be to NOT
 create the home directory for \fBACCOUNT NAME INDEX\fR when it is
 asked to add the \fBACCOUNT NAME INDEX\fR user\&.
 .RE
@@ -322,16 +322,16 @@ name by the
 .SH 000\-CONFIG
 .PP
 This section of the
-\fByjl-sysusers\&.json\fR
+\fByjl\-sysusers\&.json\fR
 file modifies some of the default behavior of
-\fByjl-sysusers (8)\fR\&.
+\fByjl\-sysusers (8)\fR\&.
 .PP
 \fIdescription\fR
 .RS 4
 String\&. Optional\&.
 .sp
 A UTF-8 string describing the GNU/Linux distribution and version the
-\fByjl-sysusers\&.conf\fR
+\fByjl\-sysusers\&.conf\fR
 file was created for\&.
 .RE
 .PP
@@ -340,8 +340,20 @@ file was created for\&.
 String\&. Optional\&.
 .sp
 A UTF-8 string identifying the maintainer of the
-\fByjl-sysusers\&.conf\fR
+\fByjl\-sysusers\&.conf\fR
 file\&.
+.RE
+.PP
+\fImodified\fR
+.RS 4
+String, ISO-8601 Timestamp, Optional\&.
+.sp
+Information about when the
+\fByjl\-sysusers\&.json\fR
+file was last modified\&.
+.sp
+When used, it must include at least the date and must be
+in ISO-8601 format\&.
 .RE
 .PP
 \fInogroup\fR
@@ -474,9 +486,9 @@ it for completeness as well as a rather complete example entry\&.
 .SH MODIFICATION
 I recommend against modifications being applied to an installed
 \fByjl\-sysusers\&.json\fR file\&. A JSON mistake will break the
-ability of \fByjl-sysusers (8)\fR to function\&.
+ability of \fByjl\-sysusers (8)\fR to function\&.
 .PP
-It is better to update the JSON in the \fByjl-sysusers\fR source
+It is better to update the JSON in the \fByjl\-sysusers\fR source
 package and build an updated package, so that the modification will
 be validated during package creation\&.
 .\" ---
@@ -488,7 +500,7 @@ be validated during package creation\&.
 .PP
 .\" --- end files
 .SH SEE ALSO
-\fByjl-sysusers(8)\fR,
+\fByjl\-sysusers(8)\fR,
 \fBpasswd(5)\fR,
 \fBgroup(5)\fR,
 \fBlogin\&.defs(5)\fR,
