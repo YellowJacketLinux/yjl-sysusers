@@ -38,6 +38,8 @@ MYVERSION = "0.1.5"
 # Initial globals that get reset
 NOGROUP = "nogroup"
 DUPOK = []
+# A list of dictionaries, gets reset by 000-CONFIG
+DYNAMIC = [{'min': 201, 'max': 999}]
 ATYPSHELL = False
 CFGDESC = ""
 CFGMAIN = ""
@@ -293,10 +295,13 @@ def load_id_list(desired: int) -> list:
     mylist = []
     if desired != OS_MAX_PLUS_ONE:
         mylist.append(desired)
-    for i in range(300, 400):
-        mylist.append(i)
-    for i in range(500, 1000):
-        mylist.append(i)
+    for dydict in DYNAMIC:
+        mymin = dydict.get('min', 500)
+        mymax = dydict.get('max', 999) + 1
+        if mymax > mymin:
+            for i in range(mymin, mymax):
+                if i not in mylist:
+                    mylist.append(i)
     return mylist
 
 def find_group_id(gpname: str, desired: int) -> int:
@@ -478,11 +483,33 @@ def val_cfg_string(prop: str, checkme: str, strict: bool) -> str:
         fail_badcfg_property(prop, strict)
     return ""
 
+def validate_dynamic(mydynamic: list, strict: bool) -> list:
+    """Validates the dynamic UID/GID range and return it."""
+    valid = []
+    for mydict in mydynamic:
+        try:
+            mymin = mydict.get("min")
+        except KeyError:
+            fail_badcfg_property("dynamic", strict)
+        try:
+            mymax = mydict.get("max")
+        except KeyError:
+            fail_badcfg_property("dynamic", strict)
+        if mymin < mymax:
+            valid.append({'min': mymin, 'max': mymax})
+        else:
+            fail_badcfg_property("dynamic", strict)
+    if not valid:
+        # empty list
+        return DYNAMIC
+    return valid
+
 def validate_cfg(cfgdict: dict, strict: bool) -> None:
     """Validates the 000-CONFIG json object."""
     # pylint: disable=global-statement
     global NOGROUP
     global DUPOK
+    global DYNAMIC
     # cfg metadata
     global CFGDESC
     global CFGMAIN
@@ -498,6 +525,9 @@ def validate_cfg(cfgdict: dict, strict: bool) -> None:
         if userid_check(i) is False:
             fail_badcfg_property("dupok", strict)
             DUPOK = []
+    mydnamic = cfgdict.get("dynamic", DYNAMIC)
+    DYNAMIC = validate_dynamic(mydnamic, strict)
+    #
     CFGDESC = val_cfg_string("description", cfgdict.get("description", ""), strict)
     CFGMAIN = val_cfg_string("maintainer", cfgdict.get("maintainer", ""), strict)
     CFGMODT = val_cfg_string("modified", cfgdict.get("modified", ""), strict)
