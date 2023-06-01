@@ -50,6 +50,10 @@ OS_MAX_PLUS_ONE = 65535
 def _(fubar):
     return fubar
 
+def fail_not_root() -> None:
+    """Exits with invalid permissions error."""
+    sys.exit(_("Sorry, you must be root to run me. Try with ") + "'sudo'" + ".")
+
 # JSON Validation Errors
 def fail_invalid_definition(name: str, prop: str) -> None:
     """Exits with invalid definition error string."""
@@ -105,6 +109,23 @@ def fail_invalid_usergroup(name: str) -> None:
              + name
              + _("' is not valid."))
 
+def fail_load_json(jsonfile: str) -> None:
+    """Exits with invalid JSON message."""
+    sys.exit(_("Could not load the JSON data file:") + " " + jsonfile)
+
+def fail_addaccount(accountname: str, ugtype: str) -> None:
+    """Exits with message about failed user/group creation."""
+    sys.exit(_("Failed to add the '")
+             + accountname
+             + "' "
+             + ugtype
+             + _(" account."))
+
+def fail_nouids_left(accountname: str) -> None:
+    """Exits with message about insufficient UIDs."""
+    sys.exit(_("Failed to add the '")
+             + accountname
+             + _("' due to insufficient remaining dynamic system UIDs"))
 
 APDICT = {
     "description": _("Add system users and groups. See:") + " 'man 8 yjl-sysusers'",
@@ -169,7 +190,7 @@ def load_json() -> dict:
         with open(jsonfile) as data_file:
             return json.load(data_file)
     except:
-        sys.exit(_("Could not load the JSON data file:") + " " + jsonfile)
+        fail_load_json(jsonfile)
 
 def username_check(checkme: str) -> bool:
     """Validates input against YJL rules for system user/group names."""
@@ -256,7 +277,7 @@ def add_the_group(gpname: str, gid: int) -> int:
         try:
             subprocess.call(["groupadd", "-f", "-g", str(gid), "-r", gpname])
         except:
-            sys.exit(_("Failed to create the specified group."))
+            fail_addaccount(gpname, "group")
     else:
         # this only happens in testing, main() checks for root
         print(mycmd)
@@ -264,7 +285,7 @@ def add_the_group(gpname: str, gid: int) -> int:
     try:
         existing = grp.getgrnam(gpname)
     except KeyError:
-        sys.exit(_("Failed to create the specified group."))
+        fail_addaccount(gpname, "group")
     return existing.gr_gid
 
 def load_id_list(desired: int) -> list:
@@ -351,7 +372,7 @@ def determine_useradd_uid_from_json(username: str, sysusers: dict) -> int:
             except KeyError:
                 return i
     # Should never ever happen
-    sys.exit(_("There do not seem to be any available User IDs left for a system user."))
+    fail_nouids_left(username)
 
 def determine_useradd_comment(username: str, nameobject: dict) -> str:
     """Returns string for useradd comment argument."""
@@ -431,7 +452,7 @@ def add_the_user(username: str, sysusers: dict) -> None:
         try:
             subprocess.call(spclist)
         except:
-            sys.exit(_("Failed to create the specified user."))
+            fail_addaccount(username, "user")
     else:
         # this only happens in testing, main() checks for root.
         print(spclist)
@@ -603,7 +624,7 @@ def main(args) -> int:
         return 0
     myuid = os.getuid()
     if myuid != 0:
-        sys.exit(_("Sorry, you must be root to run me."))
+        fail_not_root()
     if username_check(args.account):
         username = args.account
     else:
