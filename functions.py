@@ -48,7 +48,7 @@ CFGVALT = ""
 # used as non-collision dummy intiger to trigger dynamic
 OS_MAX_PLUS_ONE = 65535
 
-# Dummy until gettext is used
+# Dummy function until gettext is used
 def _(fubar):
     return fubar
 
