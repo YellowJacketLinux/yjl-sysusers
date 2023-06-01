@@ -605,34 +605,8 @@ def validate_json(sysusers: dict) -> None:
     valid_json = json.dumps(sysusers)
     print(valid_json)
 
-def main(args) -> int:
-    """Loads JSON file, applies argparse options."""
-    # pylint: disable=global-statement
-    global ATYPSHELL
-    # pylint: enable=global-statement
-    sysusers = load_json()
-    #if args.account == "000":
-    if args.bootstrap:
-        validate_json(sysusers)
-        return 0
-    try:
-        validate_cfg(sysusers["000-CONFIG"], False)
-    except KeyError:
-        pass
-    if args.version:
-        showinfo()
-        return 0
-    myuid = os.getuid()
-    if myuid != 0:
-        fail_not_root()
-    if username_check(args.account):
-        username = args.account
-    else:
-        fail_invalid_usergroup(args.account)
-    keylist = list(sysusers.keys())
-    if username not in keylist:
-        sysusers[username] = {'myid': OS_MAX_PLUS_ONE, 'usr': True, 'grp': True}
-    # modify sysusers[username] based upon arguements
+def adjust_username_object(args, username: str, sysusers: dict) -> dict:
+    """Adjust the sysuser object for the argparse arguments"""
     if args.comment is not None:
         if usercomment_check(args.comment):
             sysusers[username].update({"comment": args.comment})
@@ -658,6 +632,7 @@ def main(args) -> int:
         args.group = None
     if args.group is not None:
         if username_check(args.group):
+            keylist = list(sysusers.keys())
             if args.group not in keylist:
                 sysusers[args.group] = {'myid': OS_MAX_PLUS_ONE, 'usr': False, 'grp': True}
             sysusers[username].update({"usr": True})
@@ -665,6 +640,36 @@ def main(args) -> int:
             sysusers[username].update({"group": args.group})
         else:
             fail_invalid_usergroup(args.group)
+    return sysusers
+
+def main(args) -> int:
+    """Loads JSON file, applies argparse options."""
+    # pylint: disable=global-statement
+    global ATYPSHELL
+    # pylint: enable=global-statement
+    sysusers = load_json()
+    if args.bootstrap:
+        validate_json(sysusers)
+        return 0
+    try:
+        validate_cfg(sysusers["000-CONFIG"], False)
+    except KeyError:
+        pass
+    if args.version:
+        showinfo()
+        return 0
+    myuid = os.getuid()
+    if myuid != 0:
+        fail_not_root()
+    if username_check(args.account):
+        username = args.account
+    else:
+        fail_invalid_usergroup(args.account)
+    keylist = list(sysusers.keys())
+    if username not in keylist:
+        sysusers[username] = {'myid': OS_MAX_PLUS_ONE, 'usr': True, 'grp': True}
+    # modify sysusers[username] based upon arguements
+    sysusers = adjust_username_object(args, username, sysusers)
     #
     ATYPSHELL = sysusers[username].get("atypshell", False)
     just_do_it(username, sysusers)
