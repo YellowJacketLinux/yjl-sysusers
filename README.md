@@ -31,9 +31,9 @@ distributions (sometimes with a rebuild for shared library resolution)
 becomes much easier.
 
 Theoretically (not yet implemented or tested) with the `yjl-sysusers`
-utility, translations of user comment (also called GECOS) field into
-the default system locale will be automatic, when the translation is
-available.
+utility, translations of user comment (also called GECOS) `/etc/passwd`
+field into the default system locale will be automatic, assuming the
+translation is available.
 
 See the [yjl-sysusers.8](docs/yjl-sysusers.8.md) man page for usage.
 
@@ -52,7 +52,7 @@ assignments for certain users and groups, as well as distribution-
 specific configurations for how to handle things like dynamic UID/GID
 allocation.
 
-A network or organization administrator of multiple system—even different
+A network or organization administrator of multiple systems—even different
 distributions—can customize the JSON and rebuild the package to add
 specific static allocations that are needed for use cases specific to
 that network or organization.
@@ -70,20 +70,15 @@ right thing on your system.
 Validation Failures and Handling
 --------------------------------
 
-If the user running the `yjl-sysgroups` utility does not have `root`
-privileges, the utility will exit with a failure status.
-
 If the JSON file is malformed, the `yjl-sysgroups` utility will exit
 with a failure status. That should never happen unless the JSON file
 is improperly modified after install.
 
+If the user running the `yjl-sysgroups` utility does not have `root`
+privileges, the utility will exit with a failure status.
+
 If a username or groupname passed as an argument does not validate,
 the `yjl-sysusers` utility will exit with a failure status.
-
-If anything other than the case sensitive `True` or `False` is passed
-with the `--useradd`, `--groupadd`, or `--mkdir` options, the
-`yjl-sysusers` utility will exit with a failure status. I consider
-that to be a bug I need to fix.
 
 If there are no available UIDs/GIDs left in the system user dynamic
 range when one is needed, the `yjl-sysusers` utility will exit with
@@ -103,6 +98,10 @@ script is asked to create can still be made.
 Python Notes
 ------------
 
+The `-v, --version` and `--bootstrap` *should not* require the lone
+positional argument, but they do. That probably is my misunderstanding
+of how to use `argparse`. I consider it a bug.
+
 Python 3 is required. A few distributions (like CentOS 7) are still
 at present supported that use Python 2 as the distribution Python
 interpreter, but AFAIK all of those distributions offer Python 3 as
@@ -117,16 +116,17 @@ at such a score, reported issues should be looked at.
 False positives are disables and `global keyword` warnings are disabled,
 this utility has a genuine use case for the `global keyword`.
 
-The `pylint` utility reports some code readability warnings about coding
-style with respect to the `main()` function that *probably* need to be
-dealt with for the sake of readability. It is correct about those. That
-function probably needs to be refactored.
+The `pylint` utility reports that the `adjust_username_object()` function
+has too many forks. That function has a lot of options to adjust for
+and I suspect refactoring that function to make `pylint` happy would
+only decrease readability.
 
 The `pylint` utility also reports some `No exception type(s) specified
 (bare-except)` warnings.
 
 At least some of those are safe to ignore, but I do not feel comfortable
-disabling that warning.
+disabling that warning. It may be possible to properly deal with all
+of those cases.
 
 
 My Arrogant Distribution Packaging Rant

@@ -1,18 +1,8 @@
 TODO
 ====
 
-add configuration for dynamic range
-add timestamp to installed config file
-validate CONFIG-000 description and maintainer
-
-nuke --adduser and --addgroup options, make
-*true* Boolean --useronly --grouponly and
---userandgroup options.
-
-make --mkdir *true* boolean, default False
-
-add --info option
-add --delete option
+add --delete option --- the argument is there, but it does not actually
+do anything yet.
 
 --------------------------------
 

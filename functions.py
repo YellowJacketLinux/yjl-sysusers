@@ -39,7 +39,7 @@ MYVERSION = "0.1.5"
 NOGROUP = "nogroup"
 DUPOK = []
 # A list of dictionaries, gets reset by 000-CONFIG
-DYNAMIC = [{'min': 201, 'max': 999}]
+DYNAMIC = [{'min': 201, 'max': 499}]
 ATYPSHELL = False
 CFGDESC = ""
 CFGMAIN = ""
