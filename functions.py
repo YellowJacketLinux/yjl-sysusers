@@ -34,6 +34,7 @@ import subprocess
 import argparse
 from datetime import datetime, timezone
 
+MYVERSION = "0.1.5"
 # Initial globals that get reset
 NOGROUP = "nogroup"
 DUPOK = []
@@ -98,27 +99,60 @@ def fail_badcfg_property(prop: str, strict: bool) -> None:
                  + prop
                  + _("' in '000-CONFIG' is invalid."))
 
+def fail_invalid_usergroup(name: str) -> None:
+    """Exits with invalid username/groupname message."""
+    sys.exit(_("The user/group name '")
+             + name
+             + _("' is not valid."))
+
+
 APDICT = {
-    "description": _("Add system users and groups. See: man 8 yjl-sysusers"),
-    "comment": _("Specify the user comment passwd field."),
-    "home": _("Specify the user home directory."),
-    "shell": _("Specify the user login shell."),
-    "uadd": _("Use False to disable user creation."),
-    "gadd": _("Use False to disable group creation."),
-    "group": _("Specify the default group NAME for the user."),
-    "mkdir": _("Use True to create home directory."),
-    "account": _("User or Group name to add.")
+    "description": _("Add system users and groups. See:") + " 'man 8 yjl-sysusers'",
+    "version": _("show version information and exit"),
+    "bootstrap": _("bootstrap validate the JSON file"),
+    "comment": _("specify the user comment passwd field"),
+    "home": _("specify the user home directory"),
+    "shell": _("specify the user login shell"),
+    "group": _("specify the default group NAME for the user"),
+    "uadd": _("only add a user, do not add a group"),
+    "gadd": _("only add a group, do not add a user"),
+    "badd": _("require creation of both a user and group"),
+    "mkdir": _("create the user home directory with useradd"),
+    "delete": _("delete the specified user and group"),
+    "account": _("user or group name to add")
 }
 
 PSR = argparse.ArgumentParser(description=APDICT["description"])
+PSR.add_argument("-v", "--version", action='store_true', help=APDICT["version"])
+PSR.add_argument("--bootstrap", action='store_true', help=APDICT["bootstrap"])
 PSR.add_argument("-c", "--comment", type=str, help=APDICT["comment"])
 PSR.add_argument("-d", "--home", type=str, help=APDICT["home"])
 PSR.add_argument("-s", "--shell", type=str, help=APDICT["shell"])
-PSR.add_argument("--useradd", choices=('True', 'False'), help=APDICT["uadd"])
-PSR.add_argument("--groupadd", choices=('True', 'False'), help=APDICT["gadd"])
 PSR.add_argument("-g", "--group", type=str, help=APDICT["group"])
-PSR.add_argument("--mkdir", choices=('True', 'False'), help=APDICT["mkdir"])
+PSR.add_argument("--onlyuser", action='store_true', help=APDICT["uadd"])
+PSR.add_argument("--onlygroup", action='store_true', help=APDICT["gadd"])
+PSR.add_argument("--userandgroup", action='store_true', help=APDICT["badd"])
+PSR.add_argument("--mkdir", action='store_true', help=APDICT["mkdir"])
+PSR.add_argument("--delete", action='store_true', help=APDICT["delete"])
 PSR.add_argument('account', type=str, help=APDICT["account"])
+
+def showinfo() -> None:
+    """prints version and related information and exits."""
+    print(_("This is ") + "yjl-sysusers " + _("version ") + str(MYVERSION))
+    print(_("Copyright (c)") + " 2023 YellowJacket GNU/Linux. MIT License.")
+    mysum = len(CFGDESC) + len(CFGMAIN) + len(CFGMODT) + len(CFGVALT)
+    if mysum > 0:
+        return
+    print()
+    print("yjl-sysusers.json " + _("information:"))
+    if len(CFGDESC) > 0:
+        print(_("      Decription: ") + CFGDESC)
+    if len(CFGMAIN) > 0:
+        print(_("      Maintainer: ") + CFGMAIN)
+    if len(CFGMODT) > 0:
+        print(_("   Last Modified: ") + CFGMODT)
+    if len(CFGVALT) > 0:
+        print(_("  JSON Validated: ") + CFGVALT)
 
 def myjson() -> str:
     """Sets the hard-coded location of the configuration file."""
@@ -423,18 +457,6 @@ def val_cfg_string(prop: str, checkme: str, strict: bool) -> str:
         fail_badcfg_property(prop, strict)
     return ""
 
-def val_cfg_datetime(prop: str, checkme: str, strict: bool) -> str:
-    """validates a datetime string from cfg and returns ISO 8601 string"""
-    checkme = val_cfg_string(prop, checkme, strict)
-    if len(checkme) == 0:
-        return ""
-    try:
-        dto = parser.parse(checkme, default=parser.parse("00:00Z"))
-    except:
-        fail_badcfg_property(prop, strict)
-        return ""
-    return dto.isoformat('T', 'seconds')
-
 def validate_cfg(cfgdict: dict, strict: bool) -> None:
     """Validates the 000-CONFIG json object."""
     # pylint: disable=global-statement
@@ -457,8 +479,8 @@ def validate_cfg(cfgdict: dict, strict: bool) -> None:
             DUPOK = []
     CFGDESC = val_cfg_string("description", cfgdict.get("description", ""), strict)
     CFGMAIN = val_cfg_string("maintainer", cfgdict.get("maintainer", ""), strict)
-    CFGMODT = val_cfg_datetime("modified", cfgdict.get("modified", ""), strict)
-    CFGVALT = val_cfg_datetime("validated", cfgdict.get("validated", ""), strict)
+    CFGMODT = val_cfg_string("modified", cfgdict.get("modified", ""), strict)
+    CFGVALT = val_cfg_string("validated", cfgdict.get("validated", ""), strict)
     return
 
 def validate_no_groupid_conflicts(username: str, nameobject: dict) -> None:
@@ -536,10 +558,9 @@ def validate_no_duplicates(username: str, myid: int, groupid: int, usedlist: lis
     usedlist.append(groupid)
     return usedlist
 
-def validate_json() -> int:
+def validate_json(sysusers: dict) -> None:
     """Validates the JSON configuration file and if successful, dumps contents to console."""
     usedlist = []
-    sysusers = load_json()
     keylist = list(sysusers.keys())
     if "000-CONFIG" in keylist:
         validate_cfg(sysusers["000-CONFIG"], True)
@@ -548,9 +569,7 @@ def validate_json() -> int:
         sysusers["000-CONFIG"] = {}
     for username in keylist:
         if username_check(username) is False:
-            sys.exit(_("The user/group '")
-                     + username
-                     + _("' is an invald name."))
+            fail_invalid_usergroup(username)
         nameobject = sysusers[username]
         validate_user_group(username, nameobject)
         validate_useradd_attributes(username, nameobject)
@@ -562,19 +581,25 @@ def validate_json() -> int:
             fail_invalid_definition(username, "protected")
     now = datetime.now(timezone.utc).isoformat('T', 'seconds')
     sysusers['000-CONFIG'].update({"validated": now})
-    if len(CFGMODT) > 0:
-        sysusers['000-CONFIG'].update({"modified": CFGMODT})
     valid_json = json.dumps(sysusers)
     print(valid_json)
-    return 0
 
 def main(args) -> int:
     """Loads JSON file, applies argparse options."""
     # pylint: disable=global-statement
     global ATYPSHELL
     # pylint: enable=global-statement
-    if args.account == "000":
-        validate_json()
+    sysusers = load_json()
+    #if args.account == "000":
+    if args.bootstrap:
+        validate_json(sysusers)
+        return 0
+    try:
+        validate_cfg(sysusers["000-CONFIG"], False)
+    except KeyError:
+        pass
+    if args.version:
+        showinfo()
         return 0
     myuid = os.getuid()
     if myuid != 0:
@@ -582,11 +607,8 @@ def main(args) -> int:
     if username_check(args.account):
         username = args.account
     else:
-        sys.exit(args.account + " " + _("is not valid for a system user/group account name."))
-    sysusers = load_json()
+        fail_invalid_usergroup(args.account)
     keylist = list(sysusers.keys())
-    if "000-CONFIG" in keylist:
-        validate_cfg(sysusers["000-CONFIG"], False)
     if username not in keylist:
         sysusers[username] = {'myid': OS_MAX_PLUS_ONE, 'usr': True, 'grp': True}
     # modify sysusers[username] based upon arguements
@@ -600,35 +622,28 @@ def main(args) -> int:
         if shell_check(args.shell, True):
             sysusers[username].update({"shell": args.shell})
             sysusers[username].update({"extrashells": True})
-    if args.useradd is not None:
-        if args.useradd == "True":
-            sysusers[username].update({"usr": True})
-        else:
-            sysusers[username].update({"usr": False})
-    if args.groupadd is not None:
-        if args.groupadd == "True":
-            sysusers[username].update({"grp": True})
-        else:
-            sysusers[username].update({"grp": False})
+    if args.onlyuser:
+        sysusers[username].update({"usr": True})
+        sysusers[username].update({"grp": False})
+    elif args.onlygroup:
+        sysusers[username].update({"usr": False})
+        sysusers[username].update({"grp": True})
+    elif args.userandgroup:
+        sysusers[username].update({"usr": True})
+        sysusers[username].update({"grp": True})
+    if args.mkdir:
+        sysusers[username].update({"mkdir": True})
+    if args.group == args.account:
+        args.group = None
     if args.group is not None:
         if username_check(args.group):
-            if username == args.group:
-                sysusers[username].pop("group")
-                sysusers[username].update({"grp": True})
-            else:
-                sysusers[username].update({"group": args.group})
-                sysusers[username].update({"grp": False})
-    mytest = sysusers[username].get("usr")
-    if mytest is False:
-        sysusers[username].update({"grp": True})
-    mytest = sysusers[username].get("grp")
-    if mytest is False:
-        sysusers[username].update({"usr": True})
-    if args.mkdir is not None:
-        if args.mkdir == "True":
-            sysusers[username].update({"mkdir": True})
+            if args.group not in keylist:
+                sysusers[args.group] = {'myid': OS_MAX_PLUS_ONE, 'usr': False, 'grp': True}
+            sysusers[username].update({"usr": True})
+            sysusers[username].update({"grp": False})
+            sysusers[username].update({"group": args.group})
         else:
-            sysusers[username].update({"mkdir": False})
+            fail_invalid_usergroup(args.group)
     #
     ATYPSHELL = sysusers[username].get("atypshell", False)
     just_do_it(username, sysusers)

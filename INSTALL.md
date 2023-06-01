@@ -18,7 +18,7 @@ top level where the `functions.py` file is.
 __Second__, test your version of the `yjl-sysusers.json` file by running
 the following command:
 
-    python3 functions.py 000
+    python3 functions.py --bootstrap 000
 
 If your JSON is valid and your properties are valid, a bunch of JSON
 will be dumped to screen but the exit status will be 0.
