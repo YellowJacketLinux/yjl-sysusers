@@ -161,7 +161,6 @@ class Parser(argparse.ArgumentParser):
             super(Parser, self).error(self.error_message)
 
 PSR = Parser(description=APDICT["description"])
-#PSR = argparse.ArgumentParser(description=APDICT["description"])
 PSR.add_argument("-v", "--version", action='store_true', help=APDICT["version"])
 PSR.add_argument("--bootstrap", action='store_true', help=APDICT["bootstrap"])
 PSR.add_argument("-c", "--comment", type=str, help=APDICT["comment"])
