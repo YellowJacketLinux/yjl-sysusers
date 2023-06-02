@@ -147,7 +147,7 @@ does not exist, it will be created automatically\&.
 .PP
 \fB\-\-onlyuser\fR
 .RS 4
-Boolean option. When this option is specified, only the user
+Boolean flag. When this flag is specified, only the user
 \fIaccount\fR
 will be created\&. If a valid primary group is not specified
 with the
@@ -161,14 +161,14 @@ name does not already exist, then the user will be put in the
 .PP
 \fB\-\-onlygroup\fR
 .RS 4
-Boolean option. When this option is specified, only the group
+Boolean flag. When this flag is specified, only the group
 \fIaccount\fR
 will be created\&.
 .RE
 .PP
 \fB\-\-userandgroup\fR
 .RS 4
-Boolean option. When this option is specified, both a user and
+Boolean flag. When this flag is specified, both a user and
 group
 \fIaccount\fR
 will be created\&. This is actually the default behavior but the
@@ -181,7 +181,7 @@ name\&.
 .PP
 \fB\-\-mkdir\fR
 .RS 4
-Boolean option. When this option is specified, the
+Boolean flag. When this flag is specified, the
 \fIHOME\fR
 directory for
 \fIaccount\fR
@@ -201,7 +201,7 @@ directory, which is rarely desired for system accounts\&.
 .RS 4
 As of version 0\&.1\&.5 this is not yet implemented\&.
 .sp
-This option is used to specify that any user and group of
+This flag is used to specify that any user and group of
 the name
 \fIaccount\fR
 should be deleted\&. It does does not delete any files
