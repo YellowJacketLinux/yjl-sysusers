@@ -2,7 +2,7 @@
     "000-CONFIG": {
         "description": "YellowJacket GNU/Linux 6.1",
         "maintainer": "github upstream",
-        "modified": "2023-05-31",
+        "modified": "2023-06-02",
         "dupok": [65534],
         "dynamic": [{
             "min": 300,
