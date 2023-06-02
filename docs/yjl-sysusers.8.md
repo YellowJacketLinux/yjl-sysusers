@@ -226,7 +226,7 @@ and default options to pass to `useradd (8)`.
 
     /usr/lib/rpm/macros.d/macros.yjl-sysusers
 
-The definition of the `%{\_yjl\_sysusers}` macro that is used with
+The definition of the `%{_yjl_sysusers}` macro that is used with
 `rpmbuild (8)` to create RPM packages that utilize `yjl-sysusers`.
 
  
