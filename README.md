@@ -98,10 +98,6 @@ script is asked to create can still be made.
 Python Notes
 ------------
 
-The `-v, --version` and `--bootstrap` *should not* require the lone
-positional argument, but they do. That probably is my misunderstanding
-of how to use `argparse`. I consider it a bug.
-
 Python 3 is required. A few distributions (like CentOS 7) are still
 at present supported that use Python 2 as the distribution Python
 interpreter, but AFAIK all of those distributions offer Python 3 as
