@@ -13,38 +13,44 @@
         "comment": "root super-user account",
         "homedir": "/root",
         "shell": "/bin/bash",
-        "mkdir": true
+        "mkdir": true,
+        "protected": true
     },
     "bin": {
         "myid": 1,
         "usr": true,
         "grp": true,
-        "homedir": "/bin"
+        "homedir": "/bin",
+        "protected": true
     },
     "daemon": {
         "myid": 2,
         "usr": true,
         "grp": true,
-        "homedir": "/sbin"
+        "homedir": "/sbin",
+        "protected": true
     },
     "adm": {
         "myid": 3,
         "groupid": 4,
         "usr": true,
         "grp": true,
-        "homedir": "/var/adm"
+        "homedir": "/var/adm",
+        "protected": true
     },
     "sys": {
         "myid": 3,
         "usr": false,
-        "grp": true
+        "grp": true,
+        "protected": true
         },
     "lp": {
         "myid": 4,
         "groupid": 7,
         "usr": true,
         "grp": true,
-        "homedir": "/var/spool/lpd"
+        "homedir": "/var/spool/lpd",
+        "protected": true
     },
     "sync": {
         "myid": 5,
@@ -53,12 +59,14 @@
         "group": "root",
         "homedir": "/sbin",
         "shell": "/bin/sync",
-        "atypshell": true
+        "atypshell": true,
+        "protected": true
     },
     "tty": {
         "myid": 5,
         "usr": false,
-        "grp": true
+        "grp": true,
+        "protected": true
     },
     "shutdown": {
         "myid": 6,
@@ -67,12 +75,14 @@
         "group": "root",
         "homedir": "/sbin",
         "shell": "/sbin/shutdown",
-        "atypshell": true
+        "atypshell": true,
+        "protected": true
     },
     "disk": {
         "myid": 6,
         "usr": false,
-        "grp": true
+        "grp": true,
+        "protected": true
     },
     "halt": {
         "myid": 7,
@@ -81,70 +91,82 @@
         "group": "root",
         "homedir": "/sbin",
         "shell": "/sbin/halt",
-        "atypshell": true
+        "atypshell": true,
+        "protected": true
     },
     "mail": {
         "myid": 8,
         "groupid": 12,
         "usr": true,
         "grp": true,
-        "homedir": "/var/spool/mail"
+        "homedir": "/var/spool/mail",
+        "protected": true
     },
     "mem": {
         "myid": 8,
         "usr": false,
-        "grp": true
+        "grp": true,
+        "protected": true
     },
     "kmem": {
         "myid": 9,
         "usr": false,
-        "grp": true
+        "grp": true,
+        "protected": true
     },
     "wheel": {
         "myid": 10,
         "usr": false,
-        "grp": true
+        "grp": true,
+        "protected": true
     },
     "operator": {
         "myid": 11,
         "usr": true,
         "grp": false,
         "group": "root",
-        "homedir": "/root"
+        "homedir": "/root",
+        "protected": true
     },
     "cdrom": {
         "myid": 11,
         "usr": false,
-        "grp": true
+        "grp": true,
+        "protected": true
     },
     "games": {
         "myid": 12,
         "groupid": 20,
         "usr": true,
         "grp": true,
-        "homedir": "/usr/games"
+        "homedir": "/usr/games",
+        "protected": true
     },
     "ftp": {
         "myid": 14,
         "groupid": 50,
         "usr": true,
         "grp": true,
-        "homedir": "/var/ftp"
+        "homedir": "/var/ftp",
+        "protected": true
     },
     "man": {
         "myid": 15,
         "usr": false,
-        "grp": true
+        "grp": true,
+        "protected": true
     },
     "dialout": {
         "myid": 18,
         "usr": false,
-        "grp": true
+        "grp": true,
+        "protected": true
     },
     "floppy": {
         "myid": 19,
         "usr": false,
-        "grp": true
+        "grp": true,
+        "protected": true
     },
     "utmp": {
         "myid": 22,
@@ -160,7 +182,8 @@
     "tape": {
         "myid": 33,
         "usr": false,
-        "grp": true
+        "grp": true,
+        "protected": true
     },
     "utempter": {
         "myid": 35,
@@ -170,7 +193,8 @@
     "video": {
         "myid": 39,
         "usr": false,
-        "grp": true
+        "grp": true,
+        "protected": true
     },
     "gdm": {
         "myid": 42,
@@ -181,7 +205,8 @@
     "lock": {
         "myid": 54,
         "usr": false,
-        "grp": true
+        "grp": true,
+        "protected": true
     },
     "tss": {
         "myid": 59,
@@ -192,7 +217,8 @@
     "audio": {
         "myid": 63,
         "usr": false,
-        "grp": true
+        "grp": true,
+        "protected": true
     },
     "tcpdump": {
         "myid": 72,
@@ -214,7 +240,8 @@
     "users": {
         "myid": 100,
         "usr": false,
-        "grp": true
+        "grp": true,
+        "protected": true
     },
     "mock": {
         "myid": 135,
@@ -229,6 +256,7 @@
     "nobody": {
         "myid": 65534,
         "usr": true,
-        "grp": true
+        "grp": true,
+        "protected": true
     }
 }
