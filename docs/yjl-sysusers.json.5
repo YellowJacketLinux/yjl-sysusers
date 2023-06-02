@@ -1,12 +1,13 @@
 '\" t
-.\"         Title: yjl-sysusers.json
-.\"        Author: Michael A. Peters
+.\"     Title: yjl-sysusers.json
+.\"    Author: Michael A. Peters
 .\" Generator: Hand-coded
-.\"      Date: 2023-05-26
+.\"   Created: 2023-05-26
+.\"  Modified: 2023-06-02
 .\"    Manual: File Formats
 .\"  Language: English
 .\"
-.TH "YJL\-SYSUSERS\&.JSON" "5" "May 2023" "yjl\-sysusers\&.json 0\&.1\&.0" "File Formats"
+.TH "YJL\-SYSUSERS\&.JSON" "5" "June 2023" "yjl\-sysusers 0\&.1\&.5" "File Formats"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -30,24 +31,28 @@
 yjl\-sysusers\&.json \- static system account UID/GID database
 .SH DESCRIPTION
 The
-\fByjl\-sysusers\&.json\fR file is a JSON dictionary of system user
-and group names which have desired static assignment of User ID (UID)
-and Group ID (GID)\&.
+\fByjl\-sysusers\&.json\fR
+file is a JSON dictionary of system user and group names which
+have desired static assignment of User ID (UID) and Group ID
+(GID)\&.
 .PP
-JSON (JavaScript Object Notation) was chosen because of both its ease
-of use with Python and its ubiquity with programming languages in
-general\&.
+JSON (JavaScript Object Notation) was chosen because of both
+its ease of use with Python and its ubiquity with programming
+languages in general\&.
 .PP
-The \fByjl\-sysusers\&.json\fR file is used by the
+The
+\fByjl\-sysusers\&.json\fR
+file is used by the
 \fByjl\-sysusers (8)\fR
-wrapper to
-\fBuseradd (8)\fR and
+wrapper to the
+\fBuseradd (8)\fR
+and
 \fBgroupadd (8)\fR
 system administration utilities\&.
 .PP
 In addition to static UID and GID assignments,
-\fByjl\-sysusers\&.json\fR also has optional default options to pass
-to the
+\fByjl\-sysusers\&.json\fR
+also has optional default options to pass to the
 \fBuseradd (8)\fR
 command when creating the specified system user account\&.
 .PP
@@ -69,35 +74,46 @@ Ordinarily this file should be installed as:
 \fB/usr/share/yjl\-sysusers/yjl\-sysusers\&.json\fR
 .RE
 .PP
-The file is a configuration file but it is also a read-only database
-and once installed it should not be modified except by re-installation
-of the package that provides it.
+The file is a configuration file but it is also a read-only
+database and once installed it should not be modified except
+by re-installation of the package that provides it.
 .\" ---
 .PP
 .\" --- end file location
 .SH ACCOUNT NAME INDEX
-Every potential system user and group account for which a statically
-assigned UID/GID desired should have an \fBACCOUNT NAME OBJECT\fR\&.
+Every potential system user and group account for which a
+statically assigned UID/GID desired should have an
+\fBACCOUNT NAME OBJECT\fR\&.
 .PP
-The \fBACCOUNT NAME INDEX\fR is the index of that object in the
-\fByjl-sysusers\&.json\fR file and must match the name of the potential
-system user or group account\&.
+The
+\fBACCOUNT NAME INDEX\fR
+is the index of that object in the
+\fByjl\-sysusers\&.json\fR
+file and must match the name of the potential system user or
+group account\&.
 .PP
-The \fByjl\-sysusers (8)\fR utility is stricter about system account names
-than the \fBuseradd (8)\fR utility\&. It only allows lower-case ASCII
-alpha\-numeric names with the addition of an underscore and hyphen
-dash\&, and the first character must be a letter or underscore\&. A
+The
+\fByjl\-sysusers (8)\fR
+utility is stricter about system account names than the
+\fBuseradd (8)\fR
+utility\&. It only allows lower\-case ASCII alpha\-numeric
+names with the addition of an underscore and hyphen dash,
+and the first character must be a letter or underscore\&. A
 $ at the end of a system user or group name is also allowed\&.
 .\" ---
 .PP
 .\" --- end account name index
 .SH ACCOUNT NAME OBJECTS
 .PP
-Each system user and/or group account for which a static ID is desired
-should have an \fBACCOUNT NAME OBJECT\fR using the \fBACCOUNT NAME\fR
+Each system user and/or group account for which a static ID
+is desired should have an
+\fBACCOUNT NAME OBJECT\fR
+using the
+\fBACCOUNT NAME\fR
 as the index for the object\&.
 .PP
-The following case sensitive properties of an \fBACCOUNT NAME OBJECT\fR
+The following case sensitive properties of an
+\fBACCOUNT NAME OBJECT\fR
 describe the defaults for the system user/group accounts of the name
 \fBACCOUNT NAME INDEX\fR:
 .PP
@@ -109,49 +125,108 @@ This property is the static UID/GID that should be used, if not already
 in use, when creating a user and/or group of the
 \fBACCOUNT NAME INDEX\fR\&.
 .sp
-The \fBnobody\fR and \fBnogroup\fR entries may share the same \fImyid\fR
-values but all other \fBACCOUNT NAME OBJECTS\fR must have a unique
-\fImyid\fR value\&.
+Any cases where a user and group of different names share
+the same UID/GID, such as is often the case with the
+\fBnobody\fR
+and
+\fBnogroup\fR
+entries,
+the
+\fIdupok\fR
+list property in the
+\fB000-CONFIG\fR
+configuration entry must have that ID in the list.
 .sp
-The \fBnobody\fR and \fBnogroup\fR entries may have a \fImyid\fR value
-of \fI65534\fR but all other \fBACCOUNT NAME OBJECTS\fR must have a
-value below \fI1000\fR\&.
+The
+\fBroot\fR
+entry must have a
+\fImyid\fR
+value of
+\fI0\fR\&.
 .sp
-The \fBroot\fR entry must have a \fImyid\fR value of \fI0\fR\&.
+The
+\fImyid\fR
+property should not be within the dynamically
+assigned system user range identified by
+\fISYS_UID_MIN\fR
+and
+\fISYS_UID_MAX\fR
+in the GNU/Linux distribution default
+\fB/etc/login\&.defs\fR
+configuration file\&. See
+\fBman 5 login\&.defs\fR\&.
+.RE
+.PP
+\fIgroupid\fR
+.RS 4
+Integer\&. Optional\&.
 .sp
-The \fImyid\fR property should not be within the dynamically assigned
-system user range identified
-by \fISYS_UID_MIN\fR and \fISYS_UID_MAX\fR in the GNU/Linux distribution
-default
-\fB/etc/login\&.defs\fR configuration file\&. See
+This property is exclusively for cases where both a user and
+group with the name
+\fBACCOUNT NAME INDEX\fR
+should be created, but with a statically assigned GID that
+differs from the UID\&.
+.sp
+In this special case, both boolean properties
+\fIusr\fR
+and
+\fIgrp\fR
+must be assigned values of
+\fItrue\fR
+and the string property
+\fIgroup\fR
+must not be set\&.
+.sp
+The
+\fIgroupid\fR
+property should not be within the dynamically assigned system
+user range identified by
+\fISYS_UID_MIN\fR
+and
+\fISYS_UID_MAX\fR
+in the GNU/Linux distribution default
+\fB/etc/login\&.defs\fR configuration file\&.
+See
 \fBman 5 login\&.defs\fR\&.
 .RE
 .PP
 \fIusr\fR
 .RS 4
-Boolean\&. Recommended\&. Default value is \fIfalse\fR\&.
+Boolean\&. Recommended\&. Default value is
+\fIfalse\fR\&.
 .sp
 This property defines whether the default action of
-\fByjl-sysusers (8)\fR
+\fByjl\-sysusers (8)\fR
 should be to create a user account with the the user name of the
 \fBACCOUNT NAME INDEX\fR\&.
 .sp
-If the \fIusr\fR property is either not defined or defined to
-\fIfalse\fR\ then the \fIgpr\fR property must be defined to
+If the
+\fIusr\fR
+property is either not defined or defined to
+\fIfalse\fR
+then the
+\fIgrp\fR
+property must be defined to
 \fItrue\fR\&.
 .RE
 .PP
 \fIgrp\fR
 .RS 4
-Boolean\&. Recommended\&. Default value is \fIfalse\fR\&.
+Boolean\&. Recommended\&. Default value is
+\fIfalse\fR\&.
 .sp
 This property defines whether the default action of
-\fByjl-sysusers (8)\fR
+\fByjl\-sysusers (8)\fR
 should be to create a group account with the group name of the
 \fBACCOUNT NAME INDEX\fR\&.
 .sp
-If the \fIgrp\fR property is either not defined or defined to
-\fIfalse\fR\ then the \fIusr\fR property must be defined to
+If the
+\fIgrp\fR
+property is either not defined or defined to
+\fIfalse\fR
+then the
+\fIusr\fR
+property must be defined to
 \fItrue\fR\&.
 .RE
 .PP
@@ -160,18 +235,37 @@ If the \fIgrp\fR property is either not defined or defined to
 String\&. Optional, rarely appropriate\&.
 .sp
 When present, this property defines the primary group that
-a user of the same name as the \fBACCOUNT NAME INDRX\fR
+a user of the same name as the
+\fBACCOUNT NAME INDRX\fR
 should belong to when a group of the same name is not to
 be created\&.
 .sp
-When the \fIgroup\fR property is present, the \fIusr\fR
-property must be defined as \fItrue\fR and the \fIgrp\fR
+When the
+\fIgroup\fR
+property is present, the
+\fIusr\fR
+property must be defined as
+\fItrue\fR
+and the
+\fIgrp\fR
 property should either not be defined or defined as
 \fIfalse\fR\&.
 .sp
-When the \fIgroup\fR property is present, the string value
-should match the name of another \fBACCOUNT NAME INDEX\fR
-that has a \fIgrp\fR property of \fItrue\fR\&.
+When the
+\fIgroup\fR
+property is present, the string value
+should match the name of another
+\fBACCOUNT NAME INDEX\fR
+that has a
+\fIgrp\fR
+property of
+\fItrue\fR\&.
+.sp
+The
+\fIgroup\fR
+property can not be set in combination with the
+\fIgroupid\fR
+property\&.
 .RE
 .PP
 \fIcomment\fR
@@ -179,24 +273,37 @@ that has a \fIgrp\fR property of \fItrue\fR\&.
 String\&. Optional, recommended\&.
 .sp
 When present, this property defines the default ASCII English
-version of the \fICOMMENT\fR
-(also called \fIGECOS\fR) field of the /etc/passwd file (see
-\fBman 5 passwd\fR) when
-\fByjl-sysusers (8)\fR creates a user account using the name
+version of the
+\fICOMMENT\fR
+(also called
+\fIGECOS\fR)
+field of the /etc/passwd file (see
+\fBman 5 passwd\fR)
+when
+\fByjl\-sysusers (8)\fR
+creates a user account using the name
 \fBACCOUNT NAME INDEX\fR\&.
 .sp
-When the \fIcomment\fR property is not defined,
-\fByjl-sysusers (8)\fR will default to using
-"\fBACCOUNT NAME INDEX\fR system user account"
-as the \fICOMMENT\fR when it creates a user account using the
-name \fBACCOUNT NAME INDEX\fR\&.
+When the
+\fIcomment\fR
+property is not defined,
+\fByjl\-sysusers (8)\fR
+will default to using
+"\fBACCOUNT NAME INDEX\fR
+system user account"
+as the
+\fICOMMENT\fR
+when it creates a user account using the name
+\fBACCOUNT NAME INDEX\fR\&.
 .sp
-The \fIcomment\fR property must be printable ASCII of no more
-than 60 characters in length and must not contain a colon or a
+The
+\fIcomment\fR
+property must be printable ASCII of no more than 120
+characters in length and must not contain a colon or a
 back\-slash\&.
 .sp
 When translations are available,
-\fByjl-sysusers (8)\fR
+\fByjl\-sysusers (8)\fR
 will use translations of this property as provided by GNU
 gettext for systems that uses a non-English default
 language\&.
@@ -207,18 +314,25 @@ language\&.
 String\&. Optional\&. Defaults to /dev/null\&.
 .sp
 When present, this property defines the default
-\fIdirectory\fR field of the /etc/passwd file (see
-\fBman 5 passwd\fR) when
-\fByjl-sysusers (8)\fR creates a user account using the
-name \fBACCOUNT NAME INDEX\fR\&.
+\fIdirectory\fR
+field of the /etc/passwd file (see
+\fBman 5 passwd\fR)
+when
+\fByjl\-sysusers (8)\fR
+creates a user account using the name
+\fBACCOUNT NAME INDEX\fR\&.
 .sp
 This is usually called the "home directory" because
-it defines the \fIHOME\fR environment variable for the
-user account\&.
+it defines the
+\fIHOME\fR
+environment variable for the user account\&.
 .sp
-The \fByjl-sysusers (8)\fR utility enforces stricter rules
-for system accounts, only allowing \fIhomedir\fR values
-that are lower case alpha-numeric plus underscore,
+The
+\fByjl\-sysusers (8)\fR
+utility enforces stricter rules for system accounts,
+only allowing
+\fIhomedir\fR
+values that are lower case alpha-numeric plus underscore,
 forward-slash, and hyphen dashes\&.
 .RE
 .PP
@@ -227,53 +341,223 @@ forward-slash, and hyphen dashes\&.
 String\&. Optional, rarely appropriate\&.
 .PP
 When present, this property defines the default
-\fIshell\fR field of the /etc/passwd file (see
-\fBman 5 passwd\fR) when
-\fByjl-sysusers (8)\fR creates a user account using the
-name \fBACCOUNT NAME INDEX\fR\&.
+\fIshell\fR
+field of the /etc/passwd file (see
+\fBman 5 passwd\fR)
+when
+\fByjl\-sysusers (8)\fR
+creates a user account using the name
+\fBACCOUNT NAME INDEX\fR\&.
 .sp
-The only valid values for the \fIshell\fR property of an
-\fBACCOUNT NAME OBJECT\fR in the
-\fByjl-sysusers\&.conf\fR file are
-\fI/bin/bash\fR and \fI/bin/sh\fR\&.
+The only valid values for the
+\fIshell\fR property (unless the
+\fIatypshell\fR
+property is set to
+\fItrue\fR)
+of an
+\fBACCOUNT NAME OBJECT\fR
+in the
+\fByjl\-sysusers\&.conf\fR
+file are
+\fI/bin/bash\fR
+and
+\fI/bin/sh\fR\&.
 .sp
 Additional values may be specified to the
-\fByjl-sysusers (8)\fR utility as long as the specified shell
-is in /etc/shells (see
+\fByjl\-sysusers (8)\fR
+utility as long as the specified shell is in /etc/shells (see
 \fBman 5 shells\fR)\&.
 .sp
-When the \fBACCOUNT NAME OBJECT\fR does not have a \fIshell\fR
-property and a valid \fISHELL\fR option is not passed to the
-\fByjl-sysusers (8)\fR utility, the \fByjl-sysusers (8)\fR utility
-will use \fB/sbin/nologin\fR (if it exists on the system) or
-\fB/bin/false\fR for the \fIshell\fR field of the /etc/passwd file
-when it creates a user account named \fBACCOUNT NAME INDEX\fR\&.
+When the
+\fBACCOUNT NAME OBJECT\fR
+does not have a
+\fIshell\fR
+property and a valid
+\fISHELL\fR
+option is not passed to the
+\fByjl\-sysusers (8)\fR
+utility, the
+\fByjl\-sysusers (8)\fR
+utility will use
+\fB/sbin/nologin\fR
+(if it exists on the system) or
+\fB/bin/false\fR
+for the
+\fIshell\fR
+field of the /etc/passwd file when it creates a
+user account named
+\fBACCOUNT NAME INDEX\fR\&.
+.RE
+.PP
+\fIatypshell\fR
+.RS 4
+Boolean\&. Optional, defaults to
+\fIfalse\fR\&.
+.sp
+When this property is
+\fItrue\fR,
+no validation of the
+\fIshell\fR
+is performed except to verify it is a valid filesystem path.
 .RE
 .PP
 \fImkdir\fR
 .RS 4
-Boolean\&. Optional, defaults to \fIfalse\fR\&.
+Boolean\&. Optional, defaults to
+\fIfalse\fR\&.
 .sp
-When this property is set to \fItrue\fR then the default behavior
-of \fByjl-sysusers (8)\fR will be to create the home directory
-for \fBACCOUNT NAME INDEX\fR if the directory does not already exist
-when \fByjl-sysusers (8)\fR is asked to create a user account for
+When this property is set to
+\fItrue\fR
+then the default behavior of
+\fByjl\-sysusers (8)\fR
+will be to create the home directory for
+\fBACCOUNT NAME INDEX\fR
+if the directory does not already exist when
+\fByjl\-sysusers (8)\fR
+is asked to create a user account for
 \fBACCOUNT NAME INDEX\fR\&.
 .sp
 In most cases, that is not desired for system user accounts because
 it will copy the contents of /etc/skel into the created directory\&.
 .sp
-If the \fImkdir\fR property is either not set or is set to \fIfalse\fR
-then the default behavior of \fByjl-sysusers (8)\fR will be to NOT
-create the home directory for \fBACCOUNT NAME INDEX\fR when it is
-asked to add the \fBACCOUNT NAME INDEX\fR user\&.
+If the
+\fImkdir\fR
+property is either not set or is set to
+\fIfalse\fR
+then the default behavior of
+\fByjl\-sysusers (8)\fR
+will be to NOT create the home directory for
+\fBACCOUNT NAME INDEX\fR
+when it is asked to add the
+\fBACCOUNT NAME INDEX\fR
+user\&.
+.RE
+.PP
+\fIprotected\fR
+.RS 4
+Boolean\&. Optional, defaults to
+\fIfalse\fR\&.
+.sp
+This property defines whether or not
+\fBACCOUNT NAME INDEX\fR
+should be protected from deletion by the
+\fByjl-sysusers (8)\fR
+utility\&.
+.sp
+When the
+\fIprotected\fR
+option is set to
+\fItrue\fR,
+attempts to delete a group or user with the
+\fBACCOUNT NAME INDEX\fR
+name by the
+\fByjl-sysusers (8)\fR
+utility will be ignored\&.
 .RE
 .\" ---
 .PP
 .\" --- end account name object
 .SH 000\-CONFIG
-This space is reserved for future content when the feature is implemented,
-likely in June 2023\&.
+.PP
+This section of the
+\fByjl\-sysusers\&.json\fR
+file modifies some of the default behavior of
+\fByjl\-sysusers (8)\fR\&.
+.PP
+\fIdescription\fR
+.RS 4
+String\&. Optional\&.
+.sp
+A UTF-8 string describing the GNU/Linux distribution and version the
+\fByjl\-sysusers\&.conf\fR
+file was created for\&.
+.RE
+.PP
+\fImaintainer\fR
+.RS 4
+String\&. Optional\&.
+.sp
+A UTF-8 string identifying the maintainer of the
+\fByjl\-sysusers\&.conf\fR
+file\&.
+.RE
+.PP
+\fImodified\fR
+.RS 4
+String, ISO-8601 Timestamp, Optional\&.
+.sp
+Information about when the
+\fByjl\-sysusers\&.json\fR
+file was last modified\&.
+.sp
+When used, it must include at least the date and should be
+in ISO-8601 format, e.g. YYYY-MM-DD or YYYY-MM-DDTHH:MM:SS\&.
+.RE
+.PP
+\fInogroup\fR
+.RS 4
+String\&. Optional, defaults to
+"\fInogroup\fR"\&.
+.sp
+An ASCII string following the rules of an
+\fBACCOUNT NAME INDEX\fR
+that defines what group a system user should use for its
+primary group if a group of the same name is not to be
+created and a specified
+group name is not provided\&.
+.RE
+.PP
+\fIdupok\fR
+.RS 4
+List of Integers\&. Optional, defaults to empty list\&.
+.sp
+A JSON list of integers for which more than one
+\fBACCOUNT NAME OBJECT\fR
+may share the same
+\fImyid\fR
+or
+\fImygroup\fR
+value\&.
+.sp
+This is necessary when a static UID/GID is assigned to
+a different user name and group name\&.
+.sp
+This also can also be used for cases where two different
+services provide the same capabilities resulting in them
+not likely to be installed at the same time, such as the
+multiple different implementations of the
+\fBlocate (1)\fR
+database\&.
+.RE
+.PP
+\fIdynamic\fR
+.RS 4
+List of Object Dictionaries. Optional\&.
+.sp
+Each object dictionary in the list describes a range of
+suitable IDs that
+\fByjl\-sysusers (8)\fR
+can use when it needs a dynanic UID/GID\&.
+.sp
+Each object dictionary must have a
+\fImin\fR
+property and a
+\fImax\fR
+property which reference an integer value\&.
+.sp
+The integer associated with the
+\fImax\fR
+property must be larger than the integer associated with the
+\fImin\fR
+property and the range between should not include any IDs
+that are used for static allocation\&.
+.sp
+When the
+\fIdynamic\fR
+list of dictionary properties is not specified,
+\fByjl\-systemusers (8)\fR
+will use the single range of 200 to 499\&.
+.RE
 .\" ---
 .PP
 .\" --- end 000-config
@@ -281,8 +565,31 @@ likely in June 2023\&.
 The following is a brief example of a valid \fByjl\-sysusers\&.json\fR file\&.
 .PP
 {
+.RS 4
+"000-CONFIG": {
+.RE
+.RS 8
+"description": "A generic yjl\-sysusers\&.json file.",
+.br
+"maintainer": "Joe Cool <joe@example.org>",
+.br
+"modified": "2023-06-01",
+.br
+"dupok": [65534],
+.br
+"dynamic": [{
+.RE
+.RS 12
+"min": 200,
+.br
+"max": 999
+.RE
+.RS 8
+]},
 .RE
 .RS 4
+},
+.br
 "root": {
 .RE
 .RS 8
@@ -359,31 +666,36 @@ The following is a brief example of a valid \fByjl\-sysusers\&.json\fR file\&.
 .RE
 }
 .PP
-Obviously the \fBroot\fR user does not need to be mentioned in the
-JSON file, that user must exist on the system before the
-\fByjl\-sysusers (8)\fR utility can be used, but it is good to have
-it for completeness as well as a rather complete example entry\&.
+It is a good idea to pass your
+\fByjl\-sysusers\&.json\fR
+file through a JSON validator such as
+https://jsonlint\&.com/
+before trying to use it with
+\fByjl\-sysusers (8)\fR\&.
 .\" ---
 .PP
 .\" --- end example
 .SH MODIFICATION
 I recommend against modifications being applied to an installed
-\fByjl\-sysusers\&.json\fR file\&. A JSON mistake will break the
-ability of \fByjl-sysusers (8)\fR to function\&.
+\fByjl\-sysusers\&.json\fR file\&.
+A JSON mistake will break the ability of
+\fByjl\-sysusers (8)\fR
+to function\&.
 .PP
-It is better to update the JSON in the \fByjl-sysusers\fR source
-package and build an updated package, so that the modification will
-be validated during package creation\&.
+It is better to update the JSON in the
+\fByjl\-sysusers\fR
+source package and build an updated package, so that the
+modification will be validated during package creation\&.
 .\" ---
 .PP
 .\" --- end modification
 .SH FILES
-/usr/share/yjl\-sysuers/yjl\-sysusers\&.json
+/usr/share/yjl\-sysusers/yjl\-sysusers\&.json
 .\" ---
 .PP
 .\" --- end files
 .SH SEE ALSO
-\fByjl-sysusers(8)\fR,
+\fByjl\-sysusers(8)\fR,
 \fBpasswd(5)\fR,
 \fBgroup(5)\fR,
 \fBlogin\&.defs(5)\fR,
@@ -395,19 +707,19 @@ be validated during package creation\&.
 .\" --- end see also
 .SH COPYLEFT
 .PP
-The \fByjl\-sysusers (8)\fR utility is
-Copyright (c) 2023 YellowJacket GNU/Linux\&.
+The
+\fByjl\-sysusers (8)\fR
+utility is Copyright (c) 2023 YellowJacket GNU/Linux\&.
 .sp
 .RS 4
-License: SPDX:MIT <https://spdx.org/licenses/MIT.html>\&.
+License: SPDX:MIT <https://spdx\&.org/licenses/MIT\&.html>\&.
 .sp
 \fByjl\-sysusers\fR is
 free software: you are free to change and redistribute it\&.
 There is no WARRANTY, to the extent permitted by law\&.
 .RE
 .PP
-This man page is
-Copyright (c) 2023 YellowJacket GNU/Linux\&.
+This man page is Copyright (c) 2023 YellowJacket GNU/Linux\&.
 .sp
 .RS 4
 License SPDX:GFDL\-1\&.3\-or\-later

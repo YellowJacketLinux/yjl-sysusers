@@ -5,7 +5,7 @@ The Linux Standards Base (apparently now defunct) was a good concept
 but had some bad results, such as specifyung RPM as a package manager.
 
 That being said, much of what it did produce can be seen as ‘good practices’
-that distributions should adhere to unless there is a reason to (e.g.
+that distributions should adhere to unless there is a reason not to (e.g.
 no distribution should be compelled to support installation of third-party
 packages via RPM when plain old `tar` has been used for that in Un-x
 for decades).

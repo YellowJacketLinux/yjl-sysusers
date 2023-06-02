@@ -1,12 +1,13 @@
 TODO
 ====
 
-Right now it mostly works.
+add --delete option --- the argument is there, but it does not actually
+do anything yet.
 
-Need an installer (Makefile)
+--------------------------------
+
+Right now it mostly works but needs testing.
 
 It needs to be integrated with gettext for string i18n string
 translation.
 
-Need to fix the bugs referenced in
-[yjl-sysusers.8](docs/yjl-sysusers.8.md#bugs)

@@ -13,7 +13,9 @@ RPMMACRODIR = /usr/lib/rpm/macros.d
 dummy:
 	echo "run make install"
 
-install: install-macros install-man install-json install-program
+install-rpm: install install-macros
+
+install: install-man install-json install-program
 
 install-macros:
 	$(INSTALL) -Dm644 macros.yjl-sysusers $(DESTDIR)$(RPMMACRODIR)/macros.yjl-sysusers
@@ -24,8 +26,8 @@ install-man:
 
 install-json:
 	$(INSTALL) -d $(DESTDIR)$(DATADIR)/yjl-sysusers
-	$(PYTHON) functions.py 000 > $(DESTDIR)$(DATADIR)/yjl-sysusers/yjl-sysusers.json
-	$(CHMOD) 0444 $(DESTDIR)$(DATADIR)/yjl-sysusers/yjl-sysusers.json
+	$(PYTHON) functions.py --bootstrap > $(DESTDIR)$(DATADIR)/yjl-sysusers/yjl-sysusers.json
+	$(CHMOD) 0644 $(DESTDIR)$(DATADIR)/yjl-sysusers/yjl-sysusers.json
 
 install-program:
 	$(INSTALL) -d $(DESTDIR)$(SBINDIR)
@@ -33,7 +35,6 @@ install-program:
 	$(CHMOD) 0750 $(DESTDIR)$(SBINDIR)/yjl-sysusers
 
 uninstall:
-	$(RM) -f $(DESTDIR)$(RPMMACRODIR)/macros.yjl-sysusers
 	$(RM) -f $(DESTDIR)$(MANDIR)/man8/yjl-sysusers.8
 	$(RM) -f $(DESTDIR)$(MANDIR)/man5/yjl-sysusers.json.5
 	$(RM) -f $(DESTDIR)$(DATADIR)/yjl-sysusers/yjl-sysusers.json

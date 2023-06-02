@@ -1,0 +1,262 @@
+{
+    "000-CONFIG": {
+        "description": "Generic Fedora",
+        "maintainer": "Nobody Special",
+        "modified": "2023-05-30",
+        "nogroup": "nobody",
+        "dupok": [3, 4, 5, 6, 7, 8, 11, 12]
+    },
+    "root": {
+        "myid": 0,
+        "usr": true,
+        "grp": true,
+        "comment": "root super-user account",
+        "homedir": "/root",
+        "shell": "/bin/bash",
+        "mkdir": true,
+        "protected": true
+    },
+    "bin": {
+        "myid": 1,
+        "usr": true,
+        "grp": true,
+        "homedir": "/bin",
+        "protected": true
+    },
+    "daemon": {
+        "myid": 2,
+        "usr": true,
+        "grp": true,
+        "homedir": "/sbin",
+        "protected": true
+    },
+    "adm": {
+        "myid": 3,
+        "groupid": 4,
+        "usr": true,
+        "grp": true,
+        "homedir": "/var/adm",
+        "protected": true
+    },
+    "sys": {
+        "myid": 3,
+        "usr": false,
+        "grp": true,
+        "protected": true
+        },
+    "lp": {
+        "myid": 4,
+        "groupid": 7,
+        "usr": true,
+        "grp": true,
+        "homedir": "/var/spool/lpd",
+        "protected": true
+    },
+    "sync": {
+        "myid": 5,
+        "usr": true,
+        "grp": false,
+        "group": "root",
+        "homedir": "/sbin",
+        "shell": "/bin/sync",
+        "atypshell": true,
+        "protected": true
+    },
+    "tty": {
+        "myid": 5,
+        "usr": false,
+        "grp": true,
+        "protected": true
+    },
+    "shutdown": {
+        "myid": 6,
+        "usr": true,
+        "grp": false,
+        "group": "root",
+        "homedir": "/sbin",
+        "shell": "/sbin/shutdown",
+        "atypshell": true,
+        "protected": true
+    },
+    "disk": {
+        "myid": 6,
+        "usr": false,
+        "grp": true,
+        "protected": true
+    },
+    "halt": {
+        "myid": 7,
+        "usr": true,
+        "grp": false,
+        "group": "root",
+        "homedir": "/sbin",
+        "shell": "/sbin/halt",
+        "atypshell": true,
+        "protected": true
+    },
+    "mail": {
+        "myid": 8,
+        "groupid": 12,
+        "usr": true,
+        "grp": true,
+        "homedir": "/var/spool/mail",
+        "protected": true
+    },
+    "mem": {
+        "myid": 8,
+        "usr": false,
+        "grp": true,
+        "protected": true
+    },
+    "kmem": {
+        "myid": 9,
+        "usr": false,
+        "grp": true,
+        "protected": true
+    },
+    "wheel": {
+        "myid": 10,
+        "usr": false,
+        "grp": true,
+        "protected": true
+    },
+    "operator": {
+        "myid": 11,
+        "usr": true,
+        "grp": false,
+        "group": "root",
+        "homedir": "/root",
+        "protected": true
+    },
+    "cdrom": {
+        "myid": 11,
+        "usr": false,
+        "grp": true,
+        "protected": true
+    },
+    "games": {
+        "myid": 12,
+        "groupid": 20,
+        "usr": true,
+        "grp": true,
+        "homedir": "/usr/games",
+        "protected": true
+    },
+    "ftp": {
+        "myid": 14,
+        "groupid": 50,
+        "usr": true,
+        "grp": true,
+        "homedir": "/var/ftp",
+        "protected": true
+    },
+    "man": {
+        "myid": 15,
+        "usr": false,
+        "grp": true,
+        "protected": true
+    },
+    "dialout": {
+        "myid": 18,
+        "usr": false,
+        "grp": true,
+        "protected": true
+    },
+    "floppy": {
+        "myid": 19,
+        "usr": false,
+        "grp": true,
+        "protected": true
+    },
+    "utmp": {
+        "myid": 22,
+        "usr": false,
+        "grp": true
+    },
+    "rpc": {
+        "myid": 32,
+        "usr": true,
+        "grp": true,
+        "homedir": "/var/lib/rpcbind"
+    },
+    "tape": {
+        "myid": 33,
+        "usr": false,
+        "grp": true,
+        "protected": true
+    },
+    "utempter": {
+        "myid": 35,
+        "usr": false,
+        "grp": true
+    },
+    "video": {
+        "myid": 39,
+        "usr": false,
+        "grp": true,
+        "protected": true
+    },
+    "gdm": {
+        "myid": 42,
+        "usr": true,
+        "grp": true,
+        "homedir": "/var/lib/gdm"
+    },
+    "lock": {
+        "myid": 54,
+        "usr": false,
+        "grp": true,
+        "protected": true
+    },
+    "tss": {
+        "myid": 59,
+        "usr": true,
+        "grp": true,
+        "comment": "Account used by the trousers package to sandbox the tcsd daemon"
+    },
+    "audio": {
+        "myid": 63,
+        "usr": false,
+        "grp": true,
+        "protected": true
+    },
+    "tcpdump": {
+        "myid": 72,
+        "usr": true,
+        "grp": true
+    },
+    "sshd": {
+        "myid": 74,
+        "usr": true,
+        "grp": true,
+        "comment": "Privilege-separated SSH",
+        "homedir": "/var/empty/sshd"
+    },
+    "dbus": {
+        "myid": 81,
+        "usr": true,
+        "grp": true
+    },
+    "users": {
+        "myid": 100,
+        "usr": false,
+        "grp": true,
+        "protected": true
+    },
+    "mock": {
+        "myid": 135,
+        "usr": false,
+        "grp": true
+    },
+    "ceph": {
+        "myid": 167,
+        "usr": true,
+        "grp": true
+    },
+    "nobody": {
+        "myid": 65534,
+        "usr": true,
+        "grp": true,
+        "protected": true
+    }
+}

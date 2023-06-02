@@ -18,7 +18,7 @@ top level where the `functions.py` file is.
 __Second__, test your version of the `yjl-sysusers.json` file by running
 the following command:
 
-    python3 functions.py 000
+    python3 functions.py --bootstrap
 
 If your JSON is valid and your properties are valid, a bunch of JSON
 will be dumped to screen but the exit status will be 0.
@@ -34,9 +34,11 @@ __Fourth__, run the command
 
     make install
 
-More properly when building an RPM package etc.:
+More properly when building an RPM package:
 
-    DESTDIR=%{buildroot} make install
+    DESTDIR=%{buildroot} make install-rpm
+
+See the reference `yjl-sysusers.spec` file.
 
 __Fifth__, if your `yjl-sysusers.json` file is complete for the
 static UID/GID assignments of your GNU/Linux distribution, consider

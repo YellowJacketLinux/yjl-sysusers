@@ -1,4 +1,17 @@
 {
+    "000-CONFIG": {
+        "description": "YellowJacket GNU/Linux 6.1",
+        "maintainer": "github upstream",
+        "modified": "2023-06-02",
+        "dupok": [65534],
+        "dynamic": [{
+            "min": 300,
+            "max": 399
+        }, {
+            "min": 500,
+            "max": 999
+        }]
+    },
     "root": {
         "myid": 0,
         "usr": true,
@@ -6,26 +19,36 @@
         "comment": "root super-user account",
         "homedir": "/root",
         "shell": "/bin/bash",
-        "mkdir": true
+        "mkdir": true,
+        "protected": true
     },
     "bin": {
         "myid": 1,
         "usr": true,
         "grp": true,
-        "comment": "bin"
+        "comment": "bin",
+        "protected": true
     },
     "daemon": {
         "myid": 6,
         "usr": true,
         "grp": true,
-        "comment": "Daemon User"
+        "comment": "Daemon User",
+        "protected": true
     },
     "lp": {
         "myid": 9,
         "usr": true,
         "grp": true,
         "comment": "CUPS Print Server",
-        "homedir": "/var/spool/cups"
+        "homedir": "/var/spool/cups",
+        "protected": true
+    },
+    "wheel": {
+        "myid": 10,
+        "usr": false,
+        "grp": true,
+        "protected": true
     },
     "adm": {
         "myid": 16,
@@ -43,12 +66,14 @@
         "usr": true,
         "grp": true,
         "comment": "D-Bus Message Daemon User",
-        "homedir": "/run/dbus"
+        "homedir": "/run/dbus",
+        "protected": true
     },
     "lpadmin": {
         "myid": 19,
         "usr": false,
-        "grp": true
+        "grp": true,
+        "protected": true
     },
     "named": {
         "myid": 20,
@@ -95,12 +120,14 @@
     "rpc": {
         "myid": 28,
         "usr": true,
-        "grp": true
+        "grp": true,
+        "protected": true
     },
     "mail": {
         "myid": 30,
         "usr": false,
-        "grp": true
+        "grp": true,
+        "protected": true
     },
     "exim": {
         "myid": 31,
@@ -198,8 +225,9 @@
         "myid": 50,
         "usr": true,
         "grp": true,
-        "comment": "sshd PrivSep",
-        "homedir": "/var/lib/sshd"
+        "comment": "Privilege-separated SSH",
+        "homedir": "/var/lib/sshd",
+        "protected": true
     },
     "stunnel": {
         "myid": 51,
@@ -312,11 +340,6 @@
         "usr": false,
         "grp": true
     },
-    "wheel": {
-        "myid": 97,
-        "usr": false,
-        "grp": true
-    },
     "anonymous": {
         "myid": 98,
         "usr": true,
@@ -386,11 +409,13 @@
         "usr": true,
         "grp": false,
         "group": "nogroup",
-        "comment": "Unprivileged system user"
+        "comment": "Unprivileged system user",
+        "protected": true
     },
     "nogroup": {
         "myid": 65534,
         "usr": false,
-        "grp": true
+        "grp": true,
+        "protected": true
     }
 }
