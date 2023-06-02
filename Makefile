@@ -26,7 +26,7 @@ install-man:
 
 install-json:
 	$(INSTALL) -d $(DESTDIR)$(DATADIR)/yjl-sysusers
-	$(PYTHON) functions.py --bootstrap 000 > $(DESTDIR)$(DATADIR)/yjl-sysusers/yjl-sysusers.json
+	$(PYTHON) functions.py --bootstrap > $(DESTDIR)$(DATADIR)/yjl-sysusers/yjl-sysusers.json
 	$(CHMOD) 0644 $(DESTDIR)$(DATADIR)/yjl-sysusers/yjl-sysusers.json
 
 install-program:

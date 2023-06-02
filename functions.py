@@ -145,7 +145,21 @@ APDICT = {
     "account": _("user or group name to add")
 }
 
-PSR = argparse.ArgumentParser(description=APDICT["description"])
+# class from https://gist.github.com/jmoiron/6543743
+class Parser(argparse.ArgumentParser):
+    """Allows some getparse options to shortcircuit positional argument."""
+    has_errors = False
+
+    def error(self, message):
+        self.has_errors = True
+        self.error_message = message
+
+    def handle_error(self):
+        if self.has_errors:
+            super(Parser, self).error(self.error_message)
+
+PSR = Parser(description=APDICT["description"])
+#PSR = argparse.ArgumentParser(description=APDICT["description"])
 PSR.add_argument("-v", "--version", action='store_true', help=APDICT["version"])
 PSR.add_argument("--bootstrap", action='store_true', help=APDICT["bootstrap"])
 PSR.add_argument("-c", "--comment", type=str, help=APDICT["comment"])
@@ -164,7 +178,7 @@ def showinfo() -> None:
     print(_("This is ") + "yjl-sysusers " + _("version ") + str(MYVERSION))
     print(_("Copyright (c)") + " 2023 YellowJacket GNU/Linux. MIT License.")
     mysum = len(CFGDESC) + len(CFGMAIN) + len(CFGMODT) + len(CFGVALT)
-    if mysum > 0:
+    if mysum == 0:
         return
     print()
     print("yjl-sysusers.json " + _("information:"))
@@ -674,6 +688,16 @@ def adjust_username_object(args, username: str, sysusers: dict) -> dict:
 
 def main(args) -> int:
     """Loads JSON file, applies argparse options."""
+    bypass_error = False
+    if args.bootstrap:
+        bypass_error = True
+    if args.version:
+        bypass_error = True
+    if PSR.has_errors and not bypass_error:
+        PSR.handle_error()
+    if args.delete:
+        # not yet implemented
+        return 0
     # pylint: disable=global-statement
     global ATYPSHELL
     # pylint: enable=global-statement
