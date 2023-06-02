@@ -9,7 +9,7 @@ BuildArch:  noarch
 Group:    System Administration/Utilities
 License:  MIT
 URL:      https://github.com/YellowJacketLinux/%{name}
-Source0:  https://github.com/YellowJacketLinux/%{name}/archive/refs/tags/v0.1.0.tar.gz
+Source0:  https://github.com/YellowJacketLinux/%{name}/archive/refs/tags/v%{gitv}.tar.gz
 
 BuildRequires:  python3-devel
 Requires:       python3

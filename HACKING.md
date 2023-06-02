@@ -16,7 +16,7 @@ Largely notes to myself.
 
 You can test the integrity of the JSON via:
 
-    python3 fubar.py 000
+    python3 fubar.py --bootstrap
 
 You can test what it does when given arguments by:
 
@@ -31,9 +31,11 @@ and if applicable, merge any JSON changes.
 New Version Notes
 -----------------
 
+Mostly notes to myself. I have poor short term memory.
+
 Before pull request merging development into main:
 
-1) Make sure both man pages reflect and changes.
+1) Make sure both man pages reflect any changes.
 
 2) Make sure to update `Modified:` date in both man pages (line 6).
 
