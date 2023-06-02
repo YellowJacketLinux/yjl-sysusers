@@ -178,76 +178,76 @@ When translations are available, `yjl-sysusers (8)` will use
 translations of this property as provided by GNU gettext for systems
 that uses a non-English default language.
 
-*homedir*
+### `homedir`
 
-String. Optional. Defaults to /dev/null.
+String. Optional. Defaults to `/dev/null`.
 
-When present, this property defines the default *directory* field of the
-/etc/passwd file (see **man 5 passwd**) when **yjl-sysusers (8)**
-creates a user account using the name **ACCOUNT NAME INDEX**.
+When present, this property defines the default `directory` field of the
+`/etc/passwd` file (see `man 5 passwd`) when `yjl-sysusers (8)`
+creates a user account using the name __ACCOUNT NAME INDEX__.
 
 This is usually called the "home directory" because it defines the
 *HOME* environment variable for the user account.
 
-The **yjl-sysusers (8)** utility enforces stricter rules for system
+The `yjl-sysusers (8)` utility enforces stricter rules for system
 accounts, only allowing *homedir* values that are lower case
 alpha-numeric plus underscore, forward-slash, and hyphen dashes.
 
-*shell*
+### `shell`
 
 String. Optional, rarely appropriate.
 
-When present, this property defines the default *shell* field of the
-/etc/passwd file (see **man 5 passwd**) when **yjl-sysusers (8)**
-creates a user account using the name **ACCOUNT NAME INDEX**.
+When present, this property defines the default `shell` field of the
+`/etc/passwd` file (see `man 5 passwd`) when `yjl-sysusers (8)`
+creates a user account using the name __ACCOUNT NAME INDEX__.
 
-The only valid values for the *shell* property (unless the *atypshell*
-property is set to *true*) of an **ACCOUNT NAME OBJECT** in the
-**yjl-sysusers.conf** file are */bin/bash* and */bin/sh*.
+The only valid values for the `shell` property (unless the `atypshell`
+property is set to *true*) of an __ACCOUNT NAME OBJECT__ in the
+`yjl-sysusers.conf` file are `/bin/bash` and `/bin/sh`.
 
-Additional values may be specified to the **yjl-sysusers (8)** utility
-as long as the specified shell is in /etc/shells (see **man 5 shells**).
+Additional values may be specified to the `yjl-sysusers (8)` utility
+as long as the specified shell is in `/etc/shells` (see `man 5 shells`).
 
-When the **ACCOUNT NAME OBJECT** does not have a *shell* property and a
-valid *SHELL* option is not passed to the **yjl-sysusers (8)** utility,
-the **yjl-sysusers (8)** utility will use **/sbin/nologin** (if it
-exists on the system) or **/bin/false** for the *shell* field of the
-/etc/passwd file when it creates a user account named **ACCOUNT NAME
-INDEX**.
+When the __ACCOUNT NAME OBJECT__ does not have a `shell` property and a
+valid *SHELL* option is not passed to the `yjl-sysusers (8)` utility,
+the `yjl-sysusers (8)` utility will use `/sbin/nologin` (if it
+exists on the system) or `/bin/false` for the `shell` field of the
+`/etc/passwd` file when it creates a user account named __ACCOUNT NAME
+INDEX__.
 
-*atypshell*
+### `atypshell`
 
 Boolean. Optional, defaults to *false*.
 
-When this property is *true*, no validation of the *shell* is performed
+When this property is *true*, no validation of the `shell` is performed
 except to verify it is a valid filesystem path.
 
-*mkdir*
+### `mkdir`
 
 Boolean. Optional, defaults to *false*.
 
 When this property is set to *true* then the default behavior of
-**yjl-sysusers (8)** will be to create the home directory for **ACCOUNT
-NAME INDEX** if the directory does not already exist when **yjl-sysusers
-(8)** is asked to create a user account for **ACCOUNT NAME INDEX**.
+`yjl-sysusers (8)` will be to create the home directory for __ACCOUNT
+NAME INDEX__ if the directory does not already exist when `yjl-sysusers
+(8)` is asked to create a user account for __ACCOUNT NAME INDEX__.
 
 In most cases, that is not desired for system user accounts because it
-will copy the contents of /etc/skel into the created directory.
+will copy the contents of `/etc/skel` into the created directory.
 
-If the *mkdir* property is either not set or is set to *false* then the
-default behavior of **yjl-sysusers (8)** will be to NOT create the home
-directory for **ACCOUNT NAME INDEX** when it is asked to add the
-**ACCOUNT NAME INDEX** user.
+If the `mkdir` property is either not set or is set to *false* then the
+default behavior of `yjl-sysusers (8)` will be to NOT create the home
+directory for __ACCOUNT NAME INDEX__ when it is asked to add the
+__ACCOUNT NAME INDEX__ user.
 
-*protected*
+### `protected`
 
 Boolean. Optional, defaults to *false*.
 
-This property defines whether or not **ACCOUNT NAME INDEX** should be
-protected from deletion by the **yjl-sysusers (8)** utility.
+This property defines whether or not __ACCOUNT NAME INDEX__ should be
+protected from deletion by the `yjl-sysusers (8)` utility.
 
-When the *protected* option is set to *true*, attempts to delete a group
-or user with the **ACCOUNT NAME INDEX** name by the **yjl-sysusers (8)**
+When the `protected` option is set to *true*, attempts to delete a group
+or user with the __ACCOUNT NAME INDEX__ name by the `yjl-sysusers (8)`
 utility will be ignored.
 
  
@@ -255,47 +255,47 @@ utility will be ignored.
 000-CONFIG
 ----------
 
-This section of the **yjl-sysusers.json** file modifies some of the
-default behavior of **yjl-sysusers (8)**.
+This section of the `yjl-sysusers.json` file modifies some of the
+default behavior of `yjl-sysusers (8)`.
 
-*description*
+### `description`
 
 String. Optional.
 
 A UTF-8 string describing the GNU/Linux distribution and version the
-**yjl-sysusers.conf** file was created for.
+`yjl-sysusers.conf` file was created for.
 
-*maintainer*
+### `maintainer`
 
 String. Optional.
 
-A UTF-8 string identifying the maintainer of the **yjl-sysusers.conf**
+A UTF-8 string identifying the maintainer of the `yjl-sysusers.conf`
 file.
 
-*modified*
+### `modified`
 
 String, ISO-8601 Timestamp, Optional.
 
-Information about when the **yjl-sysusers.json** file was last modified.
+Information about when the `yjl-sysusers.json` file was last modified.
 
 When used, it must include at least the date and should be in ISO-8601
-format, e.g. YYYY-MM-DD or YYYY-MM-DDTHH:MM:SS.
+format, e.g. `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SS`.
 
-*nogroup*
+### `nogroup`
 
 String. Optional, defaults to "*nogroup*".
 
-An ASCII string following the rules of an **ACCOUNT NAME INDEX** that
+An ASCII string following the rules of an __ACCOUNT NAME INDEX__ that
 defines what group a system user should use for its primary group if a
 group of the same name is not to be created and a specified group name
 is not provided.
 
-*dupok*
+### `dupok`
 
 List of Integers. Optional, defaults to empty list.
 
-A JSON list of integers for which more than one **ACCOUNT NAME OBJECT**
-may share the same *myid* or *mygroup* value.
+A JSON list of integers for which more than one __ACCOUNT NAME OBJECT__
+may share the same `myid` or `mygroup` value.
 
 This is necessary when a static UID/GID is assigned to a different user
 name and group name.
@@ -303,31 +303,31 @@ name and group name.
 This also can also be used for cases where two different services
 provide the same capabilities resulting in them not likely to be
 installed at the same time, such as the multiple different
-implementations of the **locate (1)** database.
+implementations of the `locate (1)` database.
 
-*dynamic*
+### `dynamic`
 
 List of Object Dictionaries. Optional.
 
 Each object dictionary in the list describes a range of suitable IDs
-that **yjl-sysusers (8)** can use when it needs a dynanic UID/GID.
+that `yjl-sysusers (8)` can use when it needs a dynanic UID/GID.
 
-Each object dictionary must have a *min* property and a *max* property
+Each object dictionary must have a `min` property and a `max` property
 which reference an integer value.
 
-The integer associated with the *max* property must be larger than the
-integer associated with the *min* property and the range between should
+The integer associated with the `max` property must be larger than the
+integer associated with the `min` property and the range between should
 not include any IDs that are used for static allocation.
 
-When the *dynamic* list of dictionary properties is not specified,
-**yjl-systemusers (8)** will use the single range of 200 to 499.
+When the `dynamic` list of dictionary properties is not specified,
+`yjl-systemusers (8)` will use the single range of 200 to 499.
 
  
 
 EXAMPLE
 -------
 
-The following is a brief example of a valid **yjl-sysusers.json** file.
+The following is a brief example of a valid `yjl-sysusers.json` file.
 
     {
         "000-CONFIG": {
@@ -374,9 +374,9 @@ The following is a brief example of a valid **yjl-sysusers.json** file.
         }
     }
 
-It is a good idea to pass your **yjl-sysusers.json** file through a JSON
+It is a good idea to pass your `yjl-sysusers.json` file through a JSON
 validator such as [https://jsonlint.com/](https://jsonlint.com/)
-before trying to use it with **yjl-sysusers (8)**.
+before trying to use it with `yjl-sysusers (8)`.
 
  
 
@@ -384,10 +384,10 @@ MODIFICATION
 ------------
 
 I recommend against modifications being applied to an installed
-**yjl-sysusers.json** file. A JSON mistake will break the ability of
-**yjl-sysusers (8)** to function.
+`yjl-sysusers.json` file. A JSON mistake will break the ability of
+`yjl-sysusers (8)` to function.
 
-It is better to update the JSON in the **yjl-sysusers** source package
+It is better to update the JSON in the `yjl-sysusers` source package
 and build an updated package, so that the modification will be validated
 during package creation.
 
@@ -396,7 +396,7 @@ during package creation.
 FILES
 -----
 
-/usr/share/yjl-sysusers/yjl-sysusers.json
+    /usr/share/yjl-sysusers/yjl-sysusers.json
 
  
 
