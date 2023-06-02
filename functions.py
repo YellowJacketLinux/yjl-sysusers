@@ -47,6 +47,8 @@ CFGMODT = ""
 CFGVALT = ""
 # used as non-collision dummy intiger to trigger dynamic
 OS_MAX_PLUS_ONE = 65535
+# by default, like GID/UID for same account name to match
+COMMONID = True
 
 # Dummy function until gettext is used
 def _(fubar):
@@ -318,7 +320,7 @@ def load_id_list(desired: int) -> list:
                     mylist.append(i)
     return mylist
 
-def find_group_id(gpname: str, desired: int) -> int:
+def find_group_id(gpname: str, desired: int, unipair=True) -> int:
     """Returns the ID associated with input group name."""
     try:
         existing = grp.getgrnam(gpname)
@@ -330,10 +332,14 @@ def find_group_id(gpname: str, desired: int) -> int:
         try:
             existing = grp.getgrgid(i)
         except KeyError:
-            try:
-                existing = pwd.getpwuid(i)
-            except KeyError:
+            if not unipair:
                 return add_the_group(gpname, i)
+            else:
+                try:
+                    existing = pwd.getpwuid(i)
+                except KeyError:
+                    return add_the_group(gpname, i)
+        unipair = True
     # Should never reach this point but if it does
     #  try to create group anyway
     return add_the_group(gpname, desired)
@@ -360,27 +366,20 @@ def determine_useradd_gid_from_json(username: str, sysusers: dict) -> int:
     """Given a username, find the appropriate GID for useradd command."""
     gpname = request_gpname_from_json(username, sysusers)
     desired = request_gid_from_json(gpname, sysusers)
-    return find_group_id(gpname, desired)
+    return find_group_id(gpname, desired, COMMONID)
 
 def determine_useradd_uid_from_json(username: str, sysusers: dict) -> int:
     """Given a username, find the appropriate UID for useradd command."""
     nameobject = sysusers[username]
-    if nameobject.get('grp', False):
-        test_a = nameobject.get('myid', OS_MAX_PLUS_ONE)
-        test_b = nameobject.get('groupid', test_a)
-        same_as_group = (test_a == test_b)
-    else:
-        same_as_group = False
-    if same_as_group:
+    if COMMONID:
         desired = determine_useradd_gid_from_json(username, sysusers)
     else:
         desired = nameobject.get('myid', OS_MAX_PLUS_ONE)
-    if same_as_group:
-        try:
-            pwd.getpwuid(desired)
-        except KeyError:
-            return desired
-        desired = OS_MAX_PLUS_ONE
+    try:
+        pwd.getpwuid(desired)
+    except KeyError:
+        return desired
+    desired = OS_MAX_PLUS_ONE
     idlist = load_id_list(desired)
     for i in idlist:
         try:
@@ -478,7 +477,13 @@ def add_the_user(username: str, sysusers: dict) -> None:
 
 def just_do_it(username: str, sysusers: dict) -> None:
     """Called by main() to creates the user/group account as needed."""
+    # pylint: disable=global-statement
+    global COMMONID
+    # pylint: enable=global-statement
     nameobject = sysusers[username]
+    test_a = nameobject.get('myid', OS_MAX_PLUS_ONE)
+    test_b = nameobject.get('groupid', test_a)
+    COMMONID = (test_a == test_b)
     createuser = nameobject.get('usr', False)
     if createuser:
         add_the_user(username, sysusers)
