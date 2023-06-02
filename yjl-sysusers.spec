@@ -48,7 +48,7 @@ sed -i 's?docs/yjl?yjl?g' README.md
 %defattr(-,root,root,-)
 %attr(0750,root,root) %{_sbindir}/yjl-sysusers
 %dir %{_datadir}/yjl-sysusers
-%attr(0444,root,root) %{_datadir}/yjl-sysusers/yjl-sysusers.json
+%attr(0644,root,root) %{_datadir}/yjl-sysusers/yjl-sysusers.json
 %attr(0644,root,root) %{_rpmmacrodir}/macros.yjl-sysusers
 %attr(0644,root,root) %{_mandir}/man5/yjl-sysusers.json.5*
 %attr(0644,root,root) %{_mandir}/man8/yjl-sysusers.8*
