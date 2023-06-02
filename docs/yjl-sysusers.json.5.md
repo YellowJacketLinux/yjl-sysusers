@@ -375,7 +375,7 @@ The following is a brief example of a valid **yjl-sysusers.json** file.
     }
 
 It is a good idea to pass your **yjl-sysusers.json** file through a JSON
-validator such as [https://www.jslint.com/](https://www.jslint.com/)
+validator such as [https://jsonlint.com/](https://jsonlint.com/)
 before trying to use it with **yjl-sysusers (8)**.
 
  
