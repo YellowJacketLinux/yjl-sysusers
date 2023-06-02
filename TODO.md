@@ -1,6 +1,8 @@
 TODO
 ====
 
+check for bug when user and group are different and both the opposites are used.
+
 add --delete option --- the argument is there, but it does not actually
 do anything yet.
 
