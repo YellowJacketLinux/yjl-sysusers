@@ -17,23 +17,23 @@ yjl-sysusers.json - static system account UID/GID database  
 DESCRIPTION
 -----------
 
-The **yjl-sysusers.json** file is a JSON dictionary of system user and
+The `yjl-sysusers.json` file is a JSON dictionary of system user and
 group names which have desired static assignment of User ID (UID) and
 Group ID (GID).
 
 JSON (JavaScript Object Notation) was chosen because of both its ease of
 use with Python and its ubiquity with programming languages in general.
 
-The **yjl-sysusers.json** file is used by the **yjl-sysusers (8)**
-wrapper to **useradd (8)** and **groupadd (8)** system administration
+The `yjl-sysusers.json` file is used by the `yjl-sysusers (8)`
+wrapper to the `useradd (8)` and `groupadd (8)` system administration
 utilities.
 
-In addition to static UID and GID assignments, **yjl-sysusers.json**
-also has optional default options to pass to the **useradd (8)** command
+In addition to static UID and GID assignments, `yjl-sysusers.json`
+also has optional default options to pass to the `useradd (8)` command
 when creating the specified system user account.
 
-Additionally, the **yjl-sysusers.json** file may have an entry titled
-**00-CONFIG** that configures how the **yjl-sysusers (8)** utility
+Additionally, the `yjl-sysusers.json` file may have an entry titled
+__00-CONFIG__ that configures how the `yjl-sysusers (8)` utility
 handles dynamically assigned system UID and GID numbers.
 
  
@@ -43,7 +43,7 @@ FILE LOCATION
 
 Ordinarily this file should be installed as:
 
-**/usr/share/yjl-sysusers/yjl-sysusers.json**
+    /usr/share/yjl-sysusers/yjl-sysusers.json
 
 The file is a configuration file but it is also a read-only database and
 once installed it should not be modified except by re-installation of
@@ -55,14 +55,14 @@ ACCOUNT NAME INDEX
 ------------------
 
 Every potential system user and group account for which a statically
-assigned UID/GID desired should have an **ACCOUNT NAME OBJECT**.
+assigned UID/GID desired should have an __ACCOUNT NAME OBJECT__.
 
-The **ACCOUNT NAME INDEX** is the index of that object in the
-**yjl-sysusers.json** file and must match the name of the potential
+The __ACCOUNT NAME INDEX__ is the index of that object in the
+`yjl-sysusers.json` file and must match the name of the potential
 system user or group account.
 
-The **yjl-sysusers (8)** utility is stricter about system account names
-than the **useradd (8)** utility. It only allows lower-case ASCII
+The `yjl-sysusers (8)` utility is stricter about system account names
+than the `useradd (8)` utility. It only allows lower-case ASCII
 alpha-numeric names with the addition of an underscore and hyphen dash,
 and the first character must be a letter or underscore. A \$ at the end
 of a system user or group name is also allowed.
@@ -73,108 +73,108 @@ ACCOUNT NAME OBJECTS
 --------------------
 
 Each system user and/or group account for which a static ID is desired
-should have an **ACCOUNT NAME OBJECT** using the **ACCOUNT NAME** as the
+should have an __ACCOUNT NAME OBJECT__ using the __ACCOUNT NAME__ as the
 index for the object.
 
-The following case sensitive properties of an **ACCOUNT NAME OBJECT**
+The following case sensitive properties of an __ACCOUNT NAME OBJECT__
 describe the defaults for the system user/group accounts of the name
-**ACCOUNT NAME INDEX**:
+__ACCOUNT NAME INDEX__:
 
-*myid*
+### `myid`
 
 Integer. Required.
 
 This property is the static UID/GID that should be used, if not already
-in use, when creating a user and/or group of the **ACCOUNT NAME INDEX**.
+in use, when creating a user and/or group of the __ACCOUNT NAME INDEX__.
 
 Any cases where a user and group of different names share the same
-UID/GID, such as is often the case with the **nobody** and **nogroup**
-entries, the *dupok* list property in the **000-CONFIG** configuration
+UID/GID, such as is often the case with the `nobody` and `nogroup`
+entries, the `dupok` list property in the __000-CONFIG__ configuration
 entry must have that ID in the list.
 
-The **root** entry must have a *myid* value of *0*.
+The `root` entry must have a `myid` value of `0`.
 
-The *myid* property should not be within the dynamically assigned system
-user range identified by *SYS\_UID\_MIN* and *SYS\_UID\_MAX* in the
-GNU/Linux distribution default **/etc/login.defs** configuration file.
-See **man 5 login.defs**.
+The `myid` property should not be within the dynamically assigned system
+user range identified by `SYS_UID_MIN` and `SYS_UID_MAX` in the
+GNU/Linux distribution default `/etc/login.defs` configuration file.
+See `man 5 login.defs`.
 
-*groupid*
+### `groupid`
 
 Integer. Optional.
 
 This property is exclusively for cases where both a user and group with
-the name **ACCOUNT NAME INDEX** should be created, but with a statically
+the name __ACCOUNT NAME INDEX__ should be created, but with a statically
 assigned GID that differs from the UID.
 
-In this special case, both boolean properties *usr* and *grp* must be
-assigned values of *true* and the string property *group* must not be
+In this special case, both boolean properties `usr` and `grp` must be
+assigned values of `true` and the string property `group` must not be
 set.
 
-The *groupid* property should not be within the dynamically assigned
-system user range identified by *SYS\_UID\_MIN* and *SYS\_UID\_MAX* in
-the GNU/Linux distribution default **/etc/login.defs** configuration
-file. See **man 5 login.defs**.
+The `groupid` property should not be within the dynamically assigned
+system user range identified by `SYS_UID_MIN` and `SYS_UID_MAX` in
+the GNU/Linux distribution default `/etc/login.defs` configuration
+file. See `man 5 login.defs`.
 
-*usr*
+### `usr`
 
 Boolean. Recommended. Default value is *false*.
 
-This property defines whether the default action of **yjl-sysusers (8)**
+This property defines whether the default action of `yjl-sysusers (8)`
 should be to create a user account with the the user name of the
-**ACCOUNT NAME INDEX**.
+__ACCOUNT NAME INDEX__.
 
-If the *usr* property is either not defined or defined to *false* then
-the *gpr* property must be defined to *true*.
+If the `usr` property is either not defined or defined to *false* then
+the `grp` property must be defined to *true*.
 
-*grp*
+### `grp`
 
 Boolean. Recommended. Default value is *false*.
 
-This property defines whether the default action of **yjl-sysusers (8)**
-should be to create a group account with the group name of the **ACCOUNT
-NAME INDEX**.
+This property defines whether the default action of `yjl-sysusers (8)`
+should be to create a group account with the group name of the __ACCOUNT
+NAME INDEX__.
 
-If the *grp* property is either not defined or defined to *false* then
-the *usr* property must be defined to *true*.
+If the `grp` property is either not defined or defined to *false* then
+the `usr` property must be defined to *true*.
 
-*group*
+### `group`
 
 String. Optional, rarely appropriate.
 
 When present, this property defines the primary group that a user of the
-same name as the **ACCOUNT NAME INDRX** should belong to when a group of
+same name as the __ACCOUNT NAME INDRX__ should belong to when a group of
 the same name is not to be created.
 
-When the *group* property is present, the *usr* property must be defined
-as *true* and the *grp* property should either not be defined or defined
+When the `group` property is present, the `usr` property must be defined
+as *true* and the `grp` property should either not be defined or defined
 as *false*.
 
-When the *group* property is present, the string value should match the
-name of another **ACCOUNT NAME INDEX** that has a *grp* property of
+When the `group` property is present, the string value should match the
+name of another __ACCOUNT NAME INDEX__ that has a `grp` property of
 *true*.
 
-The *group* property can not be set in combination with the *groupid*
+The `group` property can not be set in combination with the `groupid`
 property.
 
-*comment*
+### `comment`
 
 String. Optional, recommended.
 
 When present, this property defines the default ASCII English version of
 the *COMMENT* (also called *GECOS*) field of the /etc/passwd file (see
-**man 5 passwd**) when **yjl-sysusers (8)** creates a user account using
-the name **ACCOUNT NAME INDEX**.
+`man 5 passwd`) when `yjl-sysusers (8)` creates a user account using
+the name `ACCOUNT NAME INDEX`.
 
-When the *comment* property is not defined, **yjl-sysusers (8)** will
-default to using "**ACCOUNT NAME INDEX** system user account" as the
-*COMMENT* when it creates a user account using the name **ACCOUNT NAME
-INDEX**.
+When the `comment` property is not defined, `yjl-sysusers (8)` will
+default to using "__ACCOUNT NAME INDEX__ system user account" as the
+`COMMENT` when it creates a user account using the name __ACCOUNT NAME
+INDEX__.
 
-The *comment* property must be printable ASCII of no more than 120
+The `comment` property must be printable ASCII of no more than 120
 characters in length and must not contain a colon or a back-slash.
 
-When translations are available, **yjl-sysusers (8)** will use
+When translations are available, `yjl-sysusers (8)` will use
 translations of this property as provided by GNU gettext for systems
 that uses a non-English default language.
 
