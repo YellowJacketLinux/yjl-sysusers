@@ -1,11 +1,9 @@
-Content-type: text/html
-
-YJL\\-SYSUSERS
-==============
+YJL-SYSUSERS
+============
 
 Section: System Management Commands (8)\
 Updated: June 2023\
-[Index](#index) [Return to Main Contents](/man/man2html)
+[Index](#index)
 
 * * * * *
 
@@ -293,35 +291,32 @@ There quite likely are some.
 SEE ALSO
 --------
 
-**[yjl-sysusers.json](/man/man2html?5+yjl-sysusers.json)(5)**,
-**[passwd](/man/man2html?5+passwd)(5)**,
-**[group](/man/man2html?5+group)(5)**,
-**[login.defs](/man/man2html?5+login.defs)(5)**,
-**[shells](/man/man2html?5+shells)(5)**,
-**[groupadd](/man/man2html?8+groupadd)(8)**,
-**[useradd](/man/man2html?8+useradd)(8)**,
-**[usermod](/man/man2html?8+usermod)(8)**,
-**[rpmbuild](/man/man2html?8+rpmbuild)(8)**
+* __[yjl-sysusers.json(5)](yjl-sysusers.json.5.md)__
+* __passwd(5)__
+* __group(5)__
+* __login.defs(5)__
+* __shells(5)__
+* __groupadd(8)__
+* __useradd(8)__
+* __usermod(8)__
+* __rpmbuild(8)__
 
  
 
 COPYLEFT
 --------
 
-The **yjl-sysusers** utility is Copyright (c) 2023 YellowJacket
+The `yjl-sysusers` utility is Copyright (c) 2023 YellowJacket
 GNU/Linux.
 
-License: SPDX:MIT
-\<[https://spdx.org/licenses/MIT.html](https://spdx.org/licenses/MIT.html)\>.
+License: [SPDX:MIT](https://spdx.org/licenses/MIT.html).
 
-**yjl-sysusers** is free software: you are free to change and
+`yjl-sysusers` is free software: you are free to change and
 redistribute it. There is no WARRANTY, to the extent permitted by law.
 
 This man page is Copyright (c) 2023 YellowJacket GNU/Linux.
 
-License: SPDX:GFDL-1.3-or-later \
-
-\<[https://spdx.org/licenses/GFDL-1.3-or-later.html](https://spdx.org/licenses/GFDL-1.3-or-later.html)\>.
+License: [SPDX:GFDL-1.3-or-later](https://spdx.org/licenses/GFDL-1.3-or-later.html).
 
 Accuracy of this man page is stroven for but explicitly is not
 guaranteed.
@@ -331,9 +326,7 @@ guaranteed.
 AUTHORS
 -------
 
-Michael A. Peters \
-
-\<[anymouseprophet@gmail.com](mailto:anymouseprophet@gmail.com)\>
+[Michael A. Peters](mailto:anymouseprophet@gmail.com)
 
 * * * * *
 
@@ -342,38 +335,38 @@ Michael A. Peters \
 Index
 -----
 
-[NAME](#lbAB)
+[NAME](#name)
 
-[SYNOPSIS](#lbAC)
+[SYNOPSIS](#synopsis)
 
-[DESCRIPTION](#lbAD)
+[DESCRIPTION](#description)
 
-[OPTIONS](#lbAE)
+[OPTIONS](#options)
 
-[USAGE NOTES](#lbAF)
+[USAGE NOTES](#usage-notes)
 
-[PACKAGER NOTES](#lbAG)
+[PACKAGER NOTES](#packager-notes)
 
-[CONFIGURATION](#lbAH)
+[CONFIGURATION](#configuration)
 
-[FILES](#lbAI)
+[FILES](#files)
 
-[EXAMPLES](#lbAJ)
+[EXAMPLES](#examples)
 
-[EXIT STATUS](#lbAK)
+[EXIT STATUS](#exit-status)
 
-[TODO](#lbAL)
+[TODO](#todo)
 
-[BUGS](#lbAM)
+[BUGS](#bugs)
 
-[SEE ALSO](#lbAN)
+[SEE ALSO](#see-also)
 
-[COPYLEFT](#lbAO)
+[COPYLEFT](#copyleft)
 
-[AUTHORS](#lbAP)
+[AUTHORS](#authors)
 
 * * * * *
 
-This document was created by [man2html](/man/man2html), using the manual
+This document was created by man2html, using the manual
 pages.\
  Time: 07:08:43 GMT, June 02, 2023

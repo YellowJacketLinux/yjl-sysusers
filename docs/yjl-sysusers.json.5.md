@@ -1,11 +1,9 @@
-Content-type: text/html
-
-YJL\\-SYSUSERS\\&.JSON
-======================
+YJL-SYSUSERS.JSON
+=================
 
 Section: File Formats (5)\
 Updated: June 2023\
-[Index](#index) [Return to Main Contents](/man/man2html)
+[Index](#index)
 
 * * * * *
 
@@ -331,67 +329,50 @@ EXAMPLE
 
 The following is a brief example of a valid **yjl-sysusers.json** file.
 
-{
-
-"000-CONFIG": {
-
-"description": "A generic yjl-sysusers.json file.", \
- "maintainer": "Joe Cool \<[joe@example.org](mailto:joe@example.org)\>",
-\
- "modified": "2023-06-01", \
- "dupok": [65534], \
- "dynamic": [{
-
-"min": 200, \
- "max": 999
-
-]},
-
-}, \
- "root": {
-
-"myid": 0, \
- "usr": true, \
- "grp": true, \
- "comment": "root super-user account", \
- "homedir": "/root", \
- "shell": "/bin/bash", \
- "mkdir": true
-
-}, \
- "plocate": {
-
-"myid": 23, \
- "usr": false, \
- "grp": true
-
-}, \
- "fetchmail": {
-
-"myid": 38, \
- "usr": true, \
- "grp": false, \
- "group": "nogroup"
-
-}, \
- "nobody": {
-
-"myid": 65534, \
- "usr": true, \
- "grp": false, \
- "group": "nogroup", \
- "comment": "Unprivileged system user"
-
-}, \
- "nogroup": {
-
-"myid": 65534, \
- "usr": false, \
- "grp": true
-
-}
-
-}
+    {
+        "000-CONFIG": {
+            "description": "A generic yjl-sysusers.json file.",
+            "maintainer": "Joe Cool <joe@example.org>",
+            "modified": "2023-06-01",
+            "dupok": [65534],
+            "dynamic": [{
+                "min": 200,
+                "max": 999
+            ]},
+        },
+        "root": {
+            "myid": 0,
+            "usr": true,
+            "grp": true,
+            "comment": "root super-user account",
+            "homedir": "/root",
+            "shell": "/bin/bash",
+            "mkdir": true
+        },
+        "plocate": {
+            "myid": 23,
+            "usr": false,
+            "grp": true
+        },
+        "fetchmail": {
+            "myid": 38,
+            "usr": true,
+            "grp": false,
+            "group": "nogroup"
+        },
+        "nobody": {
+            "myid": 65534,
+            "usr": true,
+            "grp": false,
+            "group": "nogroup",
+            "comment": "Unprivileged system user"
+        },
+        "nogroup": {
+            "myid": 65534,
+            "usr": false,
+            "grp": true
+        }
+    }
 
 It is a good idea to pass your **yjl-sysusers.json** file through a JSON
 validator such as [https://www.jslint.com/](https://www.jslint.com/)
@@ -422,33 +403,30 @@ FILES
 SEE ALSO
 --------
 
-**[yjl-sysusers](/man/man2html?8+yjl-sysusers)(8)**,
-**[passwd](/man/man2html?5+passwd)(5)**,
-**[group](/man/man2html?5+group)(5)**,
-**[login.defs](/man/man2html?5+login.defs)(5)**,
-**[shells](/man/man2html?5+shells)(5)**,
-**[groupadd](/man/man2html?8+groupadd)(8)**,
-**[useradd](/man/man2html?8+useradd)(8)**
+* __[yjl-sysusers(8)](yjl-sysusers.8.md)__
+* __passwd(5)__
+* __group(5)__
+* __login.defs(5)__
+* __shells(5)__
+* __groupadd(8)__
+* __useradd(8)__
 
  
 
 COPYLEFT
 --------
 
-The **yjl-sysusers (8)** utility is Copyright (c) 2023 YellowJacket
+The `yjl-sysusers (8)` utility is Copyright (c) 2023 YellowJacket
 GNU/Linux.
 
-License: SPDX:MIT
-\<[https://spdx.org/licenses/MIT.html](https://spdx.org/licenses/MIT.html)\>.
+License: [SPDX:MIT](https://spdx.org/licenses/MIT.html).
 
-**yjl-sysusers** is free software: you are free to change and
+`yjl-sysusers` is free software: you are free to change and
 redistribute it. There is no WARRANTY, to the extent permitted by law.
 
 This man page is Copyright (c) 2023 YellowJacket GNU/Linux.
 
-License SPDX:GFDL-1.3-or-later \
-
-\<[https://spdx.org/licenses/GFDL-1.3-or-later.html](https://spdx.org/licenses/GFDL-1.3-or-later.html)\>.
+License [SPDX:GFDL-1.3-or-later](https://spdx.org/licenses/GFDL-1.3-or-later.html).
 
 Accuracy of this man page is stroven for but is explicitly not
 guaranteed.
@@ -458,9 +436,7 @@ guaranteed.
 AUTHORS
 -------
 
-Michael A. Peters \
-
-\<[anymouseprophet@gmail.com](mailto:anymouseprophet@gmail.com)\>
+[Michael A. Peters](mailto:anymouseprophet@gmail.com)
 
 * * * * *
 
@@ -469,32 +445,32 @@ Michael A. Peters \
 Index
 -----
 
-[NAME](#lbAB)
+[NAME](#name)
 
-[DESCRIPTION](#lbAC)
+[DESCRIPTION](#description)
 
-[FILE LOCATION](#lbAD)
+[FILE LOCATION](#file-location)
 
-[ACCOUNT NAME INDEX](#lbAE)
+[ACCOUNT NAME INDEX](#account-name-index)
 
-[ACCOUNT NAME OBJECTS](#lbAF)
+[ACCOUNT NAME OBJECTS](#account-name-objects)
 
-[000-CONFIG](#lbAG)
+[000-CONFIG](#000-config)
 
-[EXAMPLE](#lbAH)
+[EXAMPLE](#example)
 
-[MODIFICATION](#lbAI)
+[MODIFICATION](#modification)
 
-[FILES](#lbAJ)
+[FILES](#files)
 
-[SEE ALSO](#lbAK)
+[SEE ALSO](#see-also)
 
-[COPYLEFT](#lbAL)
+[COPYLEFT](#copyleft)
 
-[AUTHORS](#lbAM)
+[AUTHORS](#authors)
 
 * * * * *
 
-This document was created by [man2html](/man/man2html), using the manual
+This document was created by man2html, using the manual
 pages.\
  Time: 07:08:43 GMT, June 02, 2023
