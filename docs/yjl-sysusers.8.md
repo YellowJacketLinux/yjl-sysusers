@@ -17,26 +17,26 @@ yjl-sysusers - Add system users and groups  
 SYNOPSIS
 --------
 
-**yjl-sysusers** [*OPTIONS*] *account*
+__yjl-sysusers__ [*OPTIONS*] *account*
 
  
 
 DESCRIPTION
 -----------
 
-**yjl-sysusers**
+__yjl-sysusers__
 
-is a wrapper script to the operating system **groupadd (8)** and
-**useradd (8)** commands that allows respecting the operating system
+is a wrapper script to the operating system `groupadd (8)` and
+`useradd (8)` commands that allows respecting the operating system
 static UID and GID assignment when available, without the need to assign
 them manually.
 
 Static UID and GID values, as well as some other parameters useful to
-the **useradd (8)** command, are defined in the file **yjl-sysusers.json
-(5)** which is normally located in the directory
-/usr/share/yjl-sysusers.
+the `useradd (8)` command, are defined in the file `yjl-sysusers.json
+(5)` which is normally located in the directory
+`/usr/share/yjl-sysusers`.
 
-**yjl-sysusers** was developed with RPM package scriptlets in mind.
+`yjl-sysusers` was developed with RPM package scriptlets in mind.
 
  
 
@@ -44,90 +44,90 @@ OPTIONS
 -------
 
 Options can be used when *account* has not been described in the
-**yjl-sysusers.json (5)** file or to override default settings for
-*account* as defined in the **yjl-sysusers.json (5)** file.
+`yjl-sysusers.json (5)` file or to override default settings for
+*account* as defined in the `yjl-sysusers.json (5)` file.
 
-**-h**, **--help**
+### `-h`, `--help`
 
 Display help message and exit.
 
-**-v**, **--version**
+### `-v`, `--version`
 
 Display version information and exit.
 
-**--bootstrap**
+### `--bootstrap`
 
-Validate the **yjl-sysusers.json (5)** file and if valid, dump the JSON
+Validate the `yjl-sysusers.json (5)` file and if valid, dump the JSON
 to screen.
 
-The **--bootstrap** option is intended to be used during installation
+The `--bootstrap` option is intended to be used during installation
 and packaging.
 
-**-c**, **--comment** *COMMENT*
+### `-c`, `--comment` *COMMENT*
 
 Define the comment field to be used in the /etc/passwd file. This is
 used to provide a brief description of *account*. *COMMENT* must be
 printable ASCII, excluding the \\ and : characters. *COMMENT* must not
 exceed 120 characters.
 
-**-d**, **--home** *HOME*
+### `-d`, `--home` *HOME*
 
 Define the home directory to be used with the system user account. It
 must be full path and can only use lower-case alpha-numeric characters
 plus underscore, forward-slash, and hyphen.
 
-**-s**, **--shell** *SHELL*
+### `-s`, `--shell` *SHELL*
 
 Define the login shell to be used with the system user account. If
 *SHELL* is not present in /etc/shells or is not installed on the system,
-then /sbin/nologin or /bin/false will be substituted.
+then `/sbin/nologin` or `/bin/false` will be substituted.
 
 Any argument that is not full-path is invalid, so you can just use
 *noshell* as the *SHELL* arguement to guarantee that either
-/sbin/nologin or /bin/false are used as the login shell.
+`/sbin/nologin` or `/bin/false` are used as the login shell.
 
-**yjl-sysusers** will use /sbin/nologin for any *account* that does not
-have a valid *SHELL* specified unless /sbin/nologin is not present on
-the system. In such cases, /bin/false is used instead.
+`yjl-sysusers` will use `/sbin/nologin` for any *account* that does not
+have a valid *SHELL* specified unless `/sbin/nologin` is not present on
+the system. In such cases, `/bin/false` is used instead.
 
-**-g**, **--group** *GROUP*
+### `-g`, `--group` *GROUP*
 
 Define the primary group for the user *account* with a different group
 name than *account*.
 
 If the group *GROUP* does not exist, it will be created automatically.
 
-**--onlyuser**
+### `--onlyuser`
 
 Boolean flag. When this flag is specified, only the user *account* will
-be created. If a valid primary group is not specified with the **-g**,
-**--group** *GROUP* option and a group of *account* name does not
+be created. If a valid primary group is not specified with the `-g`,
+`--group` *GROUP* option and a group of *account* name does not
 already exist, then the user will be put in the "nogroup" equivalent.
-See **yjl-sysusers.json (5)**.
+See `yjl-sysusers.json (5)`.
 
-**--onlygroup**
+### `--onlygroup`
 
 Boolean flag. When this flag is specified, only the group *account* will
 be created.
 
-**--userandgroup**
+### `--userandgroup`
 
 Boolean flag. When this flag is specified, both a user and group
 *account* will be created. This is actually the default behavior but the
-**yjl-sysusers.json (5)** file might be configured to only create one or
+`yjl-sysusers.json (5)` file might be configured to only create one or
 the other for the specified *account* name.
 
-**--mkdir**
+### `--mkdir`
 
 Boolean flag. When this flag is specified, the *HOME* directory for
-*account* will be created by **useradd (8)** if it does not already
+*account* will be created by `useradd (8)` if it does not already
 exist.
 
 The default with system accounts us not to create the *HOME* directory
-automatically because that often copies the contents of /etc/skel into
+automatically because that often copies the contents of `/etc/skel` into
 the *HOME* directory, which is rarely desired for system accounts.
 
-**--delete**
+### `--delete`
 
 As of version 0.1.5 this is not yet implemented.
 
@@ -140,7 +140,7 @@ the user or group *account*.
 USAGE NOTES
 -----------
 
-Python 3 is needed for **yjl-sysusers**. Testing has been done with the
+Python 3 is needed for `yjl-sysusers`. Testing has been done with the
 CentOS 7 packaged Python 3.6.4 (released 2017 December 19) and with
 vanilla Python 3.11.3 (released 2023 April 05).
 
@@ -150,30 +150,37 @@ PACKAGER NOTES
 --------------
 
 When creating an RPM (or other) package that has files owned by non-root
-users and groups, you should use **yjl-sysusers** in the package *%pre*
+users and groups, you should use `yjl-sysusers` in the package *%pre*
 scriptlet to ensure the appropriate users and groups exist at the time
 the files are installed.
 
-RPM packagers should use the macro **%{\_yjl\_sysusers}** rather than
-the command **yjl-sysusers** or **/usr/sbin/yjl-sysusers**.
+RPM packagers should use the macro
 
-RPM pacjagers should **BuildRequires: yjl-sysusers**.
+    %{_yjl_sysusers}
 
-RPM packagers should **Requires(pre): %{\_yjl\_sysusers}**.
+rather than the command `yjl-sysusers` or `/usr/sbin/yjl-sysusers`.
 
-Packagers should avoid using **-c**, **--comment** *COMMENT* as it can
+RPM pacjagers should:
+
+    BuildRequires: yjl-sysusers
+
+RPM packagers should:
+
+    Requires(pre): %{_yjl_sysusers}
+
+Packagers should avoid using `-c`, `--comment` *COMMENT* as it can
 interfere with the string being properly translated via gettext i18n
 facilities into the preferred language of the end user system.
 
-Packagers should usually avoid using **--mkdir**.
+Packagers should usually avoid using `--mkdir`.
 
-When **useradd (8)** creates the *HOME* directory, it also copies the
+When `useradd (8)` creates the *HOME* directory, it also copies the
 contents of /etc/skel into that directory. Usually that is not desired.
 It is often better to have the RPM package create and own the *home*
 directory when a home directory is needed.
 
-Packagers should never assume the contents of the **yjl-sysusers.json
-(5)** file are correct for the package, but should specify the correct
+Packagers should never assume the contents of the `yjl-sysusers.json
+(5)` file are correct for the package, but should specify the correct
 option parameters when ensuring that *account* exists.
 
 The primary motivation for this wrapper script is to allow for truly
@@ -186,10 +193,10 @@ A secondary motive for this wrapper script is to allow for the
 internationalization of system user account descriptions (the *COMMENT*
 field of /etc/passwd) at the time of package install.
 
-Lazy packaging where the packager relies upon **yjl-sysusers.json (5)**
+Lazy packaging where the packager relies upon `yjl-sysusers.json (5)`
 to have correct user account parameters is not a motive for this
 package, although compensating for lazy packaging was a motive for
-allowing sane **useradd (8)** defaults to be specified in that file.
+allowing sane `useradd (8)` defaults to be specified in that file.
 
  
 
@@ -197,58 +204,54 @@ CONFIGURATION
 -------------
 
 The default options on a per-*account* basis for accounts with preferred
-static UID/GID assignment are in the **yjl-sysconfig.json (5)** file.
+static UID/GID assignment are in the `yjl-sysconfig.json (5)` file.
 Most options except for the UID/GID, protection from deletion, and
 positive creation of the *HOME* directory can be overriden with options
-passed to **yjl-sysusers**.
+passed to `yjl-sysusers`.
 
  
 
 FILES
 -----
 
-/usr/sbin/yjl-sysusers
+    /usr/sbin/yjl-sysusers
 
-The Python 3 wrapper to **groupadd (8)** and **useradd (8)**. This man
+The Python 3 wrapper to `groupadd (8)` and `useradd (8)`. This man
 page describes use of that Python wrapper.
 
-/usr/share/yjl-sysusers/yjl-sysusers.json
+    /usr/share/yjl-sysusers/yjl-sysusers.json
 
 The JSON database on a per-*account* basis for preferred static UID/GID
-and default options to pass to **useradd (8)**.
+and default options to pass to `useradd (8)`.
 
-/usr/lib/rpm/macros.d/macros.yjl-sysusers
+    /usr/lib/rpm/macros.d/macros.yjl-sysusers
 
-The definition of the **%{\_yjl\_sysusers}** macro that is used with
-**rpmbuild (8)** to create RPM packages that utilize **yjl-sysusers**.
+The definition of the `%{\_yjl\_sysusers}` macro that is used with
+`rpmbuild (8)` to create RPM packages that utilize `yjl-sysusers`.
 
  
 
 EXAMPLES
 --------
 
-**yjl-sysusers** **--onlygroup** *plocate*
+    yjl-sysusers --onlygroup plocate
 
 Ensure the *plocate* group exists, without creating a *plocate* user.
 
-**yjl-sysusers** **-g** *mail* **-h** */var/lib/sendmail* **-s**
-*noshell* *sendmail*
+    yjl-sysusers -g mail -h /var/lib/sendmail -s noshell sendmail
 
 Ensure the *mail* group exists. Ensure the *sendmail* user exists,
-creating it if necessary using */var/lib/sendmail* as the *HOME*
-directory, and using either /sbin/nologin or /bin/false as the login
+creating it if necessary using `/var/lib/sendmail` as the *HOME*
+directory, and using either `/sbin/nologin` or `/bin/false` as the login
 shell.
 
 If the *sendmail* user does not already exist, it will be created with
 *mail* as the primary group it belongs to.
 
-**yjl-sysusers** **--onlygroup** *mail* && \\ \
- **yjl-sysusers** **--userandgroup** \\ \
-
-**-h** */var/lib/sendmail* **-s** *noshell* *sendmail* && \\
-
-\
- **usermod** **-a** **-G** *mail* *sendmail*
+    yjl-sysusers --onlygroup mail && \
+    yjl-sysusers --userandgroup  \
+      -h /var/lib/sendmail -s noshell sendmail && \
+    usermod -a -G mail sendmail
 
 First ensure that the *mail* group exists. Then ensure that the
 *sendmail* user exists as in the previous example, only if the user is
@@ -263,13 +266,9 @@ users that need to belong to a system group of a different name.
 EXIT STATUS
 -----------
 
-*0*
+__0__ --- success
 
-success
-
-*1*
-
-The program failed to create requested group and/or user.
+__1__ --- The program failed to create requested group and/or user.
 
  
 
